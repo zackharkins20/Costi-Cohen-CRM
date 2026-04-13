@@ -137,9 +137,10 @@ export default function ReportsPage() {
     value: deals.filter(d => d.stage === stage.key).reduce((s, d) => s + (d.deal_value || 0), 0),
   }))
 
-  const pipelineValue = deals.reduce((s, d) => s + (d.deal_value || 0), 0)
-  const activeDeals = deals.filter(d => d.stage !== 'fees_collected').length
-  const avgDealSize = deals.length > 0 ? pipelineValue / deals.length : 0
+  const activeDealsArr = deals.filter(d => d.stage !== 'fees_collected')
+  const pipelineValue = activeDealsArr.reduce((s, d) => s + (d.deal_value || 0), 0)
+  const activeDeals = activeDealsArr.length
+  const avgDealSize = activeDealsArr.length > 0 ? pipelineValue / activeDealsArr.length : 0
   const winRate = deals.length > 0 ? Math.round((deals.filter(d => d.stage === 'fees_collected').length / deals.length) * 100) : 0
   const topDeals = [...deals].sort((a, b) => (b.deal_value || 0) - (a.deal_value || 0)).slice(0, 10)
 

@@ -6,10 +6,10 @@ import { MetricCard } from '@/components/ui/metric-card'
 import { KanbanBoard } from '@/components/pipeline/kanban-board'
 import { ContactCard } from '@/components/pipeline/contact-card'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
-import { getContacts, updateContact, getCurrentUser, logActivity } from '@/lib/queries'
+import { getContacts, getDeals, updateContact, getCurrentUser, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
 import { executeWorkflows } from '@/lib/workflows'
-import { PROPERTY_STAGES, type Contact, type PropertyStage } from '@/lib/types'
+import { PROPERTY_STAGES, type Contact, type Deal, type PropertyStage } from '@/lib/types'
 import { Users, DollarSign, TrendingUp } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
@@ -17,6 +17,7 @@ import type { DropResult } from '@hello-pangea/dnd'
 
 export default function PipelinePage() {
   const [contacts, setContacts] = useState<Contact[]>([])
+  const [deals, setDeals] = useState<Deal[]>([])
   const [search, setSearch] = useState('')
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
@@ -24,6 +25,7 @@ export default function PipelinePage() {
 
   const load = () => {
     getContacts().then(setContacts)
+    getDeals().then(setDeals)
     getCurrentUser().then(u => { if (u) setUserId(u.id) })
   }
 
@@ -75,11 +77,15 @@ export default function PipelinePage() {
     })
   }
 
-  const pipelineValue = contacts.reduce((sum, c) => sum + (c.budget_max || 0), 0)
-  const estFees = contacts.reduce((sum, c) => {
-    if (!c.budget_max || !c.fee_percentage) return sum
-    return sum + (c.budget_max * c.fee_percentage) / 100
-  }, 0)
+  const pipelineValue = deals
+    .filter(d => d.stage !== 'fees_collected')
+    .reduce((sum, d) => sum + (d.deal_value || 0), 0)
+  const estFees = deals
+    .filter(d => d.stage !== 'fees_collected')
+    .reduce((sum, d) => {
+      if (!d.deal_value || !d.fee_percentage) return sum
+      return sum + (d.deal_value * d.fee_percentage) / 100
+    }, 0)
 
   const formatCurrency = (n: number) => {
     if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`

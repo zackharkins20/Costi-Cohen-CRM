@@ -23,7 +23,9 @@ export default function DashboardPage() {
     getRecentActivities(10).then(setActivities)
   }, [])
 
-  const pipelineValue = deals.reduce((sum, d) => sum + (d.deal_value || 0), 0)
+  const pipelineValue = deals
+    .filter(d => d.stage !== 'fees_collected')
+    .reduce((sum, d) => sum + (d.deal_value || 0), 0)
   const activeDeals = deals.filter(d => d.stage !== 'fees_collected').length
   const feesEarned = deals
     .filter(d => d.stage === 'fees_collected')
