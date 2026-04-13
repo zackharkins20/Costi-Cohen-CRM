@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { PageHeader } from '@/components/ui/page-header'
 import { GlassCard } from '@/components/ui/glass-card'
 import { StageBadge } from '@/components/ui/status-badge'
@@ -9,14 +9,44 @@ import { CreateContactForm } from '@/components/forms/create-contact-form'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { getContacts, getCurrentUser } from '@/lib/queries'
 import { getDocumentCounts } from '@/lib/documents'
-import type { Contact } from '@/lib/types'
+import { PROPERTY_STAGES, type Contact, type PropertyStage } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Search, Plus, Users, Mail, Phone, Paperclip } from 'lucide-react'
+
+type SortOption = 'name_asc' | 'name_desc' | 'newest' | 'oldest' | 'stage'
+type TypeFilter = 'all' | 'client' | 'other'
+
+const SORT_OPTIONS: { key: SortOption; label: string }[] = [
+  { key: 'name_asc', label: 'Name (A-Z)' },
+  { key: 'name_desc', label: 'Name (Z-A)' },
+  { key: 'newest', label: 'Newest First' },
+  { key: 'oldest', label: 'Oldest First' },
+  { key: 'stage', label: 'Stage' },
+]
+
+const STAGE_ORDER: Record<PropertyStage, number> = {
+  lead: 0,
+  initial_call: 1,
+  property_search: 2,
+  due_diligence: 3,
+  exchange: 4,
+  fees_collected: 5,
+}
 
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [search, setSearch] = useState('')
+  const [stageFilter, setStageFilter] = useState<PropertyStage | 'all'>('all')
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
+  const [sort, setSort] = useState<SortOption>('newest')
   const [createOpen, setCreateOpen] = useState(false)
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
@@ -33,28 +63,112 @@ export default function ContactsPage() {
 
   useEffect(() => { load() }, [])
 
-  const filtered = contacts.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    (c.company || '').toLowerCase().includes(search.toLowerCase()) ||
-    (c.email || '').toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = useMemo(() => {
+    let result = contacts.filter(c => {
+      // Search
+      if (search) {
+        const q = search.toLowerCase()
+        if (
+          !c.name.toLowerCase().includes(q) &&
+          !(c.company || '').toLowerCase().includes(q) &&
+          !(c.email || '').toLowerCase().includes(q)
+        ) return false
+      }
+      // Stage filter
+      if (stageFilter !== 'all' && c.stage !== stageFilter) return false
+      // Type filter
+      if (typeFilter !== 'all' && c.type !== typeFilter) return false
+      return true
+    })
+
+    // Sort
+    result = [...result].sort((a, b) => {
+      switch (sort) {
+        case 'name_asc':
+          return a.name.localeCompare(b.name)
+        case 'name_desc':
+          return b.name.localeCompare(a.name)
+        case 'newest':
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        case 'oldest':
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        case 'stage':
+          return STAGE_ORDER[a.stage] - STAGE_ORDER[b.stage]
+        default:
+          return 0
+      }
+    })
+
+    return result
+  }, [contacts, search, stageFilter, typeFilter, sort])
 
   return (
     <div>
       <PageHeader title="Contacts" description={`${contacts.length} contacts`}>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="h-4 w-4 mr-1" /> Add Contact
+        </Button>
+      </PageHeader>
+
+      {/* Filter bar */}
+      <div className="flex items-center gap-3 flex-wrap mb-6">
+        {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cc-text-muted" />
           <Input
             placeholder="Search contacts..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 w-56 h-9"
+            className="pl-9 w-52 h-9"
           />
         </div>
-        <Button onClick={() => setCreateOpen(true)}>
-          <Plus className="h-4 w-4 mr-1" /> Add Contact
-        </Button>
-      </PageHeader>
+
+        {/* Stage filter */}
+        <Select value={stageFilter} onValueChange={v => setStageFilter(v as PropertyStage | 'all')}>
+          <SelectTrigger className="w-48 h-9 text-xs">
+            <SelectValue placeholder="All Stages" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Stages</SelectItem>
+            {PROPERTY_STAGES.map(s => (
+              <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Type filter pills */}
+        <div className="flex gap-1.5">
+          {(['all', 'client', 'other'] as const).map(t => {
+            const active = typeFilter === t
+            const label = t === 'all' ? 'All' : t === 'client' ? 'Client' : 'Other'
+            return (
+              <button
+                key={t}
+                onClick={() => setTypeFilter(t)}
+                className={`px-3 py-1.5 text-xs border rounded-md transition-colors ${
+                  active
+                    ? 'bg-cc-accent text-white border-cc-accent'
+                    : 'bg-transparent text-cc-text-muted border-cc-border hover:border-cc-border-hover hover:text-cc-text-secondary'
+                }`}
+              >
+                {label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Sort */}
+        <Select value={sort} onValueChange={v => setSort(v as SortOption)}>
+          <SelectTrigger className="w-40 h-9 text-xs">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {SORT_OPTIONS.map(o => (
+              <SelectItem key={o.key} value={o.key}>{o.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {filtered.length === 0 ? (
         <EmptyState
