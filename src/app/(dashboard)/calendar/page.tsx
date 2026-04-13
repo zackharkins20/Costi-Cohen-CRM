@@ -270,13 +270,13 @@ export default function CalendarPage() {
         </div>
         {/* Time grid */}
         <div className="max-h-[600px] overflow-y-auto">
-          <div className="grid grid-cols-[60px_repeat(7,1fr)] relative">
+          <div className="grid grid-cols-[60px_repeat(7,1fr)] relative" style={{ gridTemplateRows: `repeat(24, 48px)` }}>
             {/* Hour labels */}
             {hours.map(h => (
               <div
                 key={h}
                 className="border-b border-cc-border border-r pr-2 text-right"
-                style={{ gridColumn: '1', gridRow: h + 1, height: '48px' }}
+                style={{ gridColumn: '1', gridRow: h + 1 }}
               >
                 <span className="text-[10px] text-cc-text-muted leading-none -mt-1.5 inline-block">
                   {h === 0 ? '' : format(new Date(2024, 0, 1, h), 'h a')}
