@@ -38,6 +38,24 @@ export const TASK_STATUSES: { key: TaskStatus; label: string }[] = [
   { key: 'done', label: 'Done' },
 ]
 
+const TASK_STATUS_LABEL_TO_KEY: Record<string, TaskStatus> = {}
+for (const s of TASK_STATUSES) {
+  TASK_STATUS_LABEL_TO_KEY[s.label.toLowerCase()] = s.key
+  TASK_STATUS_LABEL_TO_KEY[s.key] = s.key
+}
+
+export function normalizeTaskStatus(raw: string): TaskStatus {
+  if (TASK_STATUS_LABEL_TO_KEY[raw]) return TASK_STATUS_LABEL_TO_KEY[raw]
+  const lower = raw.toLowerCase().trim()
+  if (TASK_STATUS_LABEL_TO_KEY[lower]) return TASK_STATUS_LABEL_TO_KEY[lower]
+  const stripped = lower.replace(/[^a-z0-9]/g, '')
+  for (const s of TASK_STATUSES) {
+    if (s.key.replace(/[^a-z0-9]/g, '') === stripped) return s.key
+    if (s.label.toLowerCase().replace(/[^a-z0-9]/g, '') === stripped) return s.key
+  }
+  return 'todo'
+}
+
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent'
 export type TaskType = 'deal' | 'general'
 

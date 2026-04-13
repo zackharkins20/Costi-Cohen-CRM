@@ -1,5 +1,5 @@
 import { createClient } from './supabase'
-import { normalizeStage, type Contact, type Deal, type Task, type Activity, type DocumentLink, type Notification, type User, type DealPropertyDetails, type SubtaskCounts } from './types'
+import { normalizeStage, normalizeTaskStatus, type Contact, type Deal, type Task, type Activity, type DocumentLink, type Notification, type User, type DealPropertyDetails, type SubtaskCounts } from './types'
 
 function getClient() { return createClient() }
 
@@ -129,7 +129,7 @@ export async function getTasks(): Promise<Task[]> {
     .select('*, deal:deals(id, title), assigned_user:users!tasks_assigned_to_fkey(*)')
     .is('parent_task_id', null)
     .order('created_at', { ascending: false })
-  return data ?? []
+  return (data ?? []).map(t => ({ ...t, status: normalizeTaskStatus(t.status) }))
 }
 
 export async function createTask(task: Omit<Task, 'id' | 'created_at' | 'updated_at' | 'deal' | 'assigned_user'>): Promise<Task | null> {
@@ -159,7 +159,7 @@ export async function getSubtasks(parentId: string): Promise<Task[]> {
     .select('*, deal:deals(id, title), assigned_user:users!tasks_assigned_to_fkey(*)')
     .eq('parent_task_id', parentId)
     .order('created_at', { ascending: true })
-  return data ?? []
+  return (data ?? []).map(t => ({ ...t, status: normalizeTaskStatus(t.status) }))
 }
 
 export async function getSubtaskCounts(parentIds: string[]): Promise<Record<string, SubtaskCounts>> {
