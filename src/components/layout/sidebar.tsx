@@ -143,7 +143,7 @@ export function Sidebar() {
           priority
         />
         <p className="text-[10px] uppercase tracking-[0.25em] text-cc-text-secondary mt-1.5 font-normal">
-          Buyers Agency
+          THE EXCHANGE
         </p>
       </div>
       <nav className="flex-1 px-3 py-5 space-y-1">
@@ -271,7 +271,7 @@ export function Sidebar() {
                 priority
               />
               <p className="text-[10px] uppercase tracking-[0.25em] text-cc-text-secondary mt-1.5 font-normal">
-                Buyers Agency
+                THE EXCHANGE
               </p>
             </>
           )}
