@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --eslint --tailwind --app --src-dir --no-turbopack --no-import-alias)",
+      "Bash(npx create-next-app@latest costi-cohen-crm --typescript --eslint --tailwind --app --src-dir --no-turbopack --no-import-alias)",
+      "Bash(mv costi-cohen-crm/* costi-cohen-crm/.* .)",
+      "Bash(rm -rf costi-cohen-crm)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init -y)",
+      "Bash(npx shadcn@latest init --defaults)",
+      "Bash(npx shadcn@latest add input label textarea sheet table badge tabs card dialog select dropdown-menu separator scroll-area tooltip avatar progress -y)",
+      "Bash(npx next:*)",
+      "Bash(vercel --version)",
+      "Bash(supabase --version)",
+      "Bash(gh --version)",
+      "mcp__Control_Chrome__list_tabs",
+      "mcp__Control_Chrome__get_page_content",
+      "Bash(brew install:*)",
+      "Bash(supabase projects:*)",
+      "Bash(supabase login:*)",
+      "Bash(psql --version)",
+      "Bash(export PATH=\"/opt/homebrew/opt/libpq/bin:$PATH\")",
+      "Bash(psql \"postgresql://postgres.ugovtmdywhatgxosjupe:$\\(echo -n '')",
+      "Bash(curl -s -X POST https://ugovtmdywhatgxosjupe.supabase.co/rest/v1/rpc/exec_sql -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnb3Z0bWR5d2hhdGd4b3NqdXBlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjAyMzY5MCwiZXhwIjoyMDkxNTk5NjkwfQ.k89tHGIf58Kx85QqgWKDwEMDsRdJxEHlxGVEvNSILzI' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnb3Z0bWR5d2hhdGd4b3NqdXBlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjAyMzY5MCwiZXhwIjoyMDkxNTk5NjkwfQ.k89tHGIf58Kx85QqgWKDwEMDsRdJxEHlxGVEvNSILzI' -H 'Content-Type: application/json' -d '{}')",
+      "Bash(gh api:*)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(f'{s[\\\\\"state\\\\\"]} - {s[\\\\\"description\\\\\"]} \\({s[\\\\\"created_at\\\\\"]}\\)'\\) for s in data[:5]]\")",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(s.get\\('environment_url',''\\) or s.get\\('target_url',''\\)\\) for s in data if s.get\\('environment_url'\\) or s.get\\('target_url'\\)]\")"
+    ]
+  }
+}
