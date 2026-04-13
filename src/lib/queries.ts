@@ -1,5 +1,5 @@
 import { createClient } from './supabase'
-import type { Contact, Deal, Task, Activity, DocumentLink, Notification, User, DealPropertyDetails, SubtaskCounts } from './types'
+import { normalizeStage, type Contact, type Deal, type Task, type Activity, type DocumentLink, type Notification, type User, type DealPropertyDetails, type SubtaskCounts } from './types'
 
 function getClient() { return createClient() }
 
@@ -32,7 +32,7 @@ export async function getContacts(): Promise<Contact[]> {
     .from('contacts')
     .select('*')
     .order('updated_at', { ascending: false })
-  return data ?? []
+  return (data ?? []).map(c => ({ ...c, stage: normalizeStage(c.stage) }))
 }
 
 export async function getContact(id: string): Promise<Contact | null> {
@@ -76,7 +76,7 @@ export async function getDeals(): Promise<Deal[]> {
     .from('deals')
     .select('*, contact:contacts(*), property_details:deal_property_details(*)')
     .order('updated_at', { ascending: false })
-  return data ?? []
+  return (data ?? []).map(d => ({ ...d, stage: normalizeStage(d.stage) }))
 }
 
 export async function getDeal(id: string): Promise<Deal | null> {

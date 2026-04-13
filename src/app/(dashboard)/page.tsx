@@ -40,10 +40,12 @@ export default function DashboardPage() {
     return `$${n}`
   }
 
-  /* Theme-aware chart palette — richer tones */
-  const chartColors = ['#1A1F36', '#4A5568', '#9BA3AF', '#1A1F36', '#4A5568', '#9BA3AF']
-
   const isDark = theme === 'dark'
+
+  /* Theme-aware chart palette — richer tones */
+  const chartColors = isDark
+    ? ['#FFFFFF', '#A0A7AB', '#6B7280', '#FFFFFF', '#A0A7AB', '#6B7280']
+    : ['#1A1F36', '#4A5568', '#9BA3AF', '#1A1F36', '#4A5568', '#9BA3AF']
   const chartAxisColor = isDark ? '#555555' : '#9BA3AF'
   const chartGridColor = isDark ? '#222222' : '#DDDDDD'
   const chartTooltipBg = isDark ? '#111111' : '#FFFFFF'

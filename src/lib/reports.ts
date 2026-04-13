@@ -1,5 +1,5 @@
 import { createClient } from './supabase'
-import type { Deal, Contact, Activity } from './types'
+import { normalizeStage, type Deal, type Contact, type Activity } from './types'
 
 function getClient() { return createClient() }
 
@@ -10,7 +10,7 @@ export async function getDealsInRange(start: string, end: string): Promise<Deal[
     .gte('created_at', start)
     .lte('created_at', end)
     .order('created_at', { ascending: false })
-  return data ?? []
+  return (data ?? []).map(d => ({ ...d, stage: normalizeStage(d.stage) }))
 }
 
 export async function getContactsInRange(start: string, end: string): Promise<Contact[]> {
@@ -20,7 +20,7 @@ export async function getContactsInRange(start: string, end: string): Promise<Co
     .gte('created_at', start)
     .lte('created_at', end)
     .order('created_at', { ascending: false })
-  return data ?? []
+  return (data ?? []).map(c => ({ ...c, stage: normalizeStage(c.stage) }))
 }
 
 export async function getActivitiesInRange(start: string, end: string): Promise<Activity[]> {

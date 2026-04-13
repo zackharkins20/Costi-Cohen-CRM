@@ -105,8 +105,8 @@ export default function ReportsPage() {
 
   const isDark = theme === 'dark'
   const chartColors = isDark
-    ? ['#FFFFFF', '#A0A7AB', '#555555', '#333333']
-    : ['#000000', '#A0A7AB', '#555555', '#333333']
+    ? ['#FFFFFF', '#A0A7AB', '#6B7280', '#8892A0', '#C0C7CF', '#FFFFFF']
+    : ['#1A1F36', '#4A5568', '#6B7280', '#9BA3AF', '#333333', '#1A1F36']
   const chartAxisColor = '#A0A7AB'
   const chartGridColor = isDark ? '#222222' : '#DDDDDD'
   const chartTooltipBg = isDark ? '#111111' : '#F7F7F7'

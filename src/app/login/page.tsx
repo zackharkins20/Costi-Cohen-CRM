@@ -86,17 +86,17 @@ export default function LoginPage() {
         custom={1}
         variants={fadeUp}
       >
-        <h2 className="text-[24px] font-semibold text-black" style={{ fontFamily: "'Inter', sans-serif" }}>
+        <h2 className="text-[24px] font-semibold" style={{ fontFamily: "'Inter', sans-serif", color: '#1a1a1a' }}>
           Welcome back
         </h2>
-        <p className="mt-1.5 mb-7 text-[14px] text-[#666666]">
+        <p className="mt-1.5 mb-7 text-[14px]" style={{ color: '#4a4a4a' }}>
           Sign in to Costi Cohen
         </p>
 
         <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
           <div className="space-y-5">
             <div>
-              <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-[#333333] mb-1.5">
+              <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
                 Email
               </label>
               <input
@@ -105,13 +105,14 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 text-sm text-black placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-black focus:ring-2 focus:ring-black/10"
+                className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-black focus:ring-2 focus:ring-black/10"
+                style={{ color: '#000000' }}
               />
             </div>
 
             {mode === 'password' && (
               <div>
-                <label className="block text-[11px] font-medium uppercase tracking-[0.08em] text-[#333333] mb-1.5">
+                <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
                   Password
                 </label>
                 <div className="relative">
@@ -121,7 +122,8 @@ export default function LoginPage() {
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 pr-10 text-sm text-black placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-black focus:ring-2 focus:ring-black/10"
+                    className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 pr-10 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-black focus:ring-2 focus:ring-black/10"
+                    style={{ color: '#000000' }}
                   />
                   <button
                     type="button"
@@ -142,7 +144,8 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-10 rounded-md bg-black text-white text-sm font-medium transition-colors hover:bg-[#222222] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: '#000000', color: '#ffffff' }}
             >
               {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
             </button>
@@ -150,14 +153,15 @@ export default function LoginPage() {
         </form>
 
         {message && (
-          <p className={`text-sm mt-4 ${message.includes('Check') ? 'text-black' : 'text-red-600'}`}>
+          <p className="text-sm mt-4" style={{ color: message.includes('Check') ? '#1a1a1a' : '#dc2626' }}>
             {message}
           </p>
         )}
 
         <button
           onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
-          className="text-xs text-[#999999] hover:text-[#555555] mt-5 block w-full text-center transition-colors"
+          className="text-xs mt-5 block w-full text-center transition-colors hover:opacity-80"
+          style={{ color: '#666666' }}
         >
           {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
         </button>
@@ -165,7 +169,8 @@ export default function LoginPage() {
 
       {/* Footer */}
       <motion.p
-        className="mt-8 text-[13px] text-[#999999]"
+        className="mt-8 text-[13px]"
+        style={{ color: '#888888' }}
         initial="hidden"
         animate="visible"
         custom={2}

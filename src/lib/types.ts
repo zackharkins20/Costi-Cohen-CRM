@@ -10,6 +10,25 @@ export const PROPERTY_STAGES: { key: PropertyStage; label: string }[] = [
   { key: 'fees_collected', label: 'Fees Collected' },
 ]
 
+const STAGE_LABEL_TO_KEY: Record<string, PropertyStage> = {}
+for (const s of PROPERTY_STAGES) {
+  STAGE_LABEL_TO_KEY[s.label.toLowerCase()] = s.key
+  STAGE_LABEL_TO_KEY[s.key] = s.key
+}
+
+export function normalizeStage(raw: string): PropertyStage {
+  if (STAGE_LABEL_TO_KEY[raw]) return STAGE_LABEL_TO_KEY[raw]
+  const lower = raw.toLowerCase().trim()
+  if (STAGE_LABEL_TO_KEY[lower]) return STAGE_LABEL_TO_KEY[lower]
+  // Fuzzy: strip non-alphanumeric and compare
+  const stripped = lower.replace(/[^a-z0-9]/g, '')
+  for (const s of PROPERTY_STAGES) {
+    if (s.key.replace(/[^a-z0-9]/g, '') === stripped) return s.key
+    if (s.label.toLowerCase().replace(/[^a-z0-9]/g, '') === stripped) return s.key
+  }
+  return 'lead'
+}
+
 // Task statuses
 export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done'
 export const TASK_STATUSES: { key: TaskStatus; label: string }[] = [
