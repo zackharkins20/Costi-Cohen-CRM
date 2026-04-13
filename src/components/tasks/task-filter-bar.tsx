@@ -14,7 +14,7 @@ import type { TaskPriority, User } from '@/lib/types'
 export interface TaskFilters {
   search: string
   priorities: TaskPriority[]
-  dueDateFilter: 'all' | 'overdue' | 'this_week' | 'this_month'
+  dueDateFilter: 'all' | 'overdue' | 'today' | 'this_week' | 'this_month'
   assignee: string // user id or 'all'
 }
 
@@ -34,6 +34,7 @@ const PRIORITIES: { key: TaskPriority; label: string }[] = [
 const DUE_DATE_OPTIONS = [
   { key: 'all' as const, label: 'All Dates' },
   { key: 'overdue' as const, label: 'Overdue' },
+  { key: 'today' as const, label: 'Due Today' },
   { key: 'this_week' as const, label: 'This Week' },
   { key: 'this_month' as const, label: 'This Month' },
 ]

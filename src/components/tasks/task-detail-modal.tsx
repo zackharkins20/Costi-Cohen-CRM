@@ -40,7 +40,7 @@ import {
   type User,
 } from '@/lib/types'
 import { Trash2, Plus, CheckCircle, Circle, Calendar } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, isBefore, isToday, isTomorrow, startOfDay } from 'date-fns'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface Props {
@@ -135,12 +135,19 @@ export function TaskDetailModal({ task, open, onClose, onUpdated, userId }: Prop
             <div className="flex items-center gap-2 flex-wrap">
               <TaskStatusBadge status={task.status} />
               <PriorityBadge priority={task.priority} />
-              {task.due_date && (
-                <span className="text-xs text-cc-text-muted flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  {format(new Date(task.due_date), 'MMM d, yyyy')}
-                </span>
-              )}
+              {task.due_date && (() => {
+                const due = new Date(task.due_date)
+                const overdue = isBefore(due, startOfDay(new Date())) && task.status !== 'done'
+                const soon = !overdue && (isToday(due) || isTomorrow(due)) && task.status !== 'done'
+                return (
+                  <span className={`text-xs flex items-center gap-1 font-medium ${
+                    overdue ? 'text-red-500' : soon ? 'text-amber-500' : 'text-cc-text-muted'
+                  }`}>
+                    <Calendar className="h-3 w-3" />
+                    {overdue ? `Overdue (${format(due, 'MMM d, yyyy')})` : `Due ${format(due, 'MMM d, yyyy')}`}
+                  </span>
+                )
+              })()}
             </div>
 
             {/* Actions */}
@@ -237,6 +244,12 @@ export function TaskDetailModal({ task, open, onClose, onUpdated, userId }: Prop
                     <span className="text-cc-text-muted">Assignee</span>
                     <p className="text-cc-text-secondary">
                       {task.assigned_user?.full_name || 'Unassigned'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-cc-text-muted">Due Date</span>
+                    <p className="text-cc-text-secondary">
+                      {task.due_date ? format(new Date(task.due_date), 'MMM d, yyyy') : 'No due date'}
                     </p>
                   </div>
                   <div>

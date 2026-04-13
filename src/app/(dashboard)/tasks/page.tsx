@@ -14,7 +14,7 @@ import { executeWorkflows } from '@/lib/workflows'
 import { TASK_STATUSES, type Task, type TaskStatus, type User, type SubtaskCounts } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Plus, CheckSquare, Calendar } from 'lucide-react'
-import { format, isAfter, isBefore, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns'
+import { format, isAfter, isBefore, isToday, isTomorrow, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay } from 'date-fns'
 import type { DropResult } from '@hello-pangea/dnd'
 
 export default function TasksPage() {
@@ -66,7 +66,10 @@ export default function TasksPage() {
         const due = new Date(t.due_date)
         switch (filters.dueDateFilter) {
           case 'overdue':
-            if (!isBefore(due, now) || t.status === 'done') return false
+            if (!isBefore(due, startOfDay(now)) || t.status === 'done') return false
+            break
+          case 'today':
+            if (!isToday(due)) return false
             break
           case 'this_week': {
             const ws = startOfWeek(now, { weekStartsOn: 1 })
@@ -156,16 +159,23 @@ export default function TasksPage() {
               <p className="text-sm font-medium text-cc-text-primary mb-1.5">{task.title}</p>
               <div className="flex items-center gap-2 flex-wrap">
                 <PriorityBadge priority={task.priority} />
-                {task.due_date && (
-                  <span className={`text-[10px] flex items-center gap-0.5 ${
-                    isBefore(new Date(task.due_date), new Date()) && task.status !== 'done'
-                      ? 'text-cc-text-primary font-semibold'
-                      : 'text-cc-text-muted'
-                  }`}>
-                    <Calendar className="h-3 w-3" />
-                    {format(new Date(task.due_date), 'MMM d')}
-                  </span>
-                )}
+                {task.due_date && (() => {
+                  const due = new Date(task.due_date)
+                  const overdue = isBefore(due, startOfDay(new Date())) && task.status !== 'done'
+                  const soon = !overdue && (isToday(due) || isTomorrow(due)) && task.status !== 'done'
+                  return (
+                    <span className={`text-[10px] flex items-center gap-0.5 font-medium ${
+                      overdue
+                        ? 'text-red-500'
+                        : soon
+                        ? 'text-amber-500'
+                        : 'text-cc-text-muted'
+                    }`}>
+                      <Calendar className="h-3 w-3" />
+                      {overdue ? `Overdue (${format(due, 'MMM d')})` : `Due ${format(due, 'MMM d')}`}
+                    </span>
+                  )
+                })()}
               </div>
               {counts && counts.total > 0 && (
                 <div className="mt-2 flex items-center gap-2">
