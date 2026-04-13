@@ -6,16 +6,41 @@ import { MetricCard } from '@/components/ui/metric-card'
 import { GlassCard } from '@/components/ui/glass-card'
 import { getContacts, getDeals, getRecentActivities } from '@/lib/queries'
 import { PROPERTY_STAGES, type Contact, type Deal, type Activity } from '@/lib/types'
-import { DollarSign, TrendingUp, Users, CheckCircle, MessageSquare, Pencil, ArrowRight, Phone, Video, Plus } from 'lucide-react'
+import { DollarSign, TrendingUp, Users, CheckCircle, MessageSquare, Pencil, ArrowRightLeft, Phone, Video, Plus, PlusCircle, Mail, FileText } from 'lucide-react'
 import { formatLabel } from '@/lib/utils'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, isAfter, startOfWeek, startOfMonth, startOfYear, subMonths } from 'date-fns'
 import { useTheme } from '@/components/theme-provider'
+
+type DatePreset = 'this_week' | 'this_month' | 'this_quarter' | 'this_year' | 'all_time'
+
+const DATE_PRESETS: { key: DatePreset; label: string }[] = [
+  { key: 'all_time', label: 'All Time' },
+  { key: 'this_week', label: 'This Week' },
+  { key: 'this_month', label: 'This Month' },
+  { key: 'this_quarter', label: 'This Quarter' },
+  { key: 'this_year', label: 'This Year' },
+]
+
+function getPresetStartDate(preset: DatePreset): Date | null {
+  const now = new Date()
+  switch (preset) {
+    case 'this_week': return startOfWeek(now)
+    case 'this_month': return startOfMonth(now)
+    case 'this_quarter': {
+      const q = Math.floor(now.getMonth() / 3) * 3
+      return new Date(now.getFullYear(), q, 1)
+    }
+    case 'this_year': return startOfYear(now)
+    case 'all_time': return null
+  }
+}
 
 export default function DashboardPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [deals, setDeals] = useState<Deal[]>([])
   const [activities, setActivities] = useState<Activity[]>([])
+  const [datePreset, setDatePreset] = useState<DatePreset>('all_time')
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -24,12 +49,38 @@ export default function DashboardPage() {
     getRecentActivities(10).then(setActivities)
   }, [])
 
-  const pipelineValue = deals
+  const rangeStart = getPresetStartDate(datePreset)
+
+  const inRange = (dateStr: string) => {
+    if (!rangeStart) return true
+    return isAfter(new Date(dateStr), rangeStart)
+  }
+
+  const filteredDeals = deals.filter(d => inRange(d.created_at))
+  const filteredContacts = contacts.filter(c => inRange(c.created_at))
+  const filteredActivities = activities.filter(a => inRange(a.created_at))
+
+  const pipelineValue = filteredDeals
     .filter(d => d.stage !== 'fees_collected')
     .reduce((sum, d) => sum + (d.deal_value || 0), 0)
-  const activeDeals = deals.filter(d => d.stage !== 'fees_collected').length
-  const feesEarned = deals
+  const activeDeals = filteredDeals.filter(d => d.stage !== 'fees_collected').length
+  const feesEarned = filteredDeals
     .filter(d => d.stage === 'fees_collected')
+    .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
+
+  // Fee summary calculations
+  const pendingFees = filteredDeals
+    .filter(d => d.stage !== 'fees_collected')
+    .reduce((sum, d) => {
+      if (!d.deal_value || !d.fee_percentage) return sum
+      return sum + (d.deal_value * d.fee_percentage) / 100
+    }, 0)
+  const collectedFees = filteredDeals
+    .filter(d => d.stage === 'fees_collected')
+    .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
+  const thisMonthStart = startOfMonth(new Date())
+  const thisMonthFees = deals
+    .filter(d => d.stage === 'fees_collected' && isAfter(new Date(d.updated_at), thisMonthStart))
     .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
 
   const stageAbbreviations: Record<string, string> = {
@@ -42,17 +93,18 @@ export default function DashboardPage() {
   }
 
   const getActivityIcon = (action: string) => {
-    if (action.includes('note')) return Pencil
-    if (action.includes('stage') || action.includes('status')) return ArrowRight
+    if (action.includes('note')) return FileText
+    if (action.includes('stage') || action.includes('status')) return ArrowRightLeft
     if (action.includes('call')) return Phone
     if (action.includes('meeting')) return Video
-    if (action.includes('created') || action === 'created') return Plus
+    if (action.includes('created') || action === 'created') return PlusCircle
+    if (action.includes('email')) return Mail
     return MessageSquare
   }
 
   const chartData = PROPERTY_STAGES.map(stage => ({
     name: stageAbbreviations[stage.key] || stage.label,
-    count: contacts.filter(c => c.stage === stage.key).length,
+    count: (datePreset === 'all_time' ? contacts : filteredContacts).filter(c => c.stage === stage.key).length,
   }))
 
   const formatCurrency = (n: number) => {
@@ -75,14 +127,51 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <PageHeader title="Dashboard" description="Overview of your pipeline and activity" />
+      <PageHeader title="Dashboard" description="Overview of your pipeline and activity">
+        <div className="flex gap-1.5">
+          {DATE_PRESETS.map(p => (
+            <button
+              key={p.key}
+              onClick={() => setDatePreset(p.key)}
+              className={`px-3 py-1.5 text-xs border rounded-md transition-colors whitespace-nowrap ${
+                datePreset === p.key
+                  ? 'bg-cc-accent text-white border-cc-accent'
+                  : 'bg-transparent text-cc-text-secondary border-cc-border hover:border-cc-btn-border hover:text-cc-text-primary'
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10" data-tour="dashboard-metrics">
-        <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} index={0} />
-        <MetricCard label="Active Deals" value={activeDeals} icon={TrendingUp} index={1} />
-        <MetricCard label="Contacts" value={contacts.length} icon={Users} index={2} />
-        <MetricCard label="Fees Earned" value={formatCurrency(feesEarned)} icon={CheckCircle} index={3} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6" data-tour="dashboard-metrics">
+        <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} index={0} href="/pipeline" />
+        <MetricCard label="Active Deals" value={activeDeals} icon={TrendingUp} index={1} href="/deals" />
+        <MetricCard label="Contacts" value={filteredContacts.length} icon={Users} index={2} href="/contacts" />
+        <MetricCard label="Fees Earned" value={formatCurrency(feesEarned)} icon={CheckCircle} index={3} href="/deals" />
       </div>
+
+      {/* Fee Summary Row */}
+      <GlassCard hover={false} className="p-4 mb-10">
+        <div className="flex items-center justify-between">
+          <h3 className="text-[11px] font-semibold text-cc-text-muted uppercase tracking-[0.04em]">Fee Summary</h3>
+        </div>
+        <div className="grid grid-cols-3 gap-6 mt-3">
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-cc-text-muted">Pending Fees</p>
+            <p className="text-xl font-bold text-cc-text-primary mt-1">{formatCurrency(pendingFees)}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-cc-text-muted">Collected Fees</p>
+            <p className="text-xl font-bold text-cc-text-primary mt-1">{formatCurrency(collectedFees)}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-medium uppercase tracking-[0.08em] text-cc-text-muted">This Month</p>
+            <p className="text-xl font-bold text-cc-text-primary mt-1">{formatCurrency(thisMonthFees)}</p>
+          </div>
+        </div>
+      </GlassCard>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pipeline chart */}
@@ -131,10 +220,10 @@ export default function DashboardPage() {
         <GlassCard hover={false} className="p-6">
           <h3 className="text-[13px] font-semibold text-cc-text-primary mb-5 uppercase tracking-[0.04em]">Recent Activity</h3>
           <div className="space-y-0">
-            {activities.length === 0 ? (
+            {filteredActivities.length === 0 ? (
               <p className="text-xs text-cc-text-muted text-center py-8">No recent activity</p>
             ) : (
-              activities.map(a => {
+              filteredActivities.map(a => {
                 const Icon = getActivityIcon(a.action)
                 return (
                   <div key={a.id} className="flex gap-3 py-3 border-b border-cc-border last:border-0">

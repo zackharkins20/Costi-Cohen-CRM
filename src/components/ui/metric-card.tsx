@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { GlassCard } from './glass-card'
 import type { LucideIcon } from 'lucide-react'
 
@@ -14,11 +15,12 @@ interface MetricCardProps {
   icon: LucideIcon
   change?: string
   index?: number
+  href?: string
 }
 
-export function MetricCard({ label, value, icon: Icon, change, index = 0 }: MetricCardProps) {
-  return (
-    <GlassCard hover={false} className={`p-6 ${accentBorders[index % accentBorders.length]}`}>
+export function MetricCard({ label, value, icon: Icon, change, index = 0, href }: MetricCardProps) {
+  const card = (
+    <GlassCard hover={false} className={`p-6 ${accentBorders[index % accentBorders.length]} ${href ? 'cursor-pointer hover:scale-[1.02] hover:shadow-lg transition-all duration-200' : ''}`}>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-cc-text-secondary">
@@ -35,4 +37,10 @@ export function MetricCard({ label, value, icon: Icon, change, index = 0 }: Metr
       </div>
     </GlassCard>
   )
+
+  if (href) {
+    return <Link href={href}>{card}</Link>
+  }
+
+  return card
 }

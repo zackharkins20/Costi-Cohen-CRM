@@ -279,6 +279,27 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId, onNavi
                   </div>
                 ) : (
                   <>
+                    {/* Fee Amount (calculated) */}
+                    <div className="mb-3 pb-3 border-b border-cc-border">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <span className="text-[11px] uppercase tracking-[0.05em] text-cc-text-muted block mb-1">Fee Amount</span>
+                          <span className="text-sm text-cc-text-primary font-semibold">{formatCurrency(deal.fee_amount)}</span>
+                        </div>
+                        <div>
+                          <span className="text-[11px] uppercase tracking-[0.05em] text-cc-text-muted block mb-1">Fee Status</span>
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${
+                            deal.stage === 'fees_collected'
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                              : deal.stage === 'exchange'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+                                : 'bg-cc-surface-2 text-cc-text-secondary'
+                          }`}>
+                            {deal.stage === 'fees_collected' ? 'Paid' : deal.stage === 'exchange' ? 'Invoiced' : 'Pending'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                     <div className="grid grid-cols-2 gap-4 mb-3">
                       <div>
                         <span className="text-[11px] uppercase tracking-[0.05em] text-cc-text-muted block mb-1">Purchase Price</span>
