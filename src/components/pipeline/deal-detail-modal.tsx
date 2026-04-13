@@ -17,6 +17,7 @@ import { Separator } from '@/components/ui/separator'
 import { StageBadge } from '@/components/ui/status-badge'
 import { ActivityTimeline } from '@/components/activity/activity-timeline'
 import { updateDeal, updateDealPropertyDetails, deleteDeal, logActivity, getDocumentLinks, createDocumentLink, deleteDocumentLink } from '@/lib/queries'
+import { notifyAllUsers } from '@/lib/notifications'
 import { PROPERTY_STAGES, type PropertyStage, type Deal, type DocumentLink } from '@/lib/types'
 import { Trash2, Link as LinkIcon, Plus, ExternalLink } from 'lucide-react'
 import {
@@ -81,6 +82,13 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
         action: 'stage_change',
         description: `Stage changed from ${deal.stage} to ${form.stage}`,
         created_by: userId,
+      })
+      const stageLabel = PROPERTY_STAGES.find(s => s.key === form.stage)?.label ?? form.stage
+      await notifyAllUsers({
+        title: 'Deal Stage Changed',
+        message: `"${deal.title}" moved to ${stageLabel}`,
+        entity_type: 'deal',
+        entity_id: deal.id,
       })
     }
     setEditing(false)

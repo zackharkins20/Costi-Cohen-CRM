@@ -96,12 +96,18 @@ export interface Task {
   deal_id: string | null
   assigned_to: string | null
   due_date: string | null
+  parent_task_id: string | null
   created_by: string
   created_at: string
   updated_at: string
   // Joined
   deal?: Deal | null
   assigned_user?: User | null
+}
+
+export interface SubtaskCounts {
+  total: number
+  done: number
 }
 
 export interface Activity {

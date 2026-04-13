@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { createDeal, getContacts, logActivity } from '@/lib/queries'
+import { notifyAllUsers } from '@/lib/notifications'
 import { PROPERTY_STAGES, type PropertyStage, type Deal, type Contact } from '@/lib/types'
 
 interface Props {
@@ -65,6 +66,12 @@ export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
         action: 'note',
         description: `Deal "${deal.title}" created`,
         created_by: userId,
+      })
+      await notifyAllUsers({
+        title: 'New Deal Created',
+        message: `Deal "${deal.title}" has been created`,
+        entity_type: 'deal',
+        entity_id: deal.id,
       })
       onCreated(deal)
     }

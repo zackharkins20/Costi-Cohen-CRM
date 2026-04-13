@@ -14,18 +14,22 @@ interface KanbanBoardProps<T> {
   onDragEnd: (result: DropResult) => void
   renderCard: (item: T, index: number) => React.ReactNode
   getItemId: (item: T) => string
+  columnHeaderExtra?: (column: KanbanColumn<T>) => React.ReactNode
 }
 
-export function KanbanBoard<T>({ columns, onDragEnd, renderCard, getItemId }: KanbanBoardProps<T>) {
+export function KanbanBoard<T>({ columns, onDragEnd, renderCard, getItemId, columnHeaderExtra }: KanbanBoardProps<T>) {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex gap-4 overflow-x-auto pb-4">
         {columns.map(column => (
           <div key={column.id} className="flex-shrink-0 w-72">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[11px] font-medium text-cc-text-secondary uppercase tracking-[0.08em]">
-                {column.title}
-              </h3>
+              <div className="flex items-center gap-1.5">
+                {columnHeaderExtra && columnHeaderExtra(column)}
+                <h3 className="text-[11px] font-medium text-cc-text-secondary uppercase tracking-[0.08em]">
+                  {column.title}
+                </h3>
+              </div>
               <span className="text-[10px] px-1.5 py-0.5 bg-cc-surface-2 border border-cc-border text-cc-text-muted">
                 {column.items.length}
               </span>

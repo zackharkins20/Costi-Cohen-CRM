@@ -7,6 +7,7 @@ import { KanbanBoard } from '@/components/pipeline/kanban-board'
 import { ContactCard } from '@/components/pipeline/contact-card'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { getContacts, updateContact, getCurrentUser, logActivity } from '@/lib/queries'
+import { notifyAllUsers } from '@/lib/notifications'
 import { PROPERTY_STAGES, type Contact, type PropertyStage } from '@/lib/types'
 import { Users, DollarSign, TrendingUp } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -56,6 +57,13 @@ export default function PipelinePage() {
       action: 'stage_change',
       description: `Stage changed from ${contact.stage} to ${newStage}`,
       created_by: userId,
+    })
+    const stageLabel = PROPERTY_STAGES.find(s => s.key === newStage)?.label ?? newStage
+    await notifyAllUsers({
+      title: 'Pipeline Stage Changed',
+      message: `${contact.name} moved to ${stageLabel}`,
+      entity_type: 'contact',
+      entity_id: contactId,
     })
   }
 

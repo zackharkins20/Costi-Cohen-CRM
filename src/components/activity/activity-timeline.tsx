@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getActivities, logActivity } from '@/lib/queries'
+import { notifyAllUsers } from '@/lib/notifications'
 import type { Activity } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 import { MessageSquare, Phone, Calendar, Mail, ArrowRight, Plus } from 'lucide-react'
@@ -40,6 +41,12 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
       action: actionType,
       description: noteText,
       created_by: userId,
+    })
+    await notifyAllUsers({
+      title: 'Activity Logged',
+      message: `${actionType.replace('_', ' ')} on ${entityType}: ${noteText.slice(0, 80)}`,
+      entity_type: entityType,
+      entity_id: entityId,
     })
     setNoteText('')
     setShowForm(false)

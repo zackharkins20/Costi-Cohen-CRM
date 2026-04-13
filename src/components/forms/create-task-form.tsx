@@ -13,8 +13,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { createTask, getDeals } from '@/lib/queries'
-import type { Task, Deal, TaskPriority, TaskType, TaskStatus } from '@/lib/types'
+import { createTask, getDeals, getUsers } from '@/lib/queries'
+import { createNotification } from '@/lib/notifications'
+import type { Task, Deal, User, TaskPriority, TaskType, TaskStatus } from '@/lib/types'
 
 interface Props {
   open: boolean
@@ -25,6 +26,7 @@ interface Props {
 
 export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
   const [deals, setDeals] = useState<Deal[]>([])
+  const [allUsers, setAllUsers] = useState<User[]>([])
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -33,12 +35,17 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
     type: 'general' as TaskType,
     deal_id: '',
     due_date: '',
+    assigned_to: '',
   })
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (open) getDeals().then(setDeals)
-  }, [open])
+    if (open) {
+      getDeals().then(setDeals)
+      getUsers().then(setAllUsers)
+      setForm(prev => ({ ...prev, assigned_to: userId || '' }))
+    }
+  }, [open, userId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,12 +58,24 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
       priority: form.priority,
       type: form.type,
       deal_id: form.deal_id || null,
-      assigned_to: userId || null,
+      assigned_to: form.assigned_to || null,
       due_date: form.due_date || null,
+      parent_task_id: null,
       created_by: userId || '',
     })
-    if (task) onCreated(task)
-    setForm({ title: '', description: '', status: 'todo', priority: 'medium', type: 'general', deal_id: '', due_date: '' })
+    if (task) {
+      if (task.assigned_to) {
+        await createNotification({
+          title: 'Task Assigned to You',
+          message: `You have been assigned "${task.title}"`,
+          user_id: task.assigned_to,
+          entity_type: 'task',
+          entity_id: task.id,
+        })
+      }
+      onCreated(task)
+    }
+    setForm({ title: '', description: '', status: 'todo', priority: 'medium', type: 'general', deal_id: '', due_date: '', assigned_to: '' })
     setLoading(false)
     onClose()
   }
@@ -109,9 +128,22 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
               </Select>
             </div>
           )}
-          <div>
-            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Due Date</Label>
-            <Input type="date" value={form.due_date} onChange={e => setForm({ ...form, due_date: e.target.value })} className="mt-1.5" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Due Date</Label>
+              <Input type="date" value={form.due_date} onChange={e => setForm({ ...form, due_date: e.target.value })} className="mt-1.5" />
+            </div>
+            <div>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Assignee</Label>
+              <Select value={form.assigned_to} onValueChange={v => setForm({ ...form, assigned_to: v ?? '' })}>
+                <SelectTrigger className="mt-1.5"><SelectValue placeholder="Select assignee" /></SelectTrigger>
+                <SelectContent>
+                  {allUsers.map(u => (
+                    <SelectItem key={u.id} value={u.id}>{u.full_name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <div>
             <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Description</Label>

@@ -1,5 +1,5 @@
 import { createClient } from './supabase'
-import type { Contact, Deal, Task, Activity, DocumentLink, Notification, User, DealPropertyDetails } from './types'
+import type { Contact, Deal, Task, Activity, DocumentLink, Notification, User, DealPropertyDetails, SubtaskCounts } from './types'
 
 function getClient() { return createClient() }
 
@@ -61,6 +61,12 @@ export async function updateContact(id: string, updates: Partial<Contact>): Prom
 }
 
 export async function deleteContact(id: string): Promise<void> {
+  // Unlink deals
+  await getClient().from('deals').update({ contact_id: null }).eq('contact_id', id)
+  // Clean up related activities and documents
+  await getClient().from('activities').delete().eq('entity_type', 'contact').eq('entity_id', id)
+  await getClient().from('document_links').delete().eq('entity_type', 'contact').eq('entity_id', id)
+  // Delete the contact
   await getClient().from('contacts').delete().eq('id', id)
 }
 
@@ -121,6 +127,7 @@ export async function getTasks(): Promise<Task[]> {
   const { data } = await getClient()
     .from('tasks')
     .select('*, deal:deals(id, title), assigned_user:users!tasks_assigned_to_fkey(*)')
+    .is('parent_task_id', null)
     .order('created_at', { ascending: false })
   return data ?? []
 }
@@ -144,6 +151,31 @@ export async function updateTask(id: string, updates: Partial<Task>): Promise<vo
 
 export async function deleteTask(id: string): Promise<void> {
   await getClient().from('tasks').delete().eq('id', id)
+}
+
+export async function getSubtasks(parentId: string): Promise<Task[]> {
+  const { data } = await getClient()
+    .from('tasks')
+    .select('*, deal:deals(id, title), assigned_user:users!tasks_assigned_to_fkey(*)')
+    .eq('parent_task_id', parentId)
+    .order('created_at', { ascending: true })
+  return data ?? []
+}
+
+export async function getSubtaskCounts(parentIds: string[]): Promise<Record<string, SubtaskCounts>> {
+  if (parentIds.length === 0) return {}
+  const { data } = await getClient()
+    .from('tasks')
+    .select('parent_task_id, status')
+    .in('parent_task_id', parentIds)
+  const counts: Record<string, SubtaskCounts> = {}
+  for (const row of data ?? []) {
+    const pid = row.parent_task_id as string
+    if (!counts[pid]) counts[pid] = { total: 0, done: 0 }
+    counts[pid].total++
+    if (row.status === 'done') counts[pid].done++
+  }
+  return counts
 }
 
 // ── Activities ──
