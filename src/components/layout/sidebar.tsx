@@ -252,11 +252,11 @@ export function Sidebar() {
           ) : (
             <>
               <Image
-                src="/logo.jpg"
+                src="/logo-text.jpg"
                 alt="Costi Cohen"
-                width={160}
-                height={40}
-                className="h-5 w-auto"
+                width={200}
+                height={25}
+                className="w-full h-auto"
                 style={{ filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'none' }}
                 priority
               />

@@ -75,11 +75,11 @@ export default function LoginPage() {
           variants={fadeUp}
         >
           <Image
-            src="/logo.jpg"
+            src="/logo-text.jpg"
             alt="Costi Cohen"
-            width={180}
-            height={45}
-            className="h-7 w-auto"
+            width={200}
+            height={25}
+            className="w-[200px] h-auto"
             style={{ filter: 'brightness(0) invert(1)' }}
             priority
           />
