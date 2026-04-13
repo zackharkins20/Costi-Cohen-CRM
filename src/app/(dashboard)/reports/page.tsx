@@ -41,6 +41,7 @@ import {
 } from 'recharts'
 import { format, startOfWeek, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
 import { formatDistanceToNow } from 'date-fns'
+import { formatLabel } from '@/lib/utils'
 
 type ReportTab = 'pipeline' | 'revenue' | 'activity' | 'contacts'
 type DatePreset = 'week' | 'month' | 'quarter' | 'year' | 'all' | 'custom'
@@ -168,7 +169,7 @@ export default function ReportsPage() {
       counts[a.action] = (counts[a.action] || 0) + 1
     })
     return Object.entries(counts)
-      .map(([name, count]) => ({ name, count }))
+      .map(([name, count]) => ({ name: formatLabel(name), count }))
       .sort((a, b) => b.count - a.count)
   }, [activities])
 
@@ -482,7 +483,7 @@ export default function ReportsPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  downloadCSV('recent-activities.csv', ['Action', 'Description', 'Entity Type', 'Date'], activities.slice(0, 20).map(a => [a.action, a.description, a.entity_type, format(new Date(a.created_at), 'yyyy-MM-dd HH:mm')]))
+                  downloadCSV('recent-activities.csv', ['Action', 'Description', 'Entity Type', 'Date'], activities.slice(0, 20).map(a => [formatLabel(a.action), a.description, a.entity_type, format(new Date(a.created_at), 'yyyy-MM-dd HH:mm')]))
                 }}
               >
                 <Download className="h-3.5 w-3.5 mr-1.5" /> CSV
@@ -500,7 +501,7 @@ export default function ReportsPage() {
               <TableBody>
                 {activities.slice(0, 20).map(a => (
                   <TableRow key={a.id} className="border-cc-border">
-                    <TableCell className="text-cc-text-primary text-sm capitalize">{a.action.replace(/_/g, ' ')}</TableCell>
+                    <TableCell className="text-cc-text-primary text-sm">{formatLabel(a.action)}</TableCell>
                     <TableCell className="text-cc-text-secondary text-xs max-w-xs truncate">{a.description}</TableCell>
                     <TableCell className="text-cc-text-secondary text-xs capitalize">{a.entity_type}</TableCell>
                     <TableCell className="text-cc-text-muted text-xs">{formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}</TableCell>

@@ -5,6 +5,7 @@ import { getActivities, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
 import type { Activity } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
+import { formatLabel } from '@/lib/utils'
 import { MessageSquare, Phone, Calendar, Mail, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -50,7 +51,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
     })
     await notifyAllUsers({
       title: 'Activity Logged',
-      message: `${actionType.replace('_', ' ')} on ${entityType}: ${noteText.slice(0, 80)}`,
+      message: `${formatLabel(actionType)} on ${entityType}: ${noteText.slice(0, 80)}`,
       entity_type: entityType,
       entity_id: entityId,
     })
@@ -120,7 +121,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
                     {activity.user?.full_name && (
                       <span className="text-xs font-medium text-cc-text-primary">{activity.user.full_name}</span>
                     )}
-                    <span className="text-[10px] text-cc-text-muted capitalize">{activity.action.replace('_', ' ')}</span>
+                    <span className="text-[10px] text-cc-text-muted">{formatLabel(activity.action)}</span>
                   </div>
                   <p className="text-sm text-cc-text-secondary line-clamp-2">{activity.description}</p>
                   <p className="text-[10px] text-cc-text-muted mt-0.5">
