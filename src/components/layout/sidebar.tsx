@@ -11,12 +11,15 @@ import {
   FileText,
   CheckSquare,
   Settings,
+  Shield,
   Menu,
   X,
   LogOut,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { getCurrentUser } from '@/lib/queries'
 
 const navigation = [
   { label: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -27,10 +30,21 @@ const navigation = [
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
 
+const adminNavigation = [
+  { label: 'Team', href: '/team', icon: Shield },
+]
+
 export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    getCurrentUser().then(user => {
+      if (user?.role === 'Admin') setIsAdmin(true)
+    })
+  }, [])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -76,6 +90,32 @@ export function Sidebar() {
             </Link>
           )
         })}
+        {isAdmin && (
+          <>
+            <div className="pt-3 pb-1 px-3">
+              <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--cc-text-muted)] font-medium">Admin</p>
+            </div>
+            {adminNavigation.map((item) => {
+              const active = isActive(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                    active
+                      ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-l-2 border-[var(--cc-gold)]'
+                      : 'text-[var(--cc-text-tertiary)] hover:bg-[var(--cc-surface-2)] hover:text-[var(--cc-text-primary)]'
+                  )}
+                >
+                  <item.icon className="h-4 w-4 flex-shrink-0" />
+                  {item.label}
+                </Link>
+              )
+            })}
+          </>
+        )}
       </nav>
 
       {/* Sign out */}
