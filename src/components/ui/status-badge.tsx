@@ -1,36 +1,36 @@
 import { cn } from '@/lib/utils'
 import { PROPERTY_STAGES, TASK_STATUSES, type PropertyStage, type TaskStatus, type TaskPriority } from '@/lib/types'
 
-/* Monochrome badges — no color coding */
+/* Muted, desaturated badge tones — subtle differentiation */
 const stageColors: Record<PropertyStage, string> = {
-  lead: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
-  initial_call: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
-  property_search: 'bg-transparent text-cc-text-secondary border-cc-text-muted',
-  due_diligence: 'bg-transparent text-cc-text-secondary border-cc-text-muted',
-  exchange: 'bg-transparent text-cc-text-primary border-cc-btn-border',
-  fees_collected: 'bg-transparent text-cc-text-primary border-cc-btn-border',
+  lead: 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
+  initial_call: 'bg-[var(--cc-status-pending-bg)] text-[var(--cc-status-pending-text)] border-[var(--cc-status-pending-border)]',
+  property_search: 'bg-[var(--cc-status-active-bg)] text-[var(--cc-status-active-text)] border-[var(--cc-status-active-border)]',
+  due_diligence: 'bg-[var(--cc-status-active-bg)] text-[var(--cc-status-active-text)] border-[var(--cc-status-active-border)]',
+  exchange: 'bg-[var(--cc-status-pending-bg)] text-[var(--cc-status-pending-text)] border-[var(--cc-status-pending-border)]',
+  fees_collected: 'bg-[var(--cc-status-success-bg)] text-[var(--cc-status-success-text)] border-[var(--cc-status-success-border)]',
 }
 
 const taskStatusColors: Record<TaskStatus, string> = {
-  todo: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
-  in_progress: 'bg-transparent text-cc-text-secondary border-cc-text-muted',
-  review: 'bg-transparent text-cc-text-primary border-cc-text-muted',
-  done: 'bg-transparent text-cc-text-primary border-cc-btn-border',
+  todo: 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
+  in_progress: 'bg-[var(--cc-status-active-bg)] text-[var(--cc-status-active-text)] border-[var(--cc-status-active-border)]',
+  review: 'bg-[var(--cc-status-pending-bg)] text-[var(--cc-status-pending-text)] border-[var(--cc-status-pending-border)]',
+  done: 'bg-[var(--cc-status-success-bg)] text-[var(--cc-status-success-text)] border-[var(--cc-status-success-border)]',
 }
 
 const priorityColors: Record<TaskPriority, string> = {
-  low: 'bg-transparent text-cc-text-muted border-cc-border-hover',
-  medium: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
-  high: 'bg-transparent text-cc-text-primary border-cc-text-muted',
-  urgent: 'bg-transparent text-cc-text-primary border-cc-btn-border',
+  low: 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
+  medium: 'bg-[var(--cc-status-pending-bg)] text-[var(--cc-status-pending-text)] border-[var(--cc-status-pending-border)]',
+  high: 'bg-[var(--cc-status-active-bg)] text-[var(--cc-status-active-text)] border-[var(--cc-status-active-border)]',
+  urgent: 'bg-[var(--cc-status-warning-bg)] text-[var(--cc-status-warning-text)] border-[var(--cc-status-warning-border)]',
 }
 
 export function StageBadge({ stage, className }: { stage: PropertyStage; className?: string }) {
   const stageInfo = PROPERTY_STAGES.find(s => s.key === stage)
   return (
     <span className={cn(
-      'inline-flex items-center px-2.5 py-0.5 text-[11px] font-medium border uppercase tracking-[0.04em]',
-      stageColors[stage] || 'bg-transparent text-cc-text-secondary border-cc-border-hover',
+      'inline-flex items-center rounded-sm px-2.5 py-0.5 text-[11px] font-medium border uppercase tracking-[0.04em]',
+      stageColors[stage] || 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
       className
     )}>
       {stageInfo?.label || stage}
@@ -42,7 +42,7 @@ export function TaskStatusBadge({ status, className }: { status: TaskStatus; cla
   const statusInfo = TASK_STATUSES.find(s => s.key === status)
   return (
     <span className={cn(
-      'inline-flex items-center px-2.5 py-0.5 text-[11px] font-medium border uppercase tracking-[0.04em]',
+      'inline-flex items-center rounded-sm px-2.5 py-0.5 text-[11px] font-medium border uppercase tracking-[0.04em]',
       taskStatusColors[status],
       className
     )}>
@@ -54,7 +54,7 @@ export function TaskStatusBadge({ status, className }: { status: TaskStatus; cla
 export function PriorityBadge({ priority, className }: { priority: TaskPriority; className?: string }) {
   return (
     <span className={cn(
-      'inline-flex items-center px-2.5 py-0.5 text-[11px] font-medium border capitalize uppercase tracking-[0.04em]',
+      'inline-flex items-center rounded-sm px-2.5 py-0.5 text-[11px] font-medium border capitalize uppercase tracking-[0.04em]',
       priorityColors[priority],
       className
     )}>

@@ -94,9 +94,9 @@ export default function PipelinePage() {
       </PageHeader>
 
       <div className="grid grid-cols-3 gap-5 mb-8">
-        <MetricCard label="Total Contacts" value={contacts.length} icon={Users} />
-        <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} />
-        <MetricCard label="Est. Fees" value={formatCurrency(estFees)} icon={TrendingUp} />
+        <MetricCard label="Total Contacts" value={contacts.length} icon={Users} index={0} />
+        <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} index={1} />
+        <MetricCard label="Est. Fees" value={formatCurrency(estFees)} icon={TrendingUp} index={2} />
       </div>
 
       <KanbanBoard

@@ -40,16 +40,14 @@ export default function DashboardPage() {
     return `$${n}`
   }
 
-  /* Theme-aware chart palette */
-  const isDark = theme === 'dark'
-  const chartColors = isDark
-    ? ['#FFFFFF', '#A0A7AB', '#555555', '#FFFFFF', '#A0A7AB', '#555555']
-    : ['#000000', '#A0A7AB', '#999999', '#000000', '#A0A7AB', '#999999']
+  /* Theme-aware chart palette — richer tones */
+  const chartColors = ['#1A1F36', '#4A5568', '#9BA3AF', '#1A1F36', '#4A5568', '#9BA3AF']
 
-  const chartAxisColor = '#A0A7AB'
+  const isDark = theme === 'dark'
+  const chartAxisColor = isDark ? '#555555' : '#9BA3AF'
   const chartGridColor = isDark ? '#222222' : '#DDDDDD'
-  const chartTooltipBg = isDark ? '#111111' : '#F7F7F7'
-  const chartTooltipBorder = isDark ? '#222222' : '#DDDDDD'
+  const chartTooltipBg = isDark ? '#111111' : '#FFFFFF'
+  const chartTooltipBorder = isDark ? '#222222' : '#E5E7EB'
   const chartTooltipText = isDark ? '#FFFFFF' : '#000000'
 
   return (
@@ -57,16 +55,16 @@ export default function DashboardPage() {
       <PageHeader title="Dashboard" description="Overview of your pipeline and activity" />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-        <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} />
-        <MetricCard label="Active Deals" value={activeDeals} icon={TrendingUp} />
-        <MetricCard label="Contacts" value={contacts.length} icon={Users} />
-        <MetricCard label="Fees Earned" value={formatCurrency(feesEarned)} icon={CheckCircle} />
+        <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} index={0} />
+        <MetricCard label="Active Deals" value={activeDeals} icon={TrendingUp} index={1} />
+        <MetricCard label="Contacts" value={contacts.length} icon={Users} index={2} />
+        <MetricCard label="Fees Earned" value={formatCurrency(feesEarned)} icon={CheckCircle} index={3} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pipeline chart */}
         <GlassCard hover={false} className="lg:col-span-2 p-6">
-          <h3 className="text-sm font-medium text-cc-text-primary mb-5">Pipeline by Stage</h3>
+          <h3 className="text-[13px] font-semibold text-cc-text-primary mb-5 uppercase tracking-[0.04em]">Pipeline by Stage</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
@@ -86,12 +84,13 @@ export default function DashboardPage() {
                   contentStyle={{
                     background: chartTooltipBg,
                     border: `1px solid ${chartTooltipBorder}`,
-                    borderRadius: '0',
+                    borderRadius: '8px',
                     color: chartTooltipText,
                     fontSize: '13px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                   }}
                 />
-                <Bar dataKey="count" radius={[0, 0, 0, 0]}>
+                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                   {chartData.map((_, i) => (
                     <Cell key={i} fill={chartColors[i % chartColors.length]} />
                   ))}
@@ -103,7 +102,7 @@ export default function DashboardPage() {
 
         {/* Recent activity */}
         <GlassCard hover={false} className="p-6">
-          <h3 className="text-sm font-medium text-cc-text-primary mb-5">Recent Activity</h3>
+          <h3 className="text-[13px] font-semibold text-cc-text-primary mb-5 uppercase tracking-[0.04em]">Recent Activity</h3>
           <div className="space-y-0">
             {activities.length === 0 ? (
               <p className="text-xs text-cc-text-muted text-center py-8">No recent activity</p>

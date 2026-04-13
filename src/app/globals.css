@@ -51,6 +51,7 @@
   --color-cc-bg: var(--cc-bg);
   --color-cc-surface: var(--cc-surface);
   --color-cc-surface-2: var(--cc-surface-2);
+  --color-cc-surface-3: var(--cc-surface-3);
   --color-cc-surface-offset: var(--cc-surface-offset);
   --color-cc-border: var(--cc-border);
   --color-cc-border-hover: var(--cc-border-hover);
@@ -64,6 +65,9 @@
   --color-cc-btn-hover-bg: var(--cc-btn-hover-bg);
   --color-cc-btn-hover-text: var(--cc-btn-hover-text);
   --color-cc-destructive: var(--cc-destructive);
+  --color-cc-accent: var(--cc-accent);
+  --color-cc-accent-light: var(--cc-accent-light);
+  --color-cc-accent-text: var(--cc-accent-text);
 }
 
 :root {
@@ -73,6 +77,7 @@
   --cc-bg: #000000;
   --cc-surface: #0a0a0a;
   --cc-surface-2: #111111;
+  --cc-surface-3: #161616;
   --cc-surface-offset: #1a1a1a;
   --cc-border: #222222;
   --cc-border-hover: #333333;
@@ -87,6 +92,28 @@
   --cc-btn-hover-bg: #FFFFFF;
   --cc-btn-hover-text: #000000;
   --cc-destructive: #888888;
+
+  /* Accent — dark navy-charcoal */
+  --cc-accent: #1A1F36;
+  --cc-accent-light: rgba(26, 31, 54, 0.5);
+  --cc-accent-text: #C8CCD8;
+
+  /* Status badge colors — dark mode */
+  --cc-status-active-bg: rgba(107, 124, 147, 0.15);
+  --cc-status-active-text: #8FA0B5;
+  --cc-status-active-border: rgba(107, 124, 147, 0.3);
+  --cc-status-success-bg: rgba(93, 122, 106, 0.15);
+  --cc-status-success-text: #7FA693;
+  --cc-status-success-border: rgba(93, 122, 106, 0.3);
+  --cc-status-warning-bg: rgba(138, 125, 117, 0.15);
+  --cc-status-warning-text: #A69689;
+  --cc-status-warning-border: rgba(138, 125, 117, 0.3);
+  --cc-status-pending-bg: rgba(122, 130, 142, 0.15);
+  --cc-status-pending-text: #95A0AE;
+  --cc-status-pending-border: rgba(122, 130, 142, 0.3);
+  --cc-status-neutral-bg: rgba(155, 163, 175, 0.12);
+  --cc-status-neutral-text: #7A828E;
+  --cc-status-neutral-border: rgba(155, 163, 175, 0.25);
 
   /* Map to shadcn variables */
   --background: #000000;
@@ -107,10 +134,10 @@
   --border: #222222;
   --input: #222222;
   --ring: #FFFFFF;
-  --chart-1: #FFFFFF;
-  --chart-2: #A0A7AB;
-  --chart-3: #555555;
-  --chart-4: #333333;
+  --chart-1: #1A1F36;
+  --chart-2: #4A5568;
+  --chart-3: #9BA3AF;
+  --chart-4: #D1D5DB;
   --chart-5: #222222;
   --sidebar: #0a0a0a;
   --sidebar-foreground: #A0A7AB;
@@ -129,20 +156,43 @@
   --cc-bg: #FFFFFF;
   --cc-surface: #F7F7F7;
   --cc-surface-2: #EEEEEE;
+  --cc-surface-3: #F2F2F2;
   --cc-surface-offset: #E8E8E8;
   --cc-border: #DDDDDD;
   --cc-border-hover: #CCCCCC;
   --cc-text-primary: #000000;
-  --cc-text-secondary: #A0A7AB;
+  --cc-text-secondary: #4A5568;
   --cc-text-tertiary: #A0A7AB;
   --cc-text-muted: #999999;
   --cc-text-faint: #BBBBBB;
   --cc-divider: #DDDDDD;
-  --cc-btn-border: #000000;
-  --cc-btn-text: #000000;
-  --cc-btn-hover-bg: #000000;
+  --cc-btn-border: #1A1F36;
+  --cc-btn-text: #1A1F36;
+  --cc-btn-hover-bg: #1A1F36;
   --cc-btn-hover-text: #FFFFFF;
   --cc-destructive: #888888;
+
+  /* Accent — dark navy */
+  --cc-accent: #1A1F36;
+  --cc-accent-light: rgba(26, 31, 54, 0.08);
+  --cc-accent-text: #1A1F36;
+
+  /* Status badge colors — light mode */
+  --cc-status-active-bg: rgba(107, 124, 147, 0.1);
+  --cc-status-active-text: #5A6B7E;
+  --cc-status-active-border: rgba(107, 124, 147, 0.25);
+  --cc-status-success-bg: rgba(93, 122, 106, 0.1);
+  --cc-status-success-text: #4A6B58;
+  --cc-status-success-border: rgba(93, 122, 106, 0.25);
+  --cc-status-warning-bg: rgba(138, 125, 117, 0.1);
+  --cc-status-warning-text: #6E5E54;
+  --cc-status-warning-border: rgba(138, 125, 117, 0.25);
+  --cc-status-pending-bg: rgba(122, 130, 142, 0.1);
+  --cc-status-pending-text: #5A6270;
+  --cc-status-pending-border: rgba(122, 130, 142, 0.25);
+  --cc-status-neutral-bg: rgba(155, 163, 175, 0.1);
+  --cc-status-neutral-text: #6B7280;
+  --cc-status-neutral-border: rgba(155, 163, 175, 0.2);
 
   /* Map to shadcn variables */
   --background: #FFFFFF;
@@ -151,31 +201,31 @@
   --card-foreground: #000000;
   --popover: #F7F7F7;
   --popover-foreground: #000000;
-  --primary: #000000;
+  --primary: #1A1F36;
   --primary-foreground: #FFFFFF;
   --secondary: rgba(0, 0, 0, 0.04);
   --secondary-foreground: #000000;
   --muted: rgba(0, 0, 0, 0.04);
-  --muted-foreground: #A0A7AB;
+  --muted-foreground: #4A5568;
   --accent: rgba(0, 0, 0, 0.04);
   --accent-foreground: #000000;
   --destructive: #888888;
   --border: #DDDDDD;
   --input: #DDDDDD;
-  --ring: #000000;
-  --chart-1: #000000;
-  --chart-2: #A0A7AB;
-  --chart-3: #999999;
-  --chart-4: #CCCCCC;
+  --ring: #1A1F36;
+  --chart-1: #1A1F36;
+  --chart-2: #4A5568;
+  --chart-3: #9BA3AF;
+  --chart-4: #D1D5DB;
   --chart-5: #DDDDDD;
   --sidebar: #F7F7F7;
-  --sidebar-foreground: #A0A7AB;
-  --sidebar-primary: #000000;
+  --sidebar-foreground: #4A5568;
+  --sidebar-primary: #1A1F36;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgba(0, 0, 0, 0.04);
-  --sidebar-accent-foreground: #000000;
+  --sidebar-accent: rgba(26, 31, 54, 0.06);
+  --sidebar-accent-foreground: #1A1F36;
   --sidebar-border: #DDDDDD;
-  --sidebar-ring: #000000;
+  --sidebar-ring: #1A1F36;
 }
 
 @layer base {
@@ -193,7 +243,7 @@
   }
 }
 
-/* Glass card utility — theme-aware */
+/* Glass card utility — theme-aware with shadow */
 .glass-card {
   background: var(--cc-surface);
   border: 1px solid var(--cc-border);
@@ -201,6 +251,20 @@
 }
 .glass-card:hover {
   border-color: var(--cc-border-hover);
+}
+[data-theme="light"] .glass-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+[data-theme="light"] .glass-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Alternating table rows */
+[data-slot="table-body"] tr:nth-child(even) {
+  background: var(--cc-surface);
+}
+[data-theme="light"] [data-slot="table-body"] tr:nth-child(even) {
+  background: #FAFAFA;
 }
 
 /* Scrollbar styling — theme-aware */

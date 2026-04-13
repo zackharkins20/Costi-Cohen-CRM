@@ -68,9 +68,9 @@ export default function DealsPage() {
       <div className="flex gap-1.5 mb-8 overflow-x-auto pb-1">
         <button
           onClick={() => setStageFilter('all')}
-          className={`px-3 py-1.5 text-xs border transition-colors whitespace-nowrap ${
+          className={`px-3 py-1.5 text-xs border rounded-md transition-colors whitespace-nowrap ${
             stageFilter === 'all'
-              ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+              ? 'bg-cc-accent text-white border-cc-accent'
               : 'bg-transparent text-cc-text-secondary border-cc-border-hover hover:border-cc-btn-border hover:text-cc-text-primary'
           }`}
         >
@@ -80,9 +80,9 @@ export default function DealsPage() {
           <button
             key={s.key}
             onClick={() => setStageFilter(s.key)}
-            className={`px-3 py-1.5 text-xs border transition-colors whitespace-nowrap ${
+            className={`px-3 py-1.5 text-xs border rounded-md transition-colors whitespace-nowrap ${
               stageFilter === s.key
-                ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                ? 'bg-cc-accent text-white border-cc-accent'
                 : 'bg-transparent text-cc-text-secondary border-cc-border-hover hover:border-cc-btn-border hover:text-cc-text-primary'
             }`}
           >
@@ -119,7 +119,7 @@ export default function DealsPage() {
                 )}
                 <StageBadge stage={deal.stage} />
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-sm font-semibold text-cc-text-primary">
+                  <span className="text-sm font-bold text-cc-text-primary tracking-[-0.01em]">
                     {formatCurrency(deal.deal_value)}
                   </span>
                   <div className="flex items-center gap-2">

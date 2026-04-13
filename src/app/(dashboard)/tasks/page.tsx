@@ -161,9 +161,9 @@ export default function TasksPage() {
               </div>
               {counts && counts.total > 0 && (
                 <div className="mt-2 flex items-center gap-2">
-                  <div className="h-1 flex-1 bg-cc-surface-2 rounded-full overflow-hidden">
+                  <div className="h-1.5 flex-1 bg-cc-surface-2 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-cc-text-primary rounded-full transition-all"
+                      className="h-full bg-cc-accent rounded-full transition-all"
                       style={{ width: `${Math.round((counts.done / counts.total) * 100)}%` }}
                     />
                   </div>
@@ -185,7 +185,7 @@ export default function TasksPage() {
           return (
             <span className="flex items-center gap-1">
               {col.isDone && (
-                <span className="w-2 h-2 rounded-full bg-cc-text-primary inline-block" />
+                <span className="w-2 h-2 rounded-full bg-[#4A5D52] inline-block" />
               )}
               {col.hasOverdue && !col.isDone && (
                 <span className="w-2 h-2 rounded-full bg-cc-text-muted inline-block" />

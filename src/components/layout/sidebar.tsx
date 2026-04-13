@@ -106,11 +106,11 @@ export function Sidebar() {
         onClick={() => setMobileOpen(false)}
         title={collapsed ? item.label : undefined}
         className={cn(
-          'group relative flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
+          'group relative flex items-center gap-3 px-3 py-2.5 text-sm font-normal rounded-md transition-all duration-150',
           collapsed && 'justify-center px-0',
           active
-            ? 'text-cc-text-primary font-medium border-l-2 border-cc-text-primary pl-[10px]'
-            : 'text-cc-text-secondary hover:text-cc-text-primary',
+            ? 'text-cc-text-primary font-medium bg-cc-accent-light border-l-2 border-cc-accent pl-[10px]'
+            : 'text-cc-text-secondary hover:text-cc-text-primary hover:bg-cc-surface-2',
           collapsed && active && 'pl-0 border-l-0',
         )}
       >
@@ -152,10 +152,10 @@ export function Sidebar() {
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
+                'flex items-center gap-3 px-3 py-2.5 text-sm font-normal rounded-md transition-all duration-150',
                 active
-                  ? 'text-cc-text-primary font-medium border-l-2 border-cc-text-primary pl-[10px]'
-                  : 'text-cc-text-secondary hover:text-cc-text-primary'
+                  ? 'text-cc-text-primary font-medium bg-cc-accent-light border-l-2 border-cc-accent pl-[10px]'
+                  : 'text-cc-text-secondary hover:text-cc-text-primary hover:bg-cc-surface-2'
               )}
             >
               <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -176,10 +176,10 @@ export function Sidebar() {
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
+                    'flex items-center gap-3 px-3 py-2.5 text-sm font-normal rounded-md transition-all duration-150',
                     active
-                      ? 'text-cc-text-primary font-medium border-l-2 border-cc-text-primary pl-[10px]'
-                      : 'text-cc-text-secondary hover:text-cc-text-primary'
+                      ? 'text-cc-text-primary font-medium bg-cc-accent-light border-l-2 border-cc-accent pl-[10px]'
+                      : 'text-cc-text-secondary hover:text-cc-text-primary hover:bg-cc-surface-2'
                   )}
                 >
                   <item.icon className="h-4 w-4 flex-shrink-0" />
