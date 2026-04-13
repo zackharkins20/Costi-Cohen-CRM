@@ -1,0 +1,48 @@
+import { GlassCard } from '@/components/ui/glass-card'
+import type { Contact } from '@/lib/types'
+
+interface ContactCardProps {
+  contact: Contact
+  onClick: () => void
+}
+
+export function ContactCard({ contact, onClick }: ContactCardProps) {
+  const initials = contact.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+
+  const formatBudget = (min: number | null, max: number | null) => {
+    if (!min && !max) return null
+    const fmt = (n: number) => n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(1)}M` : `$${(n / 1_000).toFixed(0)}K`
+    if (min && max) return `${fmt(min)} – ${fmt(max)}`
+    if (min) return `From ${fmt(min)}`
+    if (max) return `Up to ${fmt(max)}`
+    return null
+  }
+
+  const budget = formatBudget(contact.budget_min, contact.budget_max)
+
+  return (
+    <GlassCard className="p-3" onClick={onClick}>
+      <div className="flex items-start gap-2.5">
+        <div className="w-8 h-8 rounded-full bg-[var(--cc-accent-soft)] flex items-center justify-center text-[var(--cc-accent)] text-xs font-semibold flex-shrink-0">
+          {initials}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium text-[var(--cc-text-primary)] truncate">{contact.name}</p>
+          {contact.company && (
+            <p className="text-xs text-[var(--cc-text-tertiary)] truncate">{contact.company}</p>
+          )}
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+            {contact.asset_type && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--cc-glass-strong)] text-[var(--cc-text-secondary)]">
+                {contact.asset_type}
+              </span>
+            )}
+            {budget && (
+              <span className="text-[10px] text-[var(--cc-text-muted)]">{budget}</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </GlassCard>
+  )
+}
