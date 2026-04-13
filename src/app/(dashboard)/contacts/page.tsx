@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { CreateContactForm } from '@/components/forms/create-contact-form'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { DealDetailModal } from '@/components/pipeline/deal-detail-modal'
-import { getContacts, getCurrentUser } from '@/lib/queries'
+import { getContacts, getDeals, getCurrentUser } from '@/lib/queries'
 import { formatPhone } from '@/lib/utils'
 import { getDocumentCounts } from '@/lib/documents'
 import { PROPERTY_STAGES, BUYER_TYPES, type Contact, type Deal, type PropertyStage, type BuyerType } from '@/lib/types'
@@ -46,8 +46,23 @@ const STAGE_ORDER: Record<PropertyStage, number> = {
   marketing_only: 8,
 }
 
+const BUYER_TYPE_COLORS: Record<string, { light: string; text: string; dark: string; darkText: string; dot: string }> = {
+  investor: { light: '#DBEAFE', text: '#1E40AF', dark: '#1E3A5F', darkText: '#93C5FD', dot: '#3B82F6' },
+  developer: { light: '#EDE9FE', text: '#5B21B6', dark: '#4C1D95', darkText: '#C4B5FD', dot: '#8B5CF6' },
+  owner_occupier: { light: '#D1FAE5', text: '#065F46', dark: '#064E3B', darkText: '#6EE7B7', dot: '#10B981' },
+}
+
+function formatCurrency(n: number) {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`
+  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`
+  return `$${n.toLocaleString()}`
+}
+
+type BuyerSection = { key: string; label: string; contacts: Contact[] }
+
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
+  const [deals, setDeals] = useState<Deal[]>([])
   const [search, setSearch] = useState('')
   const [stageFilter, setStageFilter] = useState<PropertyStage | 'all'>('all')
   const [buyerTypeFilter, setBuyerTypeFilter] = useState<BuyerType | 'all'>('all')
@@ -66,6 +81,7 @@ export default function ContactsPage() {
       setContacts(c)
       getDocumentCounts('contact', c.map(ct => ct.id)).then(setDocCounts)
     })
+    getDeals().then(setDeals)
     getCurrentUser().then(u => { if (u) setUserId(u.id) })
   }
 
@@ -73,7 +89,6 @@ export default function ContactsPage() {
 
   const filtered = useMemo(() => {
     let result = contacts.filter(c => {
-      // Search
       if (search) {
         const q = search.toLowerCase()
         if (
@@ -82,16 +97,12 @@ export default function ContactsPage() {
           !(c.email || '').toLowerCase().includes(q)
         ) return false
       }
-      // Stage filter
       if (stageFilter !== 'all' && c.stage !== stageFilter) return false
-      // Buyer type filter
       if (buyerTypeFilter !== 'all' && c.buyer_type !== buyerTypeFilter) return false
-      // Type filter
       if (typeFilter !== 'all' && c.type !== typeFilter) return false
       return true
     })
 
-    // Sort
     result = [...result].sort((a, b) => {
       switch (sort) {
         case 'name_asc':
@@ -112,6 +123,88 @@ export default function ContactsPage() {
     return result
   }, [contacts, search, stageFilter, buyerTypeFilter, typeFilter, sort])
 
+  // Group filtered contacts by buyer type
+  const sections = useMemo<BuyerSection[]>(() => {
+    const groups: BuyerSection[] = BUYER_TYPES.map(bt => ({
+      key: bt.key,
+      label: bt.label + 's',
+      contacts: filtered.filter(c => c.buyer_type === bt.key),
+    }))
+    const uncategorised = filtered.filter(c => !c.buyer_type)
+    if (uncategorised.length > 0) {
+      groups.push({ key: 'uncategorised', label: 'Uncategorised', contacts: uncategorised })
+    }
+    return groups.filter(g => g.contacts.length > 0)
+  }, [filtered])
+
+  // Pipeline values by buyer type (using all contacts + deals, not filtered)
+  const buyerTypeStats = useMemo(() => {
+    const stats: Record<string, { count: number; pipelineValue: number }> = {}
+    for (const bt of BUYER_TYPES) {
+      const btContacts = contacts.filter(c => c.buyer_type === bt.key)
+      const contactIds = new Set(btContacts.map(c => c.id))
+      const btDeals = deals.filter(d => d.contact_id && contactIds.has(d.contact_id) && d.stage !== 'settled' && d.stage !== 'marketing_only')
+      stats[bt.key] = {
+        count: btContacts.length,
+        pipelineValue: btDeals.reduce((sum, d) => sum + (d.deal_value || 0), 0),
+      }
+    }
+    return stats
+  }, [contacts, deals])
+
+  const renderContactCard = (contact: Contact) => {
+    const initials = contact.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+    return (
+      <GlassCard
+        key={contact.id}
+        className="p-5"
+        onClick={() => { setSelectedContact(contact); setDetailOpen(true) }}
+      >
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 bg-cc-surface-2 border border-cc-border flex items-center justify-center text-cc-text-primary font-semibold text-sm flex-shrink-0">
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-cc-text-primary truncate">{contact.name}</p>
+            {contact.company && (
+              <p className="text-xs text-cc-text-secondary truncate">{contact.company}</p>
+            )}
+            <div className="flex items-center gap-3 mt-2 text-xs text-cc-text-muted">
+              {contact.email && (
+                <span className="flex items-center gap-1 truncate" title={contact.email}><Mail className="h-3 w-3" /> {contact.email}</span>
+              )}
+              {contact.phone && (
+                <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {formatPhone(contact.phone)}</span>
+              )}
+            </div>
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
+              <StageBadge stage={contact.stage} />
+              {contact.buyer_type && (() => {
+                const buyerColors: Record<string, { bg: string; text: string }> = {
+                  investor: { bg: '#DBEAFE', text: '#1E40AF' },
+                  developer: { bg: '#EDE9FE', text: '#5B21B6' },
+                  owner_occupier: { bg: '#D1FAE5', text: '#065F46' },
+                }
+                const btc = buyerColors[contact.buyer_type]
+                const label = BUYER_TYPES.find(b => b.key === contact.buyer_type)?.label
+                return btc && label ? (
+                  <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded-sm" style={{ backgroundColor: btc.bg, color: btc.text }}>
+                    {label}
+                  </span>
+                ) : null
+              })()}
+              {docCounts[contact.id] > 0 && (
+                <span className="flex items-center gap-0.5 text-[10px] text-cc-text-muted">
+                  <Paperclip className="h-3 w-3" /> {docCounts[contact.id]}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </GlassCard>
+    )
+  }
+
   return (
     <div>
       <PageHeader title="Contacts" description={`${contacts.length} contacts`}>
@@ -122,7 +215,6 @@ export default function ContactsPage() {
 
       {/* Filter bar */}
       <div className="flex items-center gap-3 flex-wrap mb-6">
-        {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cc-text-muted" />
           <Input
@@ -133,7 +225,6 @@ export default function ContactsPage() {
           />
         </div>
 
-        {/* Stage filter */}
         <Select value={stageFilter} onValueChange={v => setStageFilter(v as PropertyStage | 'all')}>
           <SelectTrigger className="w-48 h-9 text-xs">
             <SelectValue placeholder="All Stages" />
@@ -146,7 +237,6 @@ export default function ContactsPage() {
           </SelectContent>
         </Select>
 
-        {/* Buyer type filter */}
         <Select value={buyerTypeFilter} onValueChange={v => setBuyerTypeFilter(v as BuyerType | 'all')}>
           <SelectTrigger className="w-44 h-9 text-xs">
             <SelectValue placeholder="All Buyer Types" />
@@ -159,7 +249,6 @@ export default function ContactsPage() {
           </SelectContent>
         </Select>
 
-        {/* Type filter pills */}
         <div className="flex gap-1.5">
           {(['all', 'client', 'other'] as const).map(t => {
             const active = typeFilter === t
@@ -180,7 +269,6 @@ export default function ContactsPage() {
           })}
         </div>
 
-        {/* Sort */}
         <Select value={sort} onValueChange={v => setSort(v as SortOption)}>
           <SelectTrigger className="w-40 h-9 text-xs">
             <SelectValue />
@@ -191,6 +279,29 @@ export default function ContactsPage() {
             ))}
           </SelectContent>
         </Select>
+      </div>
+
+      {/* Summary stats row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {BUYER_TYPES.map(bt => {
+          const colors = BUYER_TYPE_COLORS[bt.key]
+          const stats = buyerTypeStats[bt.key] || { count: 0, pipelineValue: 0 }
+          return (
+            <div
+              key={bt.key}
+              className="flex items-center gap-3 px-4 py-3 rounded-lg border border-cc-border bg-cc-surface"
+              style={{ borderLeftWidth: '3px', borderLeftColor: colors.dot }}
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-cc-text-secondary">{bt.label}s</p>
+                <div className="flex items-baseline gap-3 mt-0.5">
+                  <span className="text-lg font-bold text-cc-text-primary">{stats.count}</span>
+                  <span className="text-xs text-cc-text-muted">{formatCurrency(stats.pipelineValue)} pipeline</span>
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
       {filtered.length === 0 ? (
@@ -205,57 +316,31 @@ export default function ContactsPage() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map(contact => {
-            const initials = contact.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+        <div className="space-y-8">
+          {sections.map(section => {
+            const colors = BUYER_TYPE_COLORS[section.key]
             return (
-              <GlassCard
-                key={contact.id}
-                className="p-5"
-                onClick={() => { setSelectedContact(contact); setDetailOpen(true) }}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-cc-surface-2 border border-cc-border flex items-center justify-center text-cc-text-primary font-semibold text-sm flex-shrink-0">
-                    {initials}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-cc-text-primary truncate">{contact.name}</p>
-                    {contact.company && (
-                      <p className="text-xs text-cc-text-secondary truncate">{contact.company}</p>
+              <div key={section.key}>
+                {/* Section header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-2">
+                    {colors && (
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: colors.dot }} />
                     )}
-                    <div className="flex items-center gap-3 mt-2 text-xs text-cc-text-muted">
-                      {contact.email && (
-                        <span className="flex items-center gap-1 truncate" title={contact.email}><Mail className="h-3 w-3" /> {contact.email}</span>
-                      )}
-                      {contact.phone && (
-                        <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {formatPhone(contact.phone)}</span>
-                      )}
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 flex-wrap">
-                      <StageBadge stage={contact.stage} />
-                      {contact.buyer_type && (() => {
-                        const buyerColors: Record<string, { bg: string; text: string }> = {
-                          investor: { bg: '#DBEAFE', text: '#1E40AF' },
-                          developer: { bg: '#EDE9FE', text: '#5B21B6' },
-                          owner_occupier: { bg: '#D1FAE5', text: '#065F46' },
-                        }
-                        const btc = buyerColors[contact.buyer_type]
-                        const label = BUYER_TYPES.find(b => b.key === contact.buyer_type)?.label
-                        return btc && label ? (
-                          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded-sm" style={{ backgroundColor: btc.bg, color: btc.text }}>
-                            {label}
-                          </span>
-                        ) : null
-                      })()}
-                      {docCounts[contact.id] > 0 && (
-                        <span className="flex items-center gap-0.5 text-[10px] text-cc-text-muted">
-                          <Paperclip className="h-3 w-3" /> {docCounts[contact.id]}
-                        </span>
-                      )}
-                    </div>
+                    {!colors && (
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 bg-cc-text-muted" />
+                    )}
+                    <h2 className="text-sm font-semibold text-cc-text-primary">{section.label}</h2>
+                    <span className="text-xs text-cc-text-muted">({section.contacts.length})</span>
                   </div>
+                  <div className="flex-1 border-t border-cc-border" />
                 </div>
-              </GlassCard>
+
+                {/* Contact grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  {section.contacts.map(renderContactCard)}
+                </div>
+              </div>
             )
           })}
         </div>

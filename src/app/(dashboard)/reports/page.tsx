@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { getDealsInRange, getContactsInRange, getActivitiesInRange } from '@/lib/reports'
-import { PROPERTY_STAGES, type Deal, type Contact, type Activity } from '@/lib/types'
+import { PROPERTY_STAGES, BUYER_TYPES, type Deal, type Contact, type Activity, type BuyerType } from '@/lib/types'
 import { useTheme } from '@/components/theme-provider'
 import {
   DollarSign,
@@ -38,12 +38,13 @@ import {
   Cell,
   AreaChart,
   Area,
+  Legend,
 } from 'recharts'
 import { format, startOfWeek, startOfMonth, startOfQuarter, startOfYear, subDays } from 'date-fns'
 import { formatDistanceToNow } from 'date-fns'
 import { formatLabel } from '@/lib/utils'
 
-type ReportTab = 'pipeline' | 'revenue' | 'activity' | 'contacts'
+type ReportTab = 'pipeline' | 'revenue' | 'activity' | 'contacts' | 'buyer_types'
 type DatePreset = 'week' | 'month' | 'quarter' | 'year' | 'all' | 'custom'
 
 function getDateRange(preset: DatePreset, customStart: string, customEnd: string): { start: string; end: string } {
@@ -86,6 +87,18 @@ function formatCurrency(n: number) {
   return `$${n.toLocaleString()}`
 }
 
+const BUYER_TYPE_CHART_COLORS: Record<BuyerType, { light: string; dark: string }> = {
+  investor: { light: '#1E40AF', dark: '#93C5FD' },
+  developer: { light: '#5B21B6', dark: '#C4B5FD' },
+  owner_occupier: { light: '#065F46', dark: '#6EE7B7' },
+}
+
+const BUYER_TYPE_CARD_COLORS: Record<BuyerType, { lightBg: string; lightText: string; darkBg: string; darkText: string }> = {
+  investor: { lightBg: '#DBEAFE', lightText: '#1E40AF', darkBg: '#1E3A5F', darkText: '#93C5FD' },
+  developer: { lightBg: '#EDE9FE', lightText: '#5B21B6', darkBg: '#4C1D95', darkText: '#C4B5FD' },
+  owner_occupier: { lightBg: '#D1FAE5', lightText: '#065F46', darkBg: '#064E3B', darkText: '#6EE7B7' },
+}
+
 export default function ReportsPage() {
   const [tab, setTab] = useState<ReportTab>('pipeline')
   const [preset, setPreset] = useState<DatePreset>('all')
@@ -119,6 +132,7 @@ export default function ReportsPage() {
     { key: 'revenue', label: 'Revenue' },
     { key: 'activity', label: 'Activity' },
     { key: 'contacts', label: 'Contacts' },
+    { key: 'buyer_types', label: 'Buyer Types' },
   ]
 
   const presets: { key: DatePreset; label: string }[] = [
@@ -213,6 +227,113 @@ export default function ReportsPage() {
   })
 
   const clientContacts = contacts.filter(c => c.type === 'client').length
+
+  // ── Buyer Types Report ──
+  const buyerTypeData = useMemo(() => {
+    const data: Record<BuyerType, { count: number; pipelineValue: number; avgDealSize: number; contactIds: Set<string> }> = {
+      investor: { count: 0, pipelineValue: 0, avgDealSize: 0, contactIds: new Set() },
+      developer: { count: 0, pipelineValue: 0, avgDealSize: 0, contactIds: new Set() },
+      owner_occupier: { count: 0, pipelineValue: 0, avgDealSize: 0, contactIds: new Set() },
+    }
+
+    for (const c of contacts) {
+      if (c.buyer_type && data[c.buyer_type]) {
+        data[c.buyer_type].count++
+        data[c.buyer_type].contactIds.add(c.id)
+      }
+    }
+
+    for (const d of deals) {
+      if (!d.contact_id) continue
+      for (const bt of BUYER_TYPES) {
+        if (data[bt.key].contactIds.has(d.contact_id) && d.stage !== 'settled' && d.stage !== 'marketing_only') {
+          data[bt.key].pipelineValue += d.deal_value || 0
+        }
+      }
+    }
+
+    for (const bt of BUYER_TYPES) {
+      const btDeals = deals.filter(d => d.contact_id && data[bt.key].contactIds.has(d.contact_id) && d.stage !== 'settled' && d.stage !== 'marketing_only')
+      data[bt.key].avgDealSize = btDeals.length > 0 ? data[bt.key].pipelineValue / btDeals.length : 0
+    }
+
+    return data
+  }, [contacts, deals])
+
+  const contactDistributionData = useMemo(() =>
+    BUYER_TYPES.map(bt => ({
+      name: bt.label,
+      count: buyerTypeData[bt.key].count,
+      key: bt.key,
+    })),
+  [buyerTypeData])
+
+  const pipelineDistributionData = useMemo(() =>
+    BUYER_TYPES.map(bt => ({
+      name: bt.label,
+      value: buyerTypeData[bt.key].pipelineValue,
+      key: bt.key,
+    })),
+  [buyerTypeData])
+
+  const stageBreakdownData = useMemo(() => {
+    const contactsByBuyerType: Record<BuyerType, Set<string>> = {
+      investor: new Set(), developer: new Set(), owner_occupier: new Set(),
+    }
+    for (const c of contacts) {
+      if (c.buyer_type && contactsByBuyerType[c.buyer_type]) {
+        contactsByBuyerType[c.buyer_type].add(c.id)
+      }
+    }
+
+    return PROPERTY_STAGES.map(stage => {
+      const row: Record<string, string | number> = {
+        name: stageAbbreviations[stage.key] || stage.label,
+      }
+      for (const bt of BUYER_TYPES) {
+        row[bt.key] = deals.filter(d =>
+          d.stage === stage.key && d.contact_id && contactsByBuyerType[bt.key].has(d.contact_id)
+        ).length
+      }
+      return row
+    })
+  }, [contacts, deals])
+
+  const buyerTypeInsights = useMemo(() => {
+    const entries = BUYER_TYPES.map(bt => ({
+      key: bt.key,
+      label: bt.label,
+      count: buyerTypeData[bt.key].count,
+      pipelineValue: buyerTypeData[bt.key].pipelineValue,
+    }))
+
+    const strongest = [...entries].sort((a, b) => b.pipelineValue - a.pipelineValue)[0]
+    const growth = [...entries].sort((a, b) => a.pipelineValue - b.pipelineValue)[0]
+
+    // Advanced stages: contracts_exchanged, settled
+    const advancedStages = new Set(['contracts_exchanged', 'settled'])
+    const contactsByBt: Record<string, Set<string>> = {}
+    for (const bt of BUYER_TYPES) {
+      contactsByBt[bt.key] = new Set(contacts.filter(c => c.buyer_type === bt.key).map(c => c.id))
+    }
+
+    let conversionLeader = { key: '', label: '', pct: 0 }
+    for (const bt of BUYER_TYPES) {
+      const btDeals = deals.filter(d => d.contact_id && contactsByBt[bt.key].has(d.contact_id))
+      const advanced = btDeals.filter(d => advancedStages.has(d.stage)).length
+      const pct = btDeals.length > 0 ? Math.round((advanced / btDeals.length) * 100) : 0
+      if (pct > conversionLeader.pct) {
+        conversionLeader = { key: bt.key, label: bt.label, pct }
+      }
+    }
+
+    return { strongest, growth, conversionLeader }
+  }, [buyerTypeData, contacts, deals])
+
+  const getBtChartColor = (btKey: string) => {
+    const colors = BUYER_TYPE_CHART_COLORS[btKey as BuyerType]
+    return colors ? (isDark ? colors.dark : colors.light) : chartColors[0]
+  }
 
   return (
     <div>
@@ -649,6 +770,151 @@ export default function ReportsPage() {
                 )}
               </TableBody>
             </Table>
+          </GlassCard>
+        </div>
+      )}
+
+      {/* ═══ Buyer Types Report ═══ */}
+      {tab === 'buyer_types' && (
+        <div className="space-y-6">
+          {/* Row 1: Metric cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {BUYER_TYPES.map(bt => {
+              const data = buyerTypeData[bt.key]
+              const cardColors = BUYER_TYPE_CARD_COLORS[bt.key]
+              const bgColor = isDark ? cardColors.darkBg : cardColors.lightBg
+              const textColor = isDark ? cardColors.darkText : cardColors.lightText
+              return (
+                <GlassCard key={bt.key} hover={false} className="p-5" style={{ borderTop: `3px solid ${textColor}` }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: textColor }} />
+                    <h4 className="text-sm font-semibold text-cc-text-primary">{bt.label}s</h4>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-cc-text-muted">Contacts</p>
+                      <p className="text-xl font-bold text-cc-text-primary">{data.count}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-cc-text-muted">Pipeline</p>
+                      <p className="text-xl font-bold text-cc-text-primary">{formatCurrency(data.pipelineValue)}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-wider text-cc-text-muted">Avg Deal</p>
+                      <p className="text-xl font-bold text-cc-text-primary">{formatCurrency(data.avgDealSize)}</p>
+                    </div>
+                  </div>
+                </GlassCard>
+              )
+            })}
+          </div>
+
+          {/* Row 2: Distribution charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <GlassCard hover={false} className="p-6">
+              <h3 className="text-sm font-medium text-cc-text-primary mb-5">Contacts by Buyer Type</h3>
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={contactDistributionData} layout="vertical">
+                    <XAxis type="number" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <YAxis dataKey="name" type="category" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} width={110} />
+                    <Tooltip
+                      contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
+                    />
+                    <Bar dataKey="count" radius={[0, 4, 4, 0]} label={{ position: 'right', fill: chartAxisColor, fontSize: 11 }}>
+                      {contactDistributionData.map((d) => (
+                        <Cell key={d.key} fill={getBtChartColor(d.key)} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </GlassCard>
+
+            <GlassCard hover={false} className="p-6">
+              <h3 className="text-sm font-medium text-cc-text-primary mb-5">Pipeline Value by Buyer Type</h3>
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={pipelineDistributionData} layout="vertical">
+                    <XAxis type="number" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formatCurrency(v)} />
+                    <YAxis dataKey="name" type="category" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} width={110} />
+                    <Tooltip
+                      contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
+                      formatter={(value) => [formatCurrency(Number(value)), 'Pipeline Value']}
+                    />
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]} label={{ position: 'right', fill: chartAxisColor, fontSize: 11, formatter: (v) => formatCurrency(Number(v)) }}>
+                      {pipelineDistributionData.map((d) => (
+                        <Cell key={d.key} fill={getBtChartColor(d.key)} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </GlassCard>
+          </div>
+
+          {/* Row 3: Stage breakdown */}
+          <GlassCard hover={false} className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="text-sm font-medium text-cc-text-primary">Stage Distribution by Buyer Type</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const headers = ['Stage', ...BUYER_TYPES.map(bt => bt.label)]
+                  const rows = stageBreakdownData.map(d => [
+                    String(d.name),
+                    ...BUYER_TYPES.map(bt => String(d[bt.key] ?? 0)),
+                  ])
+                  downloadCSV('buyer-type-stage-breakdown.csv', headers, rows)
+                }}
+              >
+                <Download className="h-3.5 w-3.5 mr-1.5" /> CSV
+              </Button>
+            </div>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stageBreakdownData}>
+                  <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 10 }} axisLine={{ stroke: chartGridColor }} tickLine={false} angle={-35} textAnchor="end" height={60} />
+                  <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} label={{ value: 'Deal Count', angle: -90, position: 'insideLeft', style: { fill: chartAxisColor, fontSize: 11 } }} />
+                  <Tooltip
+                    contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
+                  />
+                  <Legend
+                    wrapperStyle={{ fontSize: '12px', color: chartAxisColor }}
+                    formatter={(value: string) => {
+                      const bt = BUYER_TYPES.find(b => b.key === value)
+                      return bt ? bt.label : value
+                    }}
+                  />
+                  {BUYER_TYPES.map(bt => (
+                    <Bar key={bt.key} dataKey={bt.key} fill={getBtChartColor(bt.key)} radius={[4, 4, 0, 0]} />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </GlassCard>
+
+          {/* Row 4: Insights */}
+          <GlassCard hover={false} className="p-6">
+            <h3 className="text-sm font-medium text-cc-text-primary mb-4">Insights</h3>
+            <div className="space-y-3">
+              {buyerTypeInsights.strongest && (
+                <p className="text-sm text-cc-text-secondary">
+                  Strongest segment: <span className="font-semibold text-cc-text-primary">{buyerTypeInsights.strongest.label}s</span> ({buyerTypeInsights.strongest.count} contacts, {formatCurrency(buyerTypeInsights.strongest.pipelineValue)} pipeline)
+                </p>
+              )}
+              {buyerTypeInsights.growth && (
+                <p className="text-sm text-cc-text-secondary">
+                  Growth opportunity: <span className="font-semibold text-cc-text-primary">{buyerTypeInsights.growth.label}s</span> ({buyerTypeInsights.growth.count} contacts, {formatCurrency(buyerTypeInsights.growth.pipelineValue)} pipeline)
+                </p>
+              )}
+              {buyerTypeInsights.conversionLeader.key && (
+                <p className="text-sm text-cc-text-secondary">
+                  Conversion leader: <span className="font-semibold text-cc-text-primary">{buyerTypeInsights.conversionLeader.label}s</span> — {buyerTypeInsights.conversionLeader.pct}% in advanced stages
+                </p>
+              )}
+            </div>
           </GlassCard>
         </div>
       )}

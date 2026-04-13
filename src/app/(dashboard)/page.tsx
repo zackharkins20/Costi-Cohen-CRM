@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { MetricCard } from '@/components/ui/metric-card'
 import { GlassCard } from '@/components/ui/glass-card'
 import { getContacts, getDeals, getRecentActivities } from '@/lib/queries'
-import { PROPERTY_STAGES, type Contact, type Deal, type Activity } from '@/lib/types'
+import { PROPERTY_STAGES, BUYER_TYPES, type Contact, type Deal, type Activity, type BuyerType } from '@/lib/types'
 import { DollarSign, TrendingUp, Users, CheckCircle, MessageSquare, Pencil, ArrowRightLeft, Phone, Video, Plus, PlusCircle, Mail, FileText } from 'lucide-react'
 import { formatLabel } from '@/lib/utils'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
@@ -34,6 +34,45 @@ function getPresetStartDate(preset: DatePreset): Date | null {
     case 'this_year': return startOfYear(now)
     case 'all_time': return null
   }
+}
+
+const BUYER_TYPE_BAR_COLORS: Record<BuyerType, string> = {
+  investor: '#3B82F6',
+  developer: '#8B5CF6',
+  owner_occupier: '#10B981',
+}
+
+function BuyerTypeSplitWidget({ contacts }: { contacts: Contact[] }) {
+  const total = contacts.length
+  const groups = BUYER_TYPES.map(bt => ({
+    key: bt.key,
+    label: bt.label,
+    count: contacts.filter(c => c.buyer_type === bt.key).length,
+    color: BUYER_TYPE_BAR_COLORS[bt.key],
+  }))
+
+  return (
+    <GlassCard hover={false} className="p-4 mt-6">
+      <h3 className="text-[11px] font-semibold text-cc-text-muted uppercase tracking-[0.04em] mb-3">Buyer Type Split</h3>
+      <div className="space-y-2.5">
+        {groups.map(g => {
+          const pct = total > 0 ? (g.count / total) * 100 : 0
+          return (
+            <div key={g.key} className="flex items-center gap-3">
+              <span className="text-xs text-cc-text-secondary w-28 shrink-0">{g.label}</span>
+              <div className="flex-1 h-5 bg-cc-surface-2 rounded overflow-hidden">
+                <div
+                  className="h-full rounded transition-all duration-500"
+                  style={{ width: `${pct}%`, backgroundColor: g.color }}
+                />
+              </div>
+              <span className="text-xs font-medium text-cc-text-primary w-8 text-right">{g.count}</span>
+            </div>
+          )
+        })}
+      </div>
+    </GlassCard>
+  )
 }
 
 export default function DashboardPage() {
@@ -244,6 +283,9 @@ export default function DashboardPage() {
           </div>
         </GlassCard>
       </div>
+
+      {/* Buyer Type Split */}
+      <BuyerTypeSplitWidget contacts={filteredContacts} />
     </div>
   )
 }
