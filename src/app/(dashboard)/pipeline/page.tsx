@@ -8,6 +8,7 @@ import { ContactCard } from '@/components/pipeline/contact-card'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { getContacts, updateContact, getCurrentUser, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
+import { executeWorkflows } from '@/lib/workflows'
 import { PROPERTY_STAGES, type Contact, type PropertyStage } from '@/lib/types'
 import { Users, DollarSign, TrendingUp } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -64,6 +65,13 @@ export default function PipelinePage() {
       message: `${contact.name} moved to ${stageLabel}`,
       entity_type: 'contact',
       entity_id: contactId,
+    })
+    executeWorkflows({
+      trigger_type: 'deal_stage_change',
+      contact: { id: contactId, name: contact.name, email: contact.email || undefined },
+      new_stage: newStage,
+      old_stage: contact.stage,
+      user: { id: userId || '', name: '' },
     })
   }
 

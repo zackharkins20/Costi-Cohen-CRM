@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getCurrentUser, updateUser } from '@/lib/queries'
 import { useTheme } from '@/components/theme-provider'
+import { WhatsNewModal } from '@/components/whats-new-modal'
+import { FeatureTour, useTour } from '@/components/feature-tour'
+import { Sparkles, Compass } from 'lucide-react'
 import type { User } from '@/lib/types'
 
 export default function SettingsPage() {
@@ -15,7 +18,9 @@ export default function SettingsPage() {
   const [form, setForm] = useState({ full_name: '', email: '', role: '' })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [whatsNewOpen, setWhatsNewOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
+  const { tourActive, startTour, completeTour } = useTour()
 
   useEffect(() => {
     getCurrentUser().then(u => {
@@ -72,7 +77,28 @@ export default function SettingsPage() {
             {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
           </Button>
         </GlassCard>
+
+        {/* Help & Onboarding */}
+        <GlassCard hover={false} className="p-6">
+          <h3 className="text-sm font-medium text-cc-text-primary mb-4">Help & Onboarding</h3>
+          <p className="text-sm text-cc-text-secondary mb-4">
+            View the latest changes or take a guided tour of the CRM.
+          </p>
+          <div className="flex gap-3">
+            <Button variant="outline" onClick={() => setWhatsNewOpen(true)}>
+              <Sparkles className="h-4 w-4 mr-1.5" />
+              What&apos;s New
+            </Button>
+            <Button variant="outline" onClick={startTour}>
+              <Compass className="h-4 w-4 mr-1.5" />
+              Take a Tour
+            </Button>
+          </div>
+        </GlassCard>
       </div>
+
+      <WhatsNewModal open={whatsNewOpen} onClose={() => setWhatsNewOpen(false)} />
+      <FeatureTour active={tourActive} onComplete={completeTour} />
     </div>
   )
 }

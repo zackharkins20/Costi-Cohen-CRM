@@ -103,7 +103,7 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-20 h-16 border-b border-cc-border bg-cc-bg/90 backdrop-blur-xl flex items-center px-8 gap-4">
       {/* Search */}
-      <div className="flex-1 max-w-md ml-12 lg:ml-0">
+      <div className="flex-1 max-w-md ml-12 lg:ml-0" data-tour="global-search">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cc-text-muted" />
           <Input
@@ -114,7 +114,7 @@ export function TopBar() {
       </div>
 
       {/* Notifications */}
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative" ref={dropdownRef} data-tour="notifications">
         <button
           onClick={() => setShowNotifications(!showNotifications)}
           className="relative p-2 hover:bg-cc-surface-2 rounded-md transition-colors"

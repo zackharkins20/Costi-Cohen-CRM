@@ -10,6 +10,7 @@ import { TaskDetailModal } from '@/components/tasks/task-detail-modal'
 import { TaskFilterBar, type TaskFilters } from '@/components/tasks/task-filter-bar'
 import { getTasks, updateTask, getCurrentUser, getUsers, getSubtaskCounts } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
+import { executeWorkflows } from '@/lib/workflows'
 import { TASK_STATUSES, type Task, type TaskStatus, type User, type SubtaskCounts } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Plus, CheckSquare, Calendar } from 'lucide-react'
@@ -120,6 +121,13 @@ export default function TasksPage() {
       entity_type: 'task',
       entity_id: taskId,
     })
+    if (newStatus === 'done') {
+      executeWorkflows({
+        trigger_type: 'task_completed',
+        task: { id: taskId, title: task.title, assigned_to: task.assigned_to || undefined },
+        user: { id: userId || '', name: '' },
+      })
+    }
   }
 
   const handleTaskClick = (task: Task) => {

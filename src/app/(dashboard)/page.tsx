@@ -56,7 +56,7 @@ export default function DashboardPage() {
     <div>
       <PageHeader title="Dashboard" description="Overview of your pipeline and activity" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10" data-tour="dashboard-metrics">
         <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} index={0} />
         <MetricCard label="Active Deals" value={activeDeals} icon={TrendingUp} index={1} />
         <MetricCard label="Contacts" value={contacts.length} icon={Users} index={2} />

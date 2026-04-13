@@ -1,7 +1,12 @@
 'use client'
 
+import { useCallback } from 'react'
 import { Sidebar, useSidebarWidth } from '@/components/layout/sidebar'
 import { TopBar } from '@/components/layout/top-bar'
+import { WhatsNewModal, useWhatsNew } from '@/components/whats-new-modal'
+import { FeatureTour, useTour } from '@/components/feature-tour'
+
+const TOUR_LS_KEY = 'costicohen_tour_completed'
 
 export default function DashboardLayout({
   children,
@@ -9,6 +14,17 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const sidebarWidth = useSidebarWidth()
+  const { showWhatsNew, closeWhatsNew } = useWhatsNew()
+  const { tourActive, startTour, completeTour } = useTour()
+
+  const handleWhatsNewClose = useCallback(() => {
+    closeWhatsNew()
+    // Auto-start tour for new users after What's New is dismissed
+    const tourCompleted = localStorage.getItem(TOUR_LS_KEY)
+    if (!tourCompleted) {
+      setTimeout(() => startTour(), 400)
+    }
+  }, [closeWhatsNew, startTour])
 
   return (
     <div className="min-h-screen bg-cc-bg relative">
@@ -25,6 +41,8 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      <WhatsNewModal open={showWhatsNew} onClose={handleWhatsNewClose} />
+      <FeatureTour active={tourActive} onComplete={completeTour} />
     </div>
   )
 }

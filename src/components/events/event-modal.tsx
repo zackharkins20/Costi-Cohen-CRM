@@ -21,6 +21,7 @@ import {
 import { createEvent, updateEvent, deleteEvent } from '@/lib/events'
 import { logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
+import { executeWorkflows } from '@/lib/workflows'
 import { EVENT_TYPES, type CalendarEvent, type EventType } from '@/lib/types'
 import { Trash2 } from 'lucide-react'
 
@@ -148,6 +149,11 @@ export function EventModal({
           message: `${title} — ${eventType}`,
           entity_type: entityType || undefined,
           entity_id: entityId || undefined,
+        })
+        executeWorkflows({
+          trigger_type: 'event_created',
+          event: { id: created.id, title: created.title },
+          user: { id: userId || '', name: '' },
         })
       }
     }

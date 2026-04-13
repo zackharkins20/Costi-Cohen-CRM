@@ -14,6 +14,7 @@ import {
   Calendar,
   Mail,
   BarChart3,
+  Zap,
   Settings,
   Shield,
   Menu,
@@ -34,19 +35,20 @@ const SIDEBAR_COLLAPSED_WIDTH = 72
 const LS_KEY = 'sidebar-collapsed'
 
 const navigation = [
-  { label: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { label: 'Pipeline', href: '/pipeline', icon: TrendingUp },
-  { label: 'Contacts', href: '/contacts', icon: Users },
-  { label: 'Deals', href: '/deals', icon: FileText },
-  { label: 'Tasks', href: '/tasks', icon: CheckSquare },
-  { label: 'Calendar', href: '/calendar', icon: Calendar },
-  { label: 'Emails', href: '/emails', icon: Mail },
-  { label: 'Reports', href: '/reports', icon: BarChart3 },
-  { label: 'Settings', href: '/settings', icon: Settings },
+  { label: 'Dashboard', href: '/', icon: LayoutDashboard, tourId: undefined },
+  { label: 'Pipeline', href: '/pipeline', icon: TrendingUp, tourId: 'pipeline-nav' },
+  { label: 'Contacts', href: '/contacts', icon: Users, tourId: undefined },
+  { label: 'Deals', href: '/deals', icon: FileText, tourId: undefined },
+  { label: 'Tasks', href: '/tasks', icon: CheckSquare, tourId: 'tasks-nav' },
+  { label: 'Calendar', href: '/calendar', icon: Calendar, tourId: 'calendar-nav' },
+  { label: 'Emails', href: '/emails', icon: Mail, tourId: undefined },
+  { label: 'Reports', href: '/reports', icon: BarChart3, tourId: 'reports-nav' },
+  { label: 'Automations', href: '/automations', icon: Zap, tourId: undefined },
+  { label: 'Settings', href: '/settings', icon: Settings, tourId: undefined },
 ]
 
 const adminNavigation = [
-  { label: 'Team', href: '/team', icon: Shield },
+  { label: 'Team', href: '/team', icon: Shield, tourId: undefined },
 ]
 
 export function useSidebarWidth() {
@@ -105,6 +107,7 @@ export function Sidebar() {
         href={item.href}
         onClick={() => setMobileOpen(false)}
         title={collapsed ? item.label : undefined}
+        {...(item.tourId ? { 'data-tour': item.tourId } : {})}
         className={cn(
           'group relative flex items-center gap-3 px-3 py-2.5 text-sm font-normal rounded-md transition-all duration-150',
           collapsed && 'justify-center px-0',
@@ -237,6 +240,7 @@ export function Sidebar() {
 
       {/* Desktop sidebar */}
       <aside
+        data-tour="sidebar"
         className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 bg-cc-surface border-r border-cc-border z-30 overflow-hidden"
         style={{
           width: collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH,

@@ -15,6 +15,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { createContact, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
+import { executeWorkflows } from '@/lib/workflows'
 import { PROPERTY_STAGES, type PropertyStage, type Contact } from '@/lib/types'
 
 interface Props {
@@ -73,6 +74,11 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
         message: `Contact "${contact.name}" has been added`,
         entity_type: 'contact',
         entity_id: contact.id,
+      })
+      executeWorkflows({
+        trigger_type: 'contact_created',
+        contact: { id: contact.id, name: contact.name, email: contact.email || undefined },
+        user: { id: userId || '', name: '' },
       })
       onCreated(contact)
     }
