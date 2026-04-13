@@ -21,6 +21,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table'
+import {
   getWorkflows,
   getWorkflowRuns,
   createWorkflow,
@@ -37,13 +45,14 @@ import {
 } from '@/lib/workflows'
 import { getCurrentUser } from '@/lib/queries'
 import { PROPERTY_STAGES } from '@/lib/types'
+import { formatLabel } from '@/lib/utils'
 import {
   Zap, Plus, Trash2, Power, PowerOff,
   ChevronDown, ChevronRight, Clock,
   CheckCircle, XCircle, Loader2, Copy,
-  ArrowRight, Play,
+  ArrowRight, Play, History,
 } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
 
 // ── Workflow Editor (3-step) ──
 
@@ -416,7 +425,7 @@ function WorkflowEditor({ open, onClose, onSaved, userId, initial }: EditorProps
   )
 }
 
-// ── Run History Row ──
+// ── Run History Row (per-workflow inline) ──
 
 function RunRow({ run }: { run: WorkflowRun }) {
   const [expanded, setExpanded] = useState(false)
@@ -462,7 +471,81 @@ function RunRow({ run }: { run: WorkflowRun }) {
   )
 }
 
+// ── Global Run History Row (expandable table row) ──
+
+function GlobalRunRow({ run, workflowName }: { run: WorkflowRun; workflowName: string }) {
+  const [expanded, setExpanded] = useState(false)
+
+  const triggerEvent = run.trigger_event as Record<string, unknown>
+  const triggerLabel = triggerEvent?.trigger_type
+    ? formatLabel(triggerEvent.trigger_type as string)
+    : '—'
+
+  const statusConfig = {
+    completed: { label: 'Completed', className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    failed: { label: 'Failed', className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
+    running: { label: 'Running', className: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400' },
+  }
+
+  const status = statusConfig[run.status] || statusConfig.running
+
+  return (
+    <>
+      <TableRow
+        className="cursor-pointer"
+        onClick={() => setExpanded(!expanded)}
+      >
+        <TableCell className="text-cc-text-primary font-medium">
+          <div className="flex items-center gap-2">
+            {expanded ? <ChevronDown className="h-3 w-3 text-cc-text-muted flex-shrink-0" /> : <ChevronRight className="h-3 w-3 text-cc-text-muted flex-shrink-0" />}
+            {workflowName}
+          </div>
+        </TableCell>
+        <TableCell className="text-xs">{triggerLabel}</TableCell>
+        <TableCell>
+          <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${status.className}`}>
+            {status.label}
+          </span>
+        </TableCell>
+        <TableCell className="text-xs text-cc-text-muted">
+          {format(new Date(run.created_at), 'dd MMM yyyy HH:mm')}
+        </TableCell>
+      </TableRow>
+      {expanded && (
+        <TableRow>
+          <TableCell colSpan={4} className="bg-cc-surface-2/30">
+            <div className="py-2 pl-6 space-y-1.5">
+              {run.error && (
+                <p className="text-xs text-red-600 dark:text-red-400">Error: {run.error}</p>
+              )}
+              {(run.actions_executed as Record<string, unknown>[])?.length > 0 ? (
+                (run.actions_executed as Record<string, unknown>[]).map((a, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[11px]">
+                    {a.success ? (
+                      <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />
+                    ) : (
+                      <XCircle className="h-3 w-3 text-red-500 dark:text-red-400" />
+                    )}
+                    <span className="text-cc-text-secondary">
+                      {ACTION_TYPE_LABELS[(a.type as ActionType)] || (a.type as string)}
+                    </span>
+                    {a.error && <span className="text-cc-text-muted text-[10px]">— {a.error as string}</span>}
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-cc-text-muted">No action details available</p>
+              )}
+            </div>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
+  )
+}
+
 // ── Main Page ──
+
+type PageTab = 'workflows' | 'run_history'
 
 export default function AutomationsPage() {
   const [workflows, setWorkflows] = useState<Workflow[]>([])
@@ -471,6 +554,10 @@ export default function AutomationsPage() {
   const [userId, setUserId] = useState('')
   const [editorOpen, setEditorOpen] = useState(false)
   const [editorInitial, setEditorInitial] = useState<Partial<Workflow> | undefined>()
+  const [activeTab, setActiveTab] = useState<PageTab>('workflows')
+  const [globalRuns, setGlobalRuns] = useState<WorkflowRun[]>([])
+  const [globalRunsLimit, setGlobalRunsLimit] = useState(50)
+  const [loadingRuns, setLoadingRuns] = useState(false)
 
   const load = async () => {
     const [wfs, user] = await Promise.all([getWorkflows(), getCurrentUser()])
@@ -478,7 +565,20 @@ export default function AutomationsPage() {
     if (user) setUserId(user.id)
   }
 
+  const loadGlobalRuns = async () => {
+    setLoadingRuns(true)
+    const data = await getWorkflowRuns()
+    setGlobalRuns(data)
+    setLoadingRuns(false)
+  }
+
   useEffect(() => { load() }, [])
+
+  useEffect(() => {
+    if (activeTab === 'run_history' && globalRuns.length === 0) {
+      loadGlobalRuns()
+    }
+  }, [activeTab])
 
   const handleToggle = async (id: string, enabled: boolean) => {
     setWorkflows(prev => prev.map(w => w.id === id ? { ...w, enabled } : w))
@@ -515,6 +615,12 @@ export default function AutomationsPage() {
     setEditorOpen(true)
   }
 
+  // Map workflow IDs to names for run history
+  const workflowNameMap: Record<string, string> = {}
+  for (const w of workflows) {
+    workflowNameMap[w.id] = w.name
+  }
+
   return (
     <div>
       <PageHeader title="Automations" description="Automate tasks and notifications with workflow rules">
@@ -523,132 +629,213 @@ export default function AutomationsPage() {
         </Button>
       </PageHeader>
 
-      {/* Templates section */}
-      <div className="mb-8">
-        <h3 className="text-[13px] font-semibold text-cc-text-primary mb-4 uppercase tracking-[0.04em]">
-          Templates
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {WORKFLOW_TEMPLATES.map((template, i) => (
-            <GlassCard key={i} className="p-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Zap className="h-3.5 w-3.5 text-cc-text-secondary flex-shrink-0" />
-                    <h4 className="text-sm font-medium text-cc-text-primary truncate">{template.name}</h4>
-                  </div>
-                  <p className="text-xs text-cc-text-secondary line-clamp-2">{template.description}</p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-cc-surface-3 text-cc-text-secondary">
-                      {TRIGGER_TYPE_LABELS[template.trigger_type]}
-                    </span>
-                    <span className="text-[10px] text-cc-text-muted">
-                      {template.actions.length} action{template.actions.length !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleCreateFromTemplate(template)}
-                  className="ml-3 flex-shrink-0"
-                >
-                  <Copy className="h-3 w-3 mr-1" /> Use
-                </Button>
-              </div>
-            </GlassCard>
-          ))}
-        </div>
+      {/* Tab switcher */}
+      <div className="flex gap-1.5 mb-8">
+        <button
+          onClick={() => setActiveTab('workflows')}
+          className={`px-3 py-1.5 text-xs border rounded-md transition-colors flex items-center gap-1.5 ${
+            activeTab === 'workflows'
+              ? 'bg-cc-accent text-white border-cc-accent'
+              : 'bg-transparent text-cc-text-secondary border-cc-border hover:border-cc-btn-border hover:text-cc-text-primary'
+          }`}
+        >
+          <Zap className="h-3.5 w-3.5" /> Workflows
+        </button>
+        <button
+          onClick={() => setActiveTab('run_history')}
+          className={`px-3 py-1.5 text-xs border rounded-md transition-colors flex items-center gap-1.5 ${
+            activeTab === 'run_history'
+              ? 'bg-cc-accent text-white border-cc-accent'
+              : 'bg-transparent text-cc-text-secondary border-cc-border hover:border-cc-btn-border hover:text-cc-text-primary'
+          }`}
+        >
+          <History className="h-3.5 w-3.5" /> Run History
+        </button>
       </div>
 
-      {/* Active Workflows */}
-      <div>
-        <h3 className="text-[13px] font-semibold text-cc-text-primary mb-4 uppercase tracking-[0.04em]">
-          Active Workflows
-        </h3>
-
-        {workflows.length === 0 ? (
-          <GlassCard hover={false} className="p-8 text-center">
-            <Zap className="h-8 w-8 text-cc-text-muted mx-auto mb-3" />
-            <p className="text-sm text-cc-text-secondary">No workflows yet</p>
-            <p className="text-xs text-cc-text-muted mt-1">Create one from a template or build your own</p>
-          </GlassCard>
-        ) : (
-          <div className="space-y-3">
-            {workflows.map(workflow => (
-              <GlassCard key={workflow.id} hover={false} className="overflow-hidden">
-                <div className="p-4">
+      {activeTab === 'workflows' ? (
+        <>
+          {/* Templates section */}
+          <div className="mb-8">
+            <h3 className="text-[13px] font-semibold text-cc-text-primary mb-4 uppercase tracking-[0.04em]">
+              Templates
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {WORKFLOW_TEMPLATES.map((template, i) => (
+                <GlassCard key={i} className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <Zap className={`h-3.5 w-3.5 flex-shrink-0 ${workflow.enabled ? 'text-cc-text-primary' : 'text-cc-text-muted'}`} />
-                        <h4 className={`text-sm font-medium truncate ${workflow.enabled ? 'text-cc-text-primary' : 'text-cc-text-muted'}`}>
-                          {workflow.name}
-                        </h4>
+                        <Zap className="h-3.5 w-3.5 text-cc-text-secondary flex-shrink-0" />
+                        <h4 className="text-sm font-medium text-cc-text-primary truncate">{template.name}</h4>
                       </div>
-                      {workflow.description && (
-                        <p className="text-xs text-cc-text-secondary ml-5.5">{workflow.description}</p>
-                      )}
-                      <div className="flex items-center gap-2 mt-2 ml-5.5">
+                      <p className="text-xs text-cc-text-secondary line-clamp-2">{template.description}</p>
+                      <div className="flex items-center gap-2 mt-2">
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-cc-surface-3 text-cc-text-secondary">
-                          {TRIGGER_TYPE_LABELS[workflow.trigger_type as TriggerType]}
+                          {TRIGGER_TYPE_LABELS[template.trigger_type]}
                         </span>
-                        <ArrowRight className="h-3 w-3 text-cc-text-muted" />
                         <span className="text-[10px] text-cc-text-muted">
-                          {(workflow.actions as WorkflowAction[]).length} action{(workflow.actions as WorkflowAction[]).length !== 1 ? 's' : ''}
+                          {template.actions.length} action{template.actions.length !== 1 ? 's' : ''}
                         </span>
                       </div>
                     </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCreateFromTemplate(template)}
+                      className="ml-3 flex-shrink-0"
+                    >
+                      <Copy className="h-3 w-3 mr-1" /> Use
+                    </Button>
+                  </div>
+                </GlassCard>
+              ))}
+            </div>
+          </div>
 
-                    <div className="flex items-center gap-2 ml-3">
+          {/* Active Workflows */}
+          <div>
+            <h3 className="text-[13px] font-semibold text-cc-text-primary mb-4 uppercase tracking-[0.04em]">
+              Active Workflows
+            </h3>
+
+            {workflows.length === 0 ? (
+              <GlassCard hover={false} className="p-8 text-center">
+                <Zap className="h-8 w-8 text-cc-text-muted mx-auto mb-3" />
+                <p className="text-sm text-cc-text-secondary">No workflows yet</p>
+                <p className="text-xs text-cc-text-muted mt-1">Create one from a template or build your own</p>
+              </GlassCard>
+            ) : (
+              <div className="space-y-3">
+                {workflows.map(workflow => (
+                  <GlassCard key={workflow.id} hover={false} className="overflow-hidden">
+                    <div className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Zap className={`h-3.5 w-3.5 flex-shrink-0 ${workflow.enabled ? 'text-cc-text-primary' : 'text-cc-text-muted'}`} />
+                            <h4 className={`text-sm font-medium truncate ${workflow.enabled ? 'text-cc-text-primary' : 'text-cc-text-muted'}`}>
+                              {workflow.name}
+                            </h4>
+                          </div>
+                          {workflow.description && (
+                            <p className="text-xs text-cc-text-secondary ml-5.5">{workflow.description}</p>
+                          )}
+                          <div className="flex items-center gap-2 mt-2 ml-5.5">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-cc-surface-3 text-cc-text-secondary">
+                              {TRIGGER_TYPE_LABELS[workflow.trigger_type as TriggerType]}
+                            </span>
+                            <ArrowRight className="h-3 w-3 text-cc-text-muted" />
+                            <span className="text-[10px] text-cc-text-muted">
+                              {(workflow.actions as WorkflowAction[]).length} action{(workflow.actions as WorkflowAction[]).length !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 ml-3">
+                          <button
+                            onClick={() => handleToggle(workflow.id, !workflow.enabled)}
+                            title={workflow.enabled ? 'Disable' : 'Enable'}
+                            className={`p-1.5 rounded-md transition-colors ${
+                              workflow.enabled
+                                ? 'text-cc-text-primary hover:bg-cc-surface-2'
+                                : 'text-cc-text-muted hover:bg-cc-surface-2'
+                            }`}
+                          >
+                            {workflow.enabled ? <Power className="h-4 w-4" /> : <PowerOff className="h-4 w-4" />}
+                          </button>
+                          <button
+                            onClick={() => handleDelete(workflow.id)}
+                            className="p-1.5 rounded-md text-cc-text-muted hover:text-cc-text-primary hover:bg-cc-surface-2 transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Run history toggle */}
                       <button
-                        onClick={() => handleToggle(workflow.id, !workflow.enabled)}
-                        title={workflow.enabled ? 'Disable' : 'Enable'}
-                        className={`p-1.5 rounded-md transition-colors ${
-                          workflow.enabled
-                            ? 'text-cc-text-primary hover:bg-cc-surface-2'
-                            : 'text-cc-text-muted hover:bg-cc-surface-2'
-                        }`}
+                        onClick={() => handleToggleRuns(workflow.id)}
+                        className="flex items-center gap-1 mt-3 ml-5 text-[11px] text-cc-text-muted hover:text-cc-text-secondary transition-colors"
                       >
-                        {workflow.enabled ? <Power className="h-4 w-4" /> : <PowerOff className="h-4 w-4" />}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(workflow.id)}
-                        className="p-1.5 rounded-md text-cc-text-muted hover:text-cc-text-primary hover:bg-cc-surface-2 transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4" />
+                        <Clock className="h-3 w-3" />
+                        Run history
+                        {expandedRuns[workflow.id] ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                       </button>
                     </div>
-                  </div>
 
-                  {/* Run history toggle */}
-                  <button
-                    onClick={() => handleToggleRuns(workflow.id)}
-                    className="flex items-center gap-1 mt-3 ml-5 text-[11px] text-cc-text-muted hover:text-cc-text-secondary transition-colors"
-                  >
-                    <Clock className="h-3 w-3" />
-                    Run history
-                    {expandedRuns[workflow.id] ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                  </button>
-                </div>
-
-                {/* Expanded run history */}
-                {expandedRuns[workflow.id] && (
-                  <div className="border-t border-cc-border bg-cc-surface/50">
-                    {!runs[workflow.id] || runs[workflow.id].length === 0 ? (
-                      <p className="text-xs text-cc-text-muted text-center py-4">No runs yet</p>
-                    ) : (
-                      runs[workflow.id].map(run => (
-                        <RunRow key={run.id} run={run} />
-                      ))
+                    {/* Expanded run history */}
+                    {expandedRuns[workflow.id] && (
+                      <div className="border-t border-cc-border bg-cc-surface/50">
+                        {!runs[workflow.id] || runs[workflow.id].length === 0 ? (
+                          <p className="text-xs text-cc-text-muted text-center py-4">No runs yet</p>
+                        ) : (
+                          runs[workflow.id].map(run => (
+                            <RunRow key={run.id} run={run} />
+                          ))
+                        )}
+                      </div>
                     )}
-                  </div>
-                )}
-              </GlassCard>
-            ))}
+                  </GlassCard>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        /* Run History tab */
+        <div>
+          <h3 className="text-[13px] font-semibold text-cc-text-primary mb-4 uppercase tracking-[0.04em]">
+            Run History
+          </h3>
+
+          {loadingRuns ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-5 w-5 text-cc-text-muted animate-spin" />
+            </div>
+          ) : globalRuns.length === 0 ? (
+            <GlassCard hover={false} className="p-8 text-center">
+              <History className="h-8 w-8 text-cc-text-muted mx-auto mb-3" />
+              <p className="text-sm text-cc-text-secondary">No automation runs yet.</p>
+              <p className="text-xs text-cc-text-muted mt-1">Workflows will log their executions here.</p>
+            </GlassCard>
+          ) : (
+            <GlassCard hover={false} className="p-0 overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Workflow Name</TableHead>
+                    <TableHead>Trigger Event</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Timestamp</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {globalRuns.slice(0, globalRunsLimit).map(run => (
+                    <GlobalRunRow
+                      key={run.id}
+                      run={run}
+                      workflowName={workflowNameMap[run.workflow_id] || 'Unknown Workflow'}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+              {globalRuns.length > globalRunsLimit && (
+                <div className="p-3 border-t border-cc-border text-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setGlobalRunsLimit(prev => prev + 50)}
+                    className="text-xs"
+                  >
+                    Load more ({globalRuns.length - globalRunsLimit} remaining)
+                  </Button>
+                </div>
+              )}
+            </GlassCard>
+          )}
+        </div>
+      )}
 
       {/* Editor modal */}
       <WorkflowEditor
