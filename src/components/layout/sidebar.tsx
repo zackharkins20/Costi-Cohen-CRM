@@ -60,11 +60,11 @@ export function Sidebar() {
   const navContent = (
     <>
       {/* Logo */}
-      <div className="px-5 py-7 border-b border-[var(--cc-border)]">
-        <h1 className="text-xl text-[var(--cc-gold)] tracking-wide" style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}>
+      <div className="px-5 py-7 border-b border-[#222222]">
+        <h1 className="text-lg font-semibold text-white uppercase tracking-[0.15em]">
           Costi Cohen
         </h1>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--cc-text-muted)] mt-1 font-medium">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-[#A0A7AB] mt-1 font-normal">
           Property Advisory
         </p>
       </div>
@@ -79,10 +79,10 @@ export function Sidebar() {
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                'flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
                 active
-                  ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-l-2 border-[var(--cc-gold)]'
-                  : 'text-[var(--cc-text-tertiary)] hover:bg-[var(--cc-surface-2)] hover:text-[var(--cc-text-primary)]'
+                  ? 'text-white font-medium border-l-2 border-white pl-[10px]'
+                  : 'text-[#A0A7AB] hover:text-white'
               )}
             >
               <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -93,7 +93,7 @@ export function Sidebar() {
         {isAdmin && (
           <>
             <div className="pt-3 pb-1 px-3">
-              <p className="text-[9px] uppercase tracking-[0.15em] text-[var(--cc-text-muted)] font-medium">Admin</p>
+              <p className="text-[10px] uppercase tracking-[0.15em] text-[#555555] font-medium">Admin</p>
             </div>
             {adminNavigation.map((item) => {
               const active = isActive(item.href)
@@ -103,10 +103,10 @@ export function Sidebar() {
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
+                    'flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
                     active
-                      ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-l-2 border-[var(--cc-gold)]'
-                      : 'text-[var(--cc-text-tertiary)] hover:bg-[var(--cc-surface-2)] hover:text-[var(--cc-text-primary)]'
+                      ? 'text-white font-medium border-l-2 border-white pl-[10px]'
+                      : 'text-[#A0A7AB] hover:text-white'
                   )}
                 >
                   <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -119,10 +119,10 @@ export function Sidebar() {
       </nav>
 
       {/* Sign out */}
-      <div className="px-3 py-4 border-t border-[var(--cc-border)]">
+      <div className="px-3 py-4 border-t border-[#222222]">
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[var(--cc-text-tertiary)] hover:bg-[var(--cc-surface-2)] hover:text-[var(--cc-text-primary)] transition-all w-full"
+          className="flex items-center gap-3 px-3 py-2.5 text-sm font-normal text-[#A0A7AB] hover:text-white transition-all w-full"
         >
           <LogOut className="h-4 w-4" />
           Sign Out
@@ -136,21 +136,21 @@ export function Sidebar() {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-[var(--cc-surface)] border border-[var(--cc-border)] lg:hidden"
+        className="fixed top-4 left-4 z-50 p-2 bg-[#0a0a0a] border border-[#222222] lg:hidden"
       >
-        <Menu className="h-5 w-5 text-[var(--cc-text-primary)]" />
+        <Menu className="h-5 w-5 text-white" />
       </button>
 
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
-          <div className="relative w-64 h-full bg-[var(--cc-surface)] border-r border-[var(--cc-border)] flex flex-col">
+          <div className="absolute inset-0 bg-black/80" onClick={() => setMobileOpen(false)} />
+          <div className="relative w-64 h-full bg-[#0a0a0a] border-r border-[#222222] flex flex-col">
             <button
               onClick={() => setMobileOpen(false)}
               className="absolute top-4 right-4 p-1"
             >
-              <X className="h-5 w-5 text-[var(--cc-text-tertiary)]" />
+              <X className="h-5 w-5 text-[#A0A7AB]" />
             </button>
             {navContent}
           </div>
@@ -158,7 +158,7 @@ export function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 bg-[var(--cc-surface)] border-r border-[var(--cc-border)] z-30">
+      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 bg-[#0a0a0a] border-r border-[#222222] z-30">
         {navContent}
       </aside>
     </>

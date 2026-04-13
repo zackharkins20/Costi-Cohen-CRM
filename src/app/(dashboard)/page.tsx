@@ -38,8 +38,8 @@ export default function DashboardPage() {
     return `$${n}`
   }
 
-  /* Muted warm chart palette: golds, champagne, warm grays */
-  const chartColors = ['#c9a96e', '#b8924f', '#a07a38', '#8a8680', '#6b6560', '#5c584f']
+  /* Monochrome chart palette */
+  const chartColors = ['#FFFFFF', '#A0A7AB', '#555555', '#FFFFFF', '#A0A7AB', '#555555']
 
   return (
     <div>
@@ -55,32 +55,32 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pipeline chart */}
         <GlassCard hover={false} className="lg:col-span-2 p-6">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-5">Pipeline by Stage</h3>
+          <h3 className="text-sm font-medium text-white mb-5">Pipeline by Stage</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: '#5c584f', fontSize: 11 }}
-                  axisLine={{ stroke: 'rgba(201, 169, 110, 0.08)' }}
+                  tick={{ fill: '#A0A7AB', fontSize: 11 }}
+                  axisLine={{ stroke: '#222222' }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: '#5c584f', fontSize: 11 }}
+                  tick={{ fill: '#A0A7AB', fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   allowDecimals={false}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: '#1a1917',
-                    border: '1px solid rgba(201, 169, 110, 0.15)',
-                    borderRadius: '8px',
-                    color: '#f5f0e8',
-                    fontSize: '12px',
+                    background: '#111111',
+                    border: '1px solid #222222',
+                    borderRadius: '0',
+                    color: '#FFFFFF',
+                    fontSize: '13px',
                   }}
                 />
-                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="count" radius={[0, 0, 0, 0]}>
                   {chartData.map((_, i) => (
                     <Cell key={i} fill={chartColors[i % chartColors.length]} />
                   ))}
@@ -92,17 +92,17 @@ export default function DashboardPage() {
 
         {/* Recent activity */}
         <GlassCard hover={false} className="p-6">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-5">Recent Activity</h3>
+          <h3 className="text-sm font-medium text-white mb-5">Recent Activity</h3>
           <div className="space-y-0">
             {activities.length === 0 ? (
-              <p className="text-xs text-[var(--cc-text-muted)] text-center py-8">No recent activity</p>
+              <p className="text-xs text-[#555555] text-center py-8">No recent activity</p>
             ) : (
               activities.map(a => (
-                <div key={a.id} className="flex gap-3 py-3 border-b border-[var(--cc-border)] last:border-0">
-                  <MessageSquare className="h-3.5 w-3.5 text-[var(--cc-text-muted)] mt-0.5 flex-shrink-0" />
+                <div key={a.id} className="flex gap-3 py-3 border-b border-[#222222] last:border-0">
+                  <MessageSquare className="h-3.5 w-3.5 text-[#555555] mt-0.5 flex-shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-sm text-[var(--cc-text-secondary)] line-clamp-2">{a.description}</p>
-                    <p className="text-[10px] text-[var(--cc-text-muted)] mt-0.5">
+                    <p className="text-sm text-[#A0A7AB] line-clamp-2">{a.description}</p>
+                    <p className="text-[10px] text-[#555555] mt-0.5">
                       {formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}
                     </p>
                   </div>

@@ -13,16 +13,16 @@ export function MetricCard({ label, value, icon: Icon, change }: MetricCardProps
     <GlassCard hover={false} className="p-6">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-wider text-[var(--cc-text-muted)]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-[#A0A7AB]">
             {label}
           </p>
-          <p className="text-2xl font-semibold text-[var(--cc-gold)] mt-2" style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}>{value}</p>
+          <p className="text-[32px] font-semibold text-white mt-2 tracking-[-0.02em] leading-none">{value}</p>
           {change && (
-            <p className="text-xs text-[var(--cc-text-tertiary)] mt-1">{change}</p>
+            <p className="text-xs text-[#A0A7AB] mt-1">{change}</p>
           )}
         </div>
-        <div className="p-2.5 rounded-lg bg-[var(--cc-gold-soft)]">
-          <Icon className="h-5 w-5 text-[var(--cc-gold)]" />
+        <div className="p-2.5 border border-[#222222]">
+          <Icon className="h-5 w-5 text-white" />
         </div>
       </div>
     </GlassCard>

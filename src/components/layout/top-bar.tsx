@@ -30,14 +30,14 @@ export function TopBar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 h-16 border-b border-[var(--cc-border)] bg-[var(--cc-bg)]/90 backdrop-blur-xl flex items-center px-8 gap-4">
+    <header className="sticky top-0 z-20 h-16 border-b border-[#222222] bg-[#000000]/90 backdrop-blur-xl flex items-center px-8 gap-4">
       {/* Search */}
       <div className="flex-1 max-w-md ml-12 lg:ml-0">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--cc-text-muted)]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
           <Input
             placeholder="Search contacts, deals..."
-            className="pl-9 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)] h-9"
+            className="pl-9 bg-[#111111] border-[#222222] text-white placeholder:text-[#555555] h-9"
           />
         </div>
       </div>
@@ -46,22 +46,22 @@ export function TopBar() {
       <div className="relative">
         <button
           onClick={() => setShowNotifications(!showNotifications)}
-          className="relative p-2 rounded-lg hover:bg-[var(--cc-surface-2)] transition-colors"
+          className="relative p-2 hover:bg-[#111111] transition-colors"
         >
-          <Bell className="h-5 w-5 text-[var(--cc-text-tertiary)]" />
+          <Bell className="h-5 w-5 text-[#A0A7AB]" />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-[var(--cc-gold)] rounded-full" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-white" />
           )}
         </button>
 
         {showNotifications && (
-          <div className="absolute right-0 top-full mt-2 w-80 bg-[var(--cc-surface)] border border-[var(--cc-border)] rounded-xl overflow-hidden z-50 shadow-2xl">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--cc-border)]">
-              <h3 className="text-sm font-medium text-[var(--cc-text-primary)]">Notifications</h3>
+          <div className="absolute right-0 top-full mt-2 w-80 bg-[#0a0a0a] border border-[#222222] overflow-hidden z-50 shadow-2xl">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#222222]">
+              <h3 className="text-sm font-medium text-white">Notifications</h3>
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-xs text-[var(--cc-gold)] hover:underline"
+                  className="text-xs text-white hover:underline"
                 >
                   Mark all read
                 </button>
@@ -69,19 +69,19 @@ export function TopBar() {
             </div>
             <div className="max-h-80 overflow-y-auto">
               {notifications.length === 0 ? (
-                <p className="px-4 py-6 text-sm text-[var(--cc-text-muted)] text-center">
+                <p className="px-4 py-6 text-sm text-[#555555] text-center">
                   No notifications
                 </p>
               ) : (
                 notifications.map(n => (
                   <div
                     key={n.id}
-                    className={`px-4 py-3 border-b border-[var(--cc-border)] last:border-0 ${
-                      !n.read ? 'bg-[var(--cc-gold-soft)]' : ''
+                    className={`px-4 py-3 border-b border-[#222222] last:border-0 ${
+                      !n.read ? 'bg-[#111111]' : ''
                     }`}
                   >
-                    <p className="text-sm font-medium text-[var(--cc-text-primary)]">{n.title}</p>
-                    <p className="text-xs text-[var(--cc-text-tertiary)] mt-0.5">{n.message}</p>
+                    <p className="text-sm font-medium text-white">{n.title}</p>
+                    <p className="text-xs text-[#A0A7AB] mt-0.5">{n.message}</p>
                   </div>
                 ))
               )}

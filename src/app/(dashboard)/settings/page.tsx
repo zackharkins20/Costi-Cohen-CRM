@@ -33,8 +33,6 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
-  const inputClass = 'bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]'
-
   return (
     <div className="max-w-2xl">
       <PageHeader title="Settings" description="Manage your profile and preferences" />
@@ -42,21 +40,21 @@ export default function SettingsPage() {
       <div className="space-y-6">
         {/* Profile */}
         <GlassCard hover={false} className="p-6">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-5">Profile</h3>
+          <h3 className="text-sm font-medium text-white mb-5">Profile</h3>
           <div className="space-y-4">
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Full Name</Label>
-              <Input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className={`mt-1.5 ${inputClass}`} />
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Full Name</Label>
+              <Input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className="mt-1.5" />
             </div>
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Email</Label>
-              <Input value={form.email} disabled className={`mt-1.5 ${inputClass} opacity-50`} />
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
+              <Input value={form.email} disabled className="mt-1.5 opacity-50" />
             </div>
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Role</Label>
-              <Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className={`mt-1.5 ${inputClass}`} />
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Role</Label>
+              <Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="mt-1.5" />
             </div>
-            <Button onClick={handleSave} disabled={saving} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
+            <Button onClick={handleSave} disabled={saving}>
               {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
             </Button>
           </div>
@@ -64,8 +62,8 @@ export default function SettingsPage() {
 
         {/* Theme info */}
         <GlassCard hover={false} className="p-6">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-4">Appearance</h3>
-          <p className="text-sm text-[var(--cc-text-tertiary)]">
+          <h3 className="text-sm font-medium text-white mb-4">Appearance</h3>
+          <p className="text-sm text-[#A0A7AB]">
             Dark mode is the default theme for the Costi Cohen Property Advisory CRM.
           </p>
         </GlassCard>

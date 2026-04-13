@@ -47,7 +47,7 @@ export default function TasksPage() {
   return (
     <div>
       <PageHeader title="Tasks" description={`${tasks.length} tasks`}>
-        <Button onClick={() => setCreateOpen(true)} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
+        <Button onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4 mr-1" /> New Task
         </Button>
       </PageHeader>
@@ -58,18 +58,18 @@ export default function TasksPage() {
         getItemId={t => t.id}
         renderCard={(task) => (
           <GlassCard className="p-3">
-            <p className="text-sm font-medium text-[var(--cc-text-primary)] mb-1.5">{task.title}</p>
+            <p className="text-sm font-medium text-white mb-1.5">{task.title}</p>
             <div className="flex items-center gap-2 flex-wrap">
               <PriorityBadge priority={task.priority} />
               {task.due_date && (
-                <span className="text-[10px] text-[var(--cc-text-muted)] flex items-center gap-0.5">
+                <span className="text-[10px] text-[#555555] flex items-center gap-0.5">
                   <Calendar className="h-3 w-3" />
                   {format(new Date(task.due_date), 'MMM d')}
                 </span>
               )}
             </div>
             {task.deal && (
-              <p className="text-[10px] text-[var(--cc-text-tertiary)] mt-1.5 truncate">
+              <p className="text-[10px] text-[#A0A7AB] mt-1.5 truncate">
                 <CheckSquare className="h-3 w-3 inline mr-0.5" />
                 {(task.deal as { title: string }).title}
               </p>

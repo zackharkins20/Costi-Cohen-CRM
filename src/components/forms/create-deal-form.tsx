@@ -73,25 +73,23 @@ export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
     onClose()
   }
 
-  const inputClass = 'bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]'
-
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-border)] overflow-y-auto w-full sm:max-w-lg">
+      <SheetContent className="bg-[#0a0a0a] border-[#222222] overflow-y-auto w-full sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle className="text-[var(--cc-text-primary)]">New Deal</SheetTitle>
+          <SheetTitle className="text-white">New Deal</SheetTitle>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-5 mt-5 px-1">
           <div>
-            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Title *</Label>
-            <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required placeholder="e.g. 42 Oxford St Acquisition" className={`mt-1.5 ${inputClass}`} />
+            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Title *</Label>
+            <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required placeholder="e.g. 42 Oxford St Acquisition" className="mt-1.5" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Stage</Label>
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Stage</Label>
               <Select value={form.stage} onValueChange={v => setForm({ ...form, stage: v as PropertyStage })}>
-                <SelectTrigger className={`mt-1.5 ${inputClass}`}><SelectValue /></SelectTrigger>
-                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
+                <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
+                <SelectContent>
                   {PROPERTY_STAGES.map(s => (
                     <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
                   ))}
@@ -99,10 +97,10 @@ export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
               </Select>
             </div>
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Contact</Label>
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Contact</Label>
               <Select value={form.contact_id} onValueChange={v => setForm({ ...form, contact_id: v ?? '' })}>
-                <SelectTrigger className={`mt-1.5 ${inputClass}`}><SelectValue placeholder="Select contact" /></SelectTrigger>
-                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
+                <SelectTrigger className="mt-1.5"><SelectValue placeholder="Select contact" /></SelectTrigger>
+                <SelectContent>
                   {contacts.map(c => (
                     <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                   ))}
@@ -112,19 +110,19 @@ export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Deal Value ($)</Label>
-              <Input type="number" value={form.deal_value} onChange={e => setForm({ ...form, deal_value: e.target.value })} className={`mt-1.5 ${inputClass}`} />
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Deal Value ($)</Label>
+              <Input type="number" value={form.deal_value} onChange={e => setForm({ ...form, deal_value: e.target.value })} className="mt-1.5" />
             </div>
             <div>
-              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Fee %</Label>
-              <Input type="number" step="0.1" value={form.fee_percentage} onChange={e => setForm({ ...form, fee_percentage: e.target.value })} className={`mt-1.5 ${inputClass}`} />
+              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Fee %</Label>
+              <Input type="number" step="0.1" value={form.fee_percentage} onChange={e => setForm({ ...form, fee_percentage: e.target.value })} className="mt-1.5" />
             </div>
           </div>
           <div>
-            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Description</Label>
-            <Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className={`mt-1.5 ${inputClass} min-h-[60px]`} />
+            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Description</Label>
+            <Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="mt-1.5 min-h-[60px]" />
           </div>
-          <Button type="submit" disabled={loading} className="w-full bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c] font-medium">
+          <Button type="submit" disabled={loading} className="w-full">
             {loading ? 'Creating...' : 'Create Deal'}
           </Button>
         </form>

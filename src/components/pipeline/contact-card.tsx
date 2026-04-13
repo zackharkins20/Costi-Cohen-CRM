@@ -23,22 +23,22 @@ export function ContactCard({ contact, onClick }: ContactCardProps) {
   return (
     <GlassCard className="p-3" onClick={onClick}>
       <div className="flex items-start gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-[var(--cc-gold-soft)] flex items-center justify-center text-[var(--cc-gold)] text-xs font-semibold flex-shrink-0">
+        <div className="w-8 h-8 bg-[#111111] border border-[#222222] flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
           {initials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-[var(--cc-text-primary)] truncate">{contact.name}</p>
+          <p className="text-sm font-medium text-white truncate">{contact.name}</p>
           {contact.company && (
-            <p className="text-xs text-[var(--cc-text-tertiary)] truncate">{contact.company}</p>
+            <p className="text-xs text-[#A0A7AB] truncate">{contact.company}</p>
           )}
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             {contact.asset_type && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--cc-surface-offset)] text-[var(--cc-text-secondary)]">
+              <span className="text-[10px] px-1.5 py-0.5 bg-[#111111] border border-[#222222] text-[#A0A7AB]">
                 {contact.asset_type}
               </span>
             )}
             {budget && (
-              <span className="text-[10px] text-[var(--cc-gold)]">{budget}</span>
+              <span className="text-[10px] text-white font-medium">{budget}</span>
             )}
           </div>
         </div>

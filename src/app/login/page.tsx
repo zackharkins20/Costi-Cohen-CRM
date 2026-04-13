@@ -48,54 +48,47 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--cc-bg)] flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Ambient orbs */}
-      <div className="ambient-orb ambient-orb-1" />
-      <div className="ambient-orb ambient-orb-2" />
-
-      <div className="w-full max-w-sm relative z-10">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
-          <h1
-            className="text-3xl text-[var(--cc-gold)] tracking-wide"
-            style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}
-          >
+          <h1 className="text-2xl font-semibold text-white uppercase tracking-[0.15em]">
             Costi Cohen
           </h1>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--cc-text-muted)] mt-1.5 font-medium">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[#A0A7AB] mt-1.5 font-normal">
             Property Advisory
           </p>
         </div>
 
-        <div className="bg-[var(--cc-surface)] border border-[var(--cc-border)] rounded-xl p-8">
-          <h2 className="text-lg font-medium text-[var(--cc-text-primary)] mb-6" style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}>
+        <div className="bg-[#0a0a0a] border border-[#222222] p-8">
+          <h2 className="text-lg font-semibold text-white mb-6 tracking-[-0.02em]">
             Sign in
           </h2>
 
           <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
             <div className="space-y-5">
               <div>
-                <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Email</Label>
+                <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
                 <Input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="mt-1.5 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]"
+                  className="mt-1.5"
                 />
               </div>
 
               {mode === 'password' && (
                 <div>
-                  <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Password</Label>
+                  <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Password</Label>
                   <Input
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="mt-1.5 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]"
+                    className="mt-1.5"
                   />
                 </div>
               )}
@@ -103,7 +96,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c] font-medium"
+                className="w-full"
               >
                 {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
               </Button>
@@ -111,14 +104,14 @@ export default function LoginPage() {
           </form>
 
           {message && (
-            <p className={`text-sm mt-4 ${message.includes('Check') ? 'text-[var(--cc-gold)]' : 'text-[#a0705a]'}`}>
+            <p className={`text-sm mt-4 ${message.includes('Check') ? 'text-white' : 'text-[#888888]'}`}>
               {message}
             </p>
           )}
 
           <button
             onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
-            className="text-xs text-[var(--cc-text-muted)] hover:text-[var(--cc-text-secondary)] mt-5 block w-full text-center"
+            className="text-xs text-[#555555] hover:text-[#A0A7AB] mt-5 block w-full text-center"
           >
             {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
           </button>

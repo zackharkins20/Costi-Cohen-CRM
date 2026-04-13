@@ -75,12 +75,12 @@ export default function PipelinePage() {
     <div>
       <PageHeader title="Pipeline" description="Drag contacts across stages">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--cc-text-muted)]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
           <Input
             placeholder="Search..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 w-56 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] h-9"
+            className="pl-9 w-56 h-9"
           />
         </div>
       </PageHeader>

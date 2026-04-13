@@ -38,15 +38,15 @@ export default function ContactsPage() {
     <div>
       <PageHeader title="Contacts" description={`${contacts.length} contacts`}>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--cc-text-muted)]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
           <Input
             placeholder="Search contacts..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 w-56 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] h-9"
+            className="pl-9 w-56 h-9"
           />
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
+        <Button onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4 mr-1" /> Add Contact
         </Button>
       </PageHeader>
@@ -57,7 +57,7 @@ export default function ContactsPage() {
           title="No contacts yet"
           description="Add your first contact to start building your pipeline."
           action={
-            <Button onClick={() => setCreateOpen(true)} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
+            <Button onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4 mr-1" /> Add Contact
             </Button>
           }
@@ -73,15 +73,15 @@ export default function ContactsPage() {
                 onClick={() => { setSelectedContact(contact); setDetailOpen(true) }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[var(--cc-gold-soft)] flex items-center justify-center text-[var(--cc-gold)] font-semibold text-sm flex-shrink-0">
+                  <div className="w-10 h-10 bg-[#111111] border border-[#222222] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
                     {initials}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-[var(--cc-text-primary)] truncate">{contact.name}</p>
+                    <p className="text-sm font-medium text-white truncate">{contact.name}</p>
                     {contact.company && (
-                      <p className="text-xs text-[var(--cc-text-tertiary)] truncate">{contact.company}</p>
+                      <p className="text-xs text-[#A0A7AB] truncate">{contact.company}</p>
                     )}
-                    <div className="flex items-center gap-3 mt-2 text-xs text-[var(--cc-text-muted)]">
+                    <div className="flex items-center gap-3 mt-2 text-xs text-[#555555]">
                       {contact.email && (
                         <span className="flex items-center gap-1 truncate"><Mail className="h-3 w-3" /> {contact.email}</span>
                       )}
