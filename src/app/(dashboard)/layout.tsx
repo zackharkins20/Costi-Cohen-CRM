@@ -5,6 +5,7 @@ import { Sidebar, useSidebarWidth } from '@/components/layout/sidebar'
 import { TopBar } from '@/components/layout/top-bar'
 import { WhatsNewModal, useWhatsNew } from '@/components/whats-new-modal'
 import { FeatureTour, useTour } from '@/components/feature-tour'
+import { QuickAddFab } from '@/components/quick-add-fab'
 
 const TOUR_LS_KEY = 'costicohen_tour_completed'
 
@@ -41,6 +42,7 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+      <QuickAddFab />
       <WhatsNewModal open={showWhatsNew} onClose={handleWhatsNewClose} />
       <FeatureTour active={tourActive} onComplete={completeTour} />
     </div>
