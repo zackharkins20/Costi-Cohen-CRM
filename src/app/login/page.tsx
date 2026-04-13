@@ -14,6 +14,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [btnHover, setBtnHover] = useState(false)
+  const [forgotMode, setForgotMode] = useState(false)
+  const [forgotEmail, setForgotEmail] = useState('')
+  const [forgotMessage, setForgotMessage] = useState('')
+  const [forgotLoading, setForgotLoading] = useState(false)
   const router = useRouter()
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
@@ -224,7 +228,7 @@ export default function LoginPage() {
                   />
                 </div>
 
-                {mode === 'password' && (
+                {mode === 'password' && !forgotMode && (
                   <div>
                     <label className="login-label block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
                       Password
@@ -252,19 +256,80 @@ export default function LoginPage() {
                         )}
                       </button>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => { setForgotMode(true); setForgotEmail(email); setForgotMessage('') }}
+                      className="text-xs mt-2 transition-colors hover:opacity-80"
+                      style={{ color: '#3B5068' }}
+                    >
+                      Forgot password?
+                    </button>
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  onMouseEnter={() => setBtnHover(true)}
-                  onMouseLeave={() => setBtnHover(false)}
-                  className="login-sign-in-btn w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ backgroundColor: btnHover ? '#222222' : '#000000', color: '#ffffff' }}
-                >
-                  {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
-                </button>
+                {forgotMode && (
+                  <div className="space-y-3 p-4 rounded-lg" style={{ backgroundColor: '#F0F4F8' }}>
+                    <p className="text-sm font-medium" style={{ color: '#333333' }}>Reset your password</p>
+                    <input
+                      type="email"
+                      value={forgotEmail}
+                      onChange={e => setForgotEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="h-10 w-full rounded-md border border-[#DDDDDD] bg-white px-3 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-[#3B5068] focus:ring-2 focus:ring-[#3B5068]/20"
+                      style={{ color: '#000000' }}
+                    />
+                    {forgotMessage && (
+                      <p className="text-sm" style={{ color: forgotMessage.includes('Check') ? '#16a34a' : '#dc2626' }}>
+                        {forgotMessage}
+                      </p>
+                    )}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        disabled={forgotLoading || !forgotEmail.trim()}
+                        onClick={async () => {
+                          setForgotLoading(true)
+                          setForgotMessage('')
+                          const supabase = createClient()
+                          const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+                            redirectTo: `${window.location.origin}/auth/callback`,
+                          })
+                          if (error) {
+                            setForgotMessage(error.message)
+                          } else {
+                            setForgotMessage('Check your email for a password reset link.')
+                          }
+                          setForgotLoading(false)
+                        }}
+                        className="h-9 px-4 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
+                        style={{ backgroundColor: '#000000', color: '#ffffff' }}
+                      >
+                        {forgotLoading ? 'Sending...' : 'Send Reset Link'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setForgotMode(false); setForgotMessage('') }}
+                        className="h-9 px-4 rounded-md text-sm border transition-colors"
+                        style={{ borderColor: '#DDDDDD', color: '#333333' }}
+                      >
+                        Back to Login
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {!forgotMode && (
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    onMouseEnter={() => setBtnHover(true)}
+                    onMouseLeave={() => setBtnHover(false)}
+                    className="login-sign-in-btn w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: btnHover ? '#222222' : '#000000', color: '#ffffff' }}
+                  >
+                    {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
+                  </button>
+                )}
               </div>
             </form>
 

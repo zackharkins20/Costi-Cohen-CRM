@@ -25,6 +25,7 @@ import { PROPERTY_STAGES, type PropertyStage, type Contact, type Deal } from '@/
 import { getStageColor } from '@/lib/stage-colors'
 import { useTheme } from '@/components/theme-provider'
 import { Mail, Pencil, Phone, Building2, AtSign, Trash2, Send, Plus, DollarSign, ChevronRight } from 'lucide-react'
+import { formatPhone } from '@/lib/utils'
 import {
   Dialog,
   DialogContent,
@@ -167,7 +168,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId, 
                     {editing ? (
                       <Input value={form.email || ''} onChange={e => setForm({ ...form, email: e.target.value })} className="h-8 text-sm" placeholder="Email" />
                     ) : (
-                      <span className="text-sm text-cc-text-secondary truncate block">{contact.email || '—'}</span>
+                      <span className="text-sm text-cc-text-secondary truncate block" title={contact.email || undefined}>{contact.email || '—'}</span>
                     )}
                   </div>
                 </div>
@@ -177,7 +178,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId, 
                     {editing ? (
                       <Input value={form.phone || ''} onChange={e => setForm({ ...form, phone: e.target.value })} className="h-8 text-sm" placeholder="Phone" />
                     ) : (
-                      <span className="text-sm text-cc-text-secondary truncate block">{contact.phone || '—'}</span>
+                      <span className="text-sm text-cc-text-secondary truncate block">{contact.phone ? formatPhone(contact.phone) : '—'}</span>
                     )}
                   </div>
                 </div>

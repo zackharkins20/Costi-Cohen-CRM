@@ -9,6 +9,7 @@ import { CreateContactForm } from '@/components/forms/create-contact-form'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { DealDetailModal } from '@/components/pipeline/deal-detail-modal'
 import { getContacts, getCurrentUser } from '@/lib/queries'
+import { formatPhone } from '@/lib/utils'
 import { getDocumentCounts } from '@/lib/documents'
 import { PROPERTY_STAGES, type Contact, type Deal, type PropertyStage } from '@/lib/types'
 import { Button } from '@/components/ui/button'
@@ -205,10 +206,10 @@ export default function ContactsPage() {
                     )}
                     <div className="flex items-center gap-3 mt-2 text-xs text-cc-text-muted">
                       {contact.email && (
-                        <span className="flex items-center gap-1 truncate"><Mail className="h-3 w-3" /> {contact.email}</span>
+                        <span className="flex items-center gap-1 truncate" title={contact.email}><Mail className="h-3 w-3" /> {contact.email}</span>
                       )}
                       {contact.phone && (
-                        <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {contact.phone}</span>
+                        <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {formatPhone(contact.phone)}</span>
                       )}
                     </div>
                     <div className="mt-2 flex items-center gap-2">

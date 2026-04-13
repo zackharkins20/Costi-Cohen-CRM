@@ -2,6 +2,7 @@
 
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { cn } from '@/lib/utils'
+import { GripVertical } from 'lucide-react'
 
 /* Stage column top-border colors — blue-grey progressive tints */
 const stageTopBorders: Record<string, string> = {
@@ -82,14 +83,19 @@ export function KanbanBoard<T>({ columns, onDragEnd, renderCard, getItemId, colu
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          {...provided.dragHandleProps}
                           className={cn(
-                            'mb-2 last:mb-0 transition-all',
+                            'mb-2 last:mb-0 transition-all group/card relative',
                             snapshot.isDragging && 'shadow-xl -translate-y-0.5',
                             stageLeftBorders[column.id] || '',
                             'rounded-lg',
                           )}
                         >
+                          <div
+                            {...provided.dragHandleProps}
+                            className="absolute left-0 top-0 bottom-0 w-5 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity cursor-grab active:cursor-grabbing z-10"
+                          >
+                            <GripVertical className="h-3.5 w-3.5 text-cc-text-muted" />
+                          </div>
                           {renderCard(item, index)}
                         </div>
                       )}

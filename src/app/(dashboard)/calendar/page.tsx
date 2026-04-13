@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -81,6 +81,8 @@ export default function CalendarPage() {
   const [userId, setUserId] = useState<string>()
   const [deals, setDeals] = useState<{ id: string; title: string }[]>([])
   const [contacts, setContacts] = useState<{ id: string; name: string }[]>([])
+  const dayScrollRef = useRef<HTMLDivElement>(null)
+  const currentHourRef = useRef<HTMLDivElement>(null)
 
   const loadEvents = useCallback(() => {
     let start: Date
@@ -105,6 +107,13 @@ export default function CalendarPage() {
     getDeals().then(d => setDeals(d.map(dl => ({ id: dl.id, title: dl.title }))))
     getContacts().then(c => setContacts(c.map(ct => ({ id: ct.id, name: ct.name }))))
   }, [])
+
+  // Auto-scroll day view to current hour
+  useEffect(() => {
+    if (viewMode === 'day' && currentHourRef.current) {
+      currentHourRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [viewMode, currentDate])
 
   const navigate = (dir: 'prev' | 'next') => {
     if (viewMode === 'month') {
@@ -389,23 +398,27 @@ export default function CalendarPage() {
         )}
 
         {/* Time grid */}
-        <div className="max-h-[600px] overflow-y-auto">
+        <div className="max-h-[600px] overflow-y-auto" ref={dayScrollRef}>
           <div className="relative">
-            {hours.map(h => (
-              <div
-                key={h}
-                className="flex border-b border-cc-border hover:bg-cc-surface-2/30 cursor-pointer"
-                style={{ height: '48px' }}
-                onClick={() => handleDayClick(currentDate)}
-              >
-                <div className="w-16 pr-2 text-right flex-shrink-0 border-r border-cc-border">
-                  <span className="text-[10px] text-cc-text-muted leading-none -mt-1.5 inline-block">
-                    {h === 0 ? '' : format(new Date(2024, 0, 1, h), 'h a')}
-                  </span>
+            {hours.map(h => {
+              const isCurrentHour = isToday(currentDate) && h === new Date().getHours()
+              return (
+                <div
+                  key={h}
+                  ref={isCurrentHour ? currentHourRef : undefined}
+                  className="flex border-b border-cc-border hover:bg-cc-surface-2/30 cursor-pointer"
+                  style={{ height: '48px' }}
+                  onClick={() => handleDayClick(currentDate)}
+                >
+                  <div className="w-16 pr-2 text-right flex-shrink-0 border-r border-cc-border">
+                    <span className="text-[10px] text-cc-text-muted leading-none -mt-1.5 inline-block">
+                      {h === 0 ? '' : format(new Date(2024, 0, 1, h), 'h a')}
+                    </span>
+                  </div>
+                  <div className="flex-1 relative" />
                 </div>
-                <div className="flex-1 relative" />
-              </div>
-            ))}
+              )
+            })}
             {/* Positioned events */}
             {dayEvents
               .filter(e => !e.all_day)
