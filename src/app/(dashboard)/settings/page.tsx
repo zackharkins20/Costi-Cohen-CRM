@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getCurrentUser, updateUser } from '@/lib/queries'
+import { useTheme } from '@/components/theme-provider'
 import type { User } from '@/lib/types'
 
 export default function SettingsPage() {
@@ -14,6 +15,7 @@ export default function SettingsPage() {
   const [form, setForm] = useState({ full_name: '', email: '', role: '' })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     getCurrentUser().then(u => {
@@ -40,18 +42,18 @@ export default function SettingsPage() {
       <div className="space-y-6">
         {/* Profile */}
         <GlassCard hover={false} className="p-6">
-          <h3 className="text-sm font-medium text-white mb-5">Profile</h3>
+          <h3 className="text-sm font-medium text-cc-text-primary mb-5">Profile</h3>
           <div className="space-y-4">
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Full Name</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Full Name</Label>
               <Input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className="mt-1.5" />
             </div>
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
               <Input value={form.email} disabled className="mt-1.5 opacity-50" />
             </div>
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Role</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Role</Label>
               <Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className="mt-1.5" />
             </div>
             <Button onClick={handleSave} disabled={saving}>
@@ -60,12 +62,15 @@ export default function SettingsPage() {
           </div>
         </GlassCard>
 
-        {/* Theme info */}
+        {/* Appearance */}
         <GlassCard hover={false} className="p-6">
-          <h3 className="text-sm font-medium text-white mb-4">Appearance</h3>
-          <p className="text-sm text-[#A0A7AB]">
-            Dark mode is the default theme for the Costi Cohen Property Advisory CRM.
+          <h3 className="text-sm font-medium text-cc-text-primary mb-4">Appearance</h3>
+          <p className="text-sm text-cc-text-secondary mb-4">
+            Toggle between dark and light mode.
           </p>
+          <Button variant="outline" onClick={toggleTheme}>
+            {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          </Button>
         </GlassCard>
       </div>
     </div>

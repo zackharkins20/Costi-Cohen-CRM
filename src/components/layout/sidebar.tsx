@@ -15,11 +15,14 @@ import {
   Menu,
   X,
   LogOut,
+  Sun,
+  Moon,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { getCurrentUser } from '@/lib/queries'
+import { useTheme } from '@/components/theme-provider'
 
 const navigation = [
   { label: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -39,6 +42,7 @@ export function Sidebar() {
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     getCurrentUser().then(user => {
@@ -60,11 +64,11 @@ export function Sidebar() {
   const navContent = (
     <>
       {/* Logo */}
-      <div className="px-5 py-7 border-b border-[#222222]">
-        <h1 className="text-lg font-semibold text-white uppercase tracking-[0.15em]">
+      <div className="px-5 py-7 border-b border-cc-border">
+        <h1 className="text-lg font-semibold text-cc-text-primary uppercase tracking-[0.15em]">
           Costi Cohen
         </h1>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-[#A0A7AB] mt-1 font-normal">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-cc-text-secondary mt-1 font-normal">
           Property Advisory
         </p>
       </div>
@@ -81,8 +85,8 @@ export function Sidebar() {
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
                 active
-                  ? 'text-white font-medium border-l-2 border-white pl-[10px]'
-                  : 'text-[#A0A7AB] hover:text-white'
+                  ? 'text-cc-text-primary font-medium border-l-2 border-cc-text-primary pl-[10px]'
+                  : 'text-cc-text-secondary hover:text-cc-text-primary'
               )}
             >
               <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -93,7 +97,7 @@ export function Sidebar() {
         {isAdmin && (
           <>
             <div className="pt-3 pb-1 px-3">
-              <p className="text-[10px] uppercase tracking-[0.15em] text-[#555555] font-medium">Admin</p>
+              <p className="text-[10px] uppercase tracking-[0.15em] text-cc-text-muted font-medium">Admin</p>
             </div>
             {adminNavigation.map((item) => {
               const active = isActive(item.href)
@@ -105,8 +109,8 @@ export function Sidebar() {
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 text-sm font-normal transition-all duration-150',
                     active
-                      ? 'text-white font-medium border-l-2 border-white pl-[10px]'
-                      : 'text-[#A0A7AB] hover:text-white'
+                      ? 'text-cc-text-primary font-medium border-l-2 border-cc-text-primary pl-[10px]'
+                      : 'text-cc-text-secondary hover:text-cc-text-primary'
                   )}
                 >
                   <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -118,11 +122,18 @@ export function Sidebar() {
         )}
       </nav>
 
-      {/* Sign out */}
-      <div className="px-3 py-4 border-t border-[#222222]">
+      {/* Theme toggle + Sign out */}
+      <div className="px-3 py-4 border-t border-cc-border">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-3 px-3 py-2.5 text-sm font-normal text-cc-text-secondary hover:text-cc-text-primary transition-all w-full"
+        >
+          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+        </button>
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2.5 text-sm font-normal text-[#A0A7AB] hover:text-white transition-all w-full"
+          className="flex items-center gap-3 px-3 py-2.5 text-sm font-normal text-cc-text-secondary hover:text-cc-text-primary transition-all w-full"
         >
           <LogOut className="h-4 w-4" />
           Sign Out
@@ -136,21 +147,21 @@ export function Sidebar() {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 p-2 bg-[#0a0a0a] border border-[#222222] lg:hidden"
+        className="fixed top-4 left-4 z-50 p-2 bg-cc-surface border border-cc-border lg:hidden"
       >
-        <Menu className="h-5 w-5 text-white" />
+        <Menu className="h-5 w-5 text-cc-text-primary" />
       </button>
 
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/80" onClick={() => setMobileOpen(false)} />
-          <div className="relative w-64 h-full bg-[#0a0a0a] border-r border-[#222222] flex flex-col">
+          <div className="absolute inset-0 bg-cc-bg/80" onClick={() => setMobileOpen(false)} />
+          <div className="relative w-64 h-full bg-cc-surface border-r border-cc-border flex flex-col">
             <button
               onClick={() => setMobileOpen(false)}
               className="absolute top-4 right-4 p-1"
             >
-              <X className="h-5 w-5 text-[#A0A7AB]" />
+              <X className="h-5 w-5 text-cc-text-secondary" />
             </button>
             {navContent}
           </div>
@@ -158,7 +169,7 @@ export function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 bg-[#0a0a0a] border-r border-[#222222] z-30">
+      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 bg-cc-surface border-r border-cc-border z-30">
         {navContent}
       </aside>
     </>

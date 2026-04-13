@@ -38,7 +38,7 @@ export default function ContactsPage() {
     <div>
       <PageHeader title="Contacts" description={`${contacts.length} contacts`}>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cc-text-muted" />
           <Input
             placeholder="Search contacts..."
             value={search}
@@ -73,15 +73,15 @@ export default function ContactsPage() {
                 onClick={() => { setSelectedContact(contact); setDetailOpen(true) }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-[#111111] border border-[#222222] flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                  <div className="w-10 h-10 bg-cc-surface-2 border border-cc-border flex items-center justify-center text-cc-text-primary font-semibold text-sm flex-shrink-0">
                     {initials}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white truncate">{contact.name}</p>
+                    <p className="text-sm font-medium text-cc-text-primary truncate">{contact.name}</p>
                     {contact.company && (
-                      <p className="text-xs text-[#A0A7AB] truncate">{contact.company}</p>
+                      <p className="text-xs text-cc-text-secondary truncate">{contact.company}</p>
                     )}
-                    <div className="flex items-center gap-3 mt-2 text-xs text-[#555555]">
+                    <div className="flex items-center gap-3 mt-2 text-xs text-cc-text-muted">
                       {contact.email && (
                         <span className="flex items-center gap-1 truncate"><Mail className="h-3 w-3" /> {contact.email}</span>
                       )}

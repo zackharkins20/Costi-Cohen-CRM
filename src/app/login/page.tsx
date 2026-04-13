@@ -48,27 +48,27 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+    <div className="min-h-screen bg-cc-bg flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
-          <h1 className="text-2xl font-semibold text-white uppercase tracking-[0.15em]">
+          <h1 className="text-2xl font-semibold text-cc-text-primary uppercase tracking-[0.15em]">
             Costi Cohen
           </h1>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-[#A0A7AB] mt-1.5 font-normal">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-cc-text-secondary mt-1.5 font-normal">
             Property Advisory
           </p>
         </div>
 
-        <div className="bg-[#0a0a0a] border border-[#222222] p-8">
-          <h2 className="text-lg font-semibold text-white mb-6 tracking-[-0.02em]">
+        <div className="bg-cc-surface border border-cc-border p-8">
+          <h2 className="text-lg font-semibold text-cc-text-primary mb-6 tracking-[-0.02em]">
             Sign in
           </h2>
 
           <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
             <div className="space-y-5">
               <div>
-                <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
+                <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
                 <Input
                   type="email"
                   value={email}
@@ -81,7 +81,7 @@ export default function LoginPage() {
 
               {mode === 'password' && (
                 <div>
-                  <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Password</Label>
+                  <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Password</Label>
                   <Input
                     type="password"
                     value={password}
@@ -96,7 +96,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-transparent border-[1.5px] border-white text-white hover:bg-white hover:text-black"
+                className="w-full bg-transparent border-[1.5px] border-cc-btn-border text-cc-btn-text hover:bg-cc-btn-hover-bg hover:text-cc-btn-hover-text"
               >
                 {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
               </Button>
@@ -104,14 +104,14 @@ export default function LoginPage() {
           </form>
 
           {message && (
-            <p className={`text-sm mt-4 ${message.includes('Check') ? 'text-white' : 'text-[#888888]'}`}>
+            <p className={`text-sm mt-4 ${message.includes('Check') ? 'text-cc-text-primary' : 'text-cc-destructive'}`}>
               {message}
             </p>
           )}
 
           <button
             onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
-            className="text-xs text-[#555555] hover:text-[#A0A7AB] mt-5 block w-full text-center"
+            className="text-xs text-cc-text-muted hover:text-cc-text-secondary mt-5 block w-full text-center"
           >
             {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
           </button>

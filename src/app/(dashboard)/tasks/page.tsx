@@ -58,18 +58,18 @@ export default function TasksPage() {
         getItemId={t => t.id}
         renderCard={(task) => (
           <GlassCard className="p-3">
-            <p className="text-sm font-medium text-white mb-1.5">{task.title}</p>
+            <p className="text-sm font-medium text-cc-text-primary mb-1.5">{task.title}</p>
             <div className="flex items-center gap-2 flex-wrap">
               <PriorityBadge priority={task.priority} />
               {task.due_date && (
-                <span className="text-[10px] text-[#555555] flex items-center gap-0.5">
+                <span className="text-[10px] text-cc-text-muted flex items-center gap-0.5">
                   <Calendar className="h-3 w-3" />
                   {format(new Date(task.due_date), 'MMM d')}
                 </span>
               )}
             </div>
             {task.deal && (
-              <p className="text-[10px] text-[#A0A7AB] mt-1.5 truncate">
+              <p className="text-[10px] text-cc-text-secondary mt-1.5 truncate">
                 <CheckSquare className="h-3 w-3 inline mr-0.5" />
                 {(task.deal as { title: string }).title}
               </p>

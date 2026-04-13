@@ -50,19 +50,19 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-white">Activity</h3>
+        <h3 className="text-sm font-medium text-cc-text-primary">Activity</h3>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setShowForm(!showForm)}
-          className="text-white hover:text-white h-7 text-xs"
+          className="text-cc-text-primary hover:text-cc-text-primary h-7 text-xs"
         >
           <Plus className="h-3 w-3 mr-1" /> Add
         </Button>
       </div>
 
       {showForm && (
-        <div className="space-y-2 p-4 bg-[#111111] border border-[#222222]">
+        <div className="space-y-2 p-4 bg-cc-surface-2 border border-cc-border">
           <div className="flex gap-1">
             {(['note', 'call', 'meeting', 'email_drafted'] as const).map(type => (
               <button
@@ -70,8 +70,8 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
                 onClick={() => setActionType(type)}
                 className={`px-2 py-1 text-xs capitalize ${
                   actionType === type
-                    ? 'bg-transparent text-white border border-white'
-                    : 'text-[#555555] hover:text-[#A0A7AB]'
+                    ? 'bg-transparent text-cc-text-primary border border-cc-btn-border'
+                    : 'text-cc-text-muted hover:text-cc-text-secondary'
                 }`}
               >
                 {type.replace('_', ' ')}
@@ -97,18 +97,18 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
 
       <div className="space-y-0">
         {activities.length === 0 ? (
-          <p className="text-xs text-[#555555] py-4 text-center">No activity yet</p>
+          <p className="text-xs text-cc-text-muted py-4 text-center">No activity yet</p>
         ) : (
           activities.map(activity => {
             const Icon = actionIcons[activity.action] || MessageSquare
             return (
-              <div key={activity.id} className="flex gap-3 py-3 border-b border-[#222222] last:border-0">
+              <div key={activity.id} className="flex gap-3 py-3 border-b border-cc-border last:border-0">
                 <div className="mt-0.5">
-                  <Icon className="h-3.5 w-3.5 text-[#555555]" />
+                  <Icon className="h-3.5 w-3.5 text-cc-text-muted" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-[#A0A7AB] line-clamp-2">{activity.description}</p>
-                  <p className="text-[10px] text-[#555555] mt-0.5">
+                  <p className="text-sm text-cc-text-secondary line-clamp-2">{activity.description}</p>
+                  <p className="text-[10px] text-cc-text-muted mt-0.5">
                     {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
                   </p>
                 </div>

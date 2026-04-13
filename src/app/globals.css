@@ -46,23 +46,47 @@
   --radius-2xl: 0;
   --radius-3xl: 0;
   --radius-4xl: 0;
+
+  /* Semantic theme colors for use in components */
+  --color-cc-bg: var(--cc-bg);
+  --color-cc-surface: var(--cc-surface);
+  --color-cc-surface-2: var(--cc-surface-2);
+  --color-cc-surface-offset: var(--cc-surface-offset);
+  --color-cc-border: var(--cc-border);
+  --color-cc-border-hover: var(--cc-border-hover);
+  --color-cc-text-primary: var(--cc-text-primary);
+  --color-cc-text-secondary: var(--cc-text-secondary);
+  --color-cc-text-muted: var(--cc-text-muted);
+  --color-cc-text-faint: var(--cc-text-faint);
+  --color-cc-divider: var(--cc-divider);
+  --color-cc-btn-border: var(--cc-btn-border);
+  --color-cc-btn-text: var(--cc-btn-text);
+  --color-cc-btn-hover-bg: var(--cc-btn-hover-bg);
+  --color-cc-btn-hover-text: var(--cc-btn-hover-text);
+  --color-cc-destructive: var(--cc-destructive);
 }
 
 :root {
   --radius: 0;
 
-  /* Costi Cohen brand — monochromatic dark theme */
+  /* === DARK THEME (default) === */
   --cc-bg: #000000;
   --cc-surface: #0a0a0a;
   --cc-surface-2: #111111;
   --cc-surface-offset: #1a1a1a;
   --cc-border: #222222;
+  --cc-border-hover: #333333;
   --cc-text-primary: #FFFFFF;
   --cc-text-secondary: #A0A7AB;
   --cc-text-tertiary: #A0A7AB;
   --cc-text-muted: #555555;
   --cc-text-faint: #555555;
   --cc-divider: #222222;
+  --cc-btn-border: #FFFFFF;
+  --cc-btn-text: #FFFFFF;
+  --cc-btn-hover-bg: #FFFFFF;
+  --cc-btn-hover-text: #000000;
+  --cc-destructive: #888888;
 
   /* Map to shadcn variables */
   --background: #000000;
@@ -100,6 +124,60 @@
   --font-heading: 'Inter', sans-serif;
 }
 
+/* === LIGHT THEME === */
+[data-theme="light"] {
+  --cc-bg: #FFFFFF;
+  --cc-surface: #F7F7F7;
+  --cc-surface-2: #EEEEEE;
+  --cc-surface-offset: #E8E8E8;
+  --cc-border: #DDDDDD;
+  --cc-border-hover: #CCCCCC;
+  --cc-text-primary: #000000;
+  --cc-text-secondary: #A0A7AB;
+  --cc-text-tertiary: #A0A7AB;
+  --cc-text-muted: #999999;
+  --cc-text-faint: #BBBBBB;
+  --cc-divider: #DDDDDD;
+  --cc-btn-border: #000000;
+  --cc-btn-text: #000000;
+  --cc-btn-hover-bg: #000000;
+  --cc-btn-hover-text: #FFFFFF;
+  --cc-destructive: #888888;
+
+  /* Map to shadcn variables */
+  --background: #FFFFFF;
+  --foreground: #000000;
+  --card: #F7F7F7;
+  --card-foreground: #000000;
+  --popover: #F7F7F7;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --secondary: rgba(0, 0, 0, 0.04);
+  --secondary-foreground: #000000;
+  --muted: rgba(0, 0, 0, 0.04);
+  --muted-foreground: #A0A7AB;
+  --accent: rgba(0, 0, 0, 0.04);
+  --accent-foreground: #000000;
+  --destructive: #888888;
+  --border: #DDDDDD;
+  --input: #DDDDDD;
+  --ring: #000000;
+  --chart-1: #000000;
+  --chart-2: #A0A7AB;
+  --chart-3: #999999;
+  --chart-4: #CCCCCC;
+  --chart-5: #DDDDDD;
+  --sidebar: #F7F7F7;
+  --sidebar-foreground: #A0A7AB;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: rgba(0, 0, 0, 0.04);
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #DDDDDD;
+  --sidebar-ring: #000000;
+}
+
 @layer base {
   *,
   *::before,
@@ -116,28 +194,28 @@
   }
 }
 
-/* Glass card utility — monochrome */
+/* Glass card utility — theme-aware */
 .glass-card {
-  background: #0a0a0a;
-  border: 1px solid #222222;
+  background: var(--cc-surface);
+  border: 1px solid var(--cc-border);
   border-radius: 0 !important;
 }
 .glass-card:hover {
-  border-color: #333333;
+  border-color: var(--cc-border-hover);
 }
 
-/* Scrollbar styling — thin, dark, square */
+/* Scrollbar styling — theme-aware */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: var(--cc-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: var(--cc-border-hover);
   border-radius: 0 !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #555555;
+  background: var(--cc-text-muted);
 }

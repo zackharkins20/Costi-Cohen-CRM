@@ -117,16 +117,16 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="bg-[#0a0a0a] border-[#222222] overflow-y-auto w-full sm:max-w-xl">
+        <SheetContent className="overflow-y-auto w-full sm:max-w-xl">
           <SheetHeader>
-            <SheetTitle className="text-white">{deal.title}</SheetTitle>
+            <SheetTitle>{deal.title}</SheetTitle>
           </SheetHeader>
 
           <div className="mt-5 space-y-5 px-1">
             <div className="flex items-center gap-2">
               <StageBadge stage={deal.stage} />
               {deal.contact && (
-                <span className="text-xs text-[#A0A7AB]">{deal.contact.name}</span>
+                <span className="text-xs text-cc-text-secondary">{deal.contact.name}</span>
               )}
             </div>
 
@@ -139,24 +139,24 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               ) : (
                 <>
                   <Button size="sm" variant="outline" onClick={() => setEditing(true)}>Edit</Button>
-                  <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} className="text-[#888888] hover:text-white ml-auto">
+                  <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} className="text-cc-destructive hover:text-cc-text-primary ml-auto">
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </>
               )}
             </div>
 
-            <Separator className="bg-[#222222]" />
+            <Separator className="bg-cc-border" />
 
             {/* Deal fields */}
             {editing ? (
               <div className="space-y-4">
                 <div>
-                  <Label className="text-[#555555] text-[10px] uppercase tracking-wider">Title</Label>
+                  <Label className="text-cc-text-muted text-[10px] uppercase tracking-wider">Title</Label>
                   <Input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} className="mt-1" />
                 </div>
                 <div>
-                  <Label className="text-[#555555] text-[10px] uppercase tracking-wider">Stage</Label>
+                  <Label className="text-cc-text-muted text-[10px] uppercase tracking-wider">Stage</Label>
                   <Select value={form.stage} onValueChange={v => setForm({ ...form, stage: v as PropertyStage })}>
                     <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -166,58 +166,58 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-[#555555] text-[10px] uppercase tracking-wider">Deal Value</Label>
+                    <Label className="text-cc-text-muted text-[10px] uppercase tracking-wider">Deal Value</Label>
                     <Input type="number" value={form.deal_value || ''} onChange={e => setForm({ ...form, deal_value: Number(e.target.value) })} className="mt-1" />
                   </div>
                   <div>
-                    <Label className="text-[#555555] text-[10px] uppercase tracking-wider">Fee %</Label>
+                    <Label className="text-cc-text-muted text-[10px] uppercase tracking-wider">Fee %</Label>
                     <Input type="number" step="0.1" value={form.fee_percentage || ''} onChange={e => setForm({ ...form, fee_percentage: Number(e.target.value) })} className="mt-1" />
                   </div>
                 </div>
                 <div>
-                  <Label className="text-[#555555] text-[10px] uppercase tracking-wider">Description</Label>
+                  <Label className="text-cc-text-muted text-[10px] uppercase tracking-wider">Description</Label>
                   <Textarea value={form.description || ''} onChange={e => setForm({ ...form, description: e.target.value })} className="mt-1 min-h-[60px]" />
                 </div>
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-4 text-xs">
                 <div>
-                  <span className="text-[#555555]">Deal Value</span>
-                  <p className="text-white font-semibold">{formatCurrency(deal.deal_value)}</p>
+                  <span className="text-cc-text-muted">Deal Value</span>
+                  <p className="text-cc-text-primary font-semibold">{formatCurrency(deal.deal_value)}</p>
                 </div>
                 <div>
-                  <span className="text-[#555555]">Fee %</span>
-                  <p className="text-white">{deal.fee_percentage ? `${deal.fee_percentage}%` : '—'}</p>
+                  <span className="text-cc-text-muted">Fee %</span>
+                  <p className="text-cc-text-primary">{deal.fee_percentage ? `${deal.fee_percentage}%` : '—'}</p>
                 </div>
                 <div>
-                  <span className="text-[#555555]">Est. Fee</span>
-                  <p className="text-white font-semibold">{formatCurrency(deal.fee_amount)}</p>
+                  <span className="text-cc-text-muted">Est. Fee</span>
+                  <p className="text-cc-text-primary font-semibold">{formatCurrency(deal.fee_amount)}</p>
                 </div>
               </div>
             )}
 
             {deal.description && !editing && (
-              <p className="text-sm text-[#A0A7AB]">{deal.description}</p>
+              <p className="text-sm text-cc-text-secondary">{deal.description}</p>
             )}
 
-            <Separator className="bg-[#222222]" />
+            <Separator className="bg-cc-border" />
 
             {/* Property details */}
-            <div className="p-4 bg-[#111111] border border-[#222222]">
-              <h4 className="text-xs font-medium text-white mb-3">Property Details</h4>
+            <div className="p-4 bg-cc-surface-2 border border-cc-border">
+              <h4 className="text-xs font-medium text-cc-text-primary mb-3">Property Details</h4>
               {editing ? (
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-[#555555] text-[10px]">Mandate Brief</Label>
+                    <Label className="text-cc-text-muted text-[10px]">Mandate Brief</Label>
                     <Textarea value={propForm.mandate_brief || ''} onChange={e => setPropForm({ ...propForm, mandate_brief: e.target.value })} className="text-xs min-h-[40px]" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label className="text-[#555555] text-[10px]">Exchange Date</Label>
+                      <Label className="text-cc-text-muted text-[10px]">Exchange Date</Label>
                       <Input type="date" value={propForm.exchange_date || ''} onChange={e => setPropForm({ ...propForm, exchange_date: e.target.value })} className="h-7 text-xs" />
                     </div>
                     <div>
-                      <Label className="text-[#555555] text-[10px]">Settlement Date</Label>
+                      <Label className="text-cc-text-muted text-[10px]">Settlement Date</Label>
                       <Input type="date" value={propForm.settlement_date || ''} onChange={e => setPropForm({ ...propForm, settlement_date: e.target.value })} className="h-7 text-xs" />
                     </div>
                   </div>
@@ -225,35 +225,35 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               ) : (
                 <div className="space-y-1 text-xs">
                   {deal.property_details?.mandate_brief && (
-                    <p className="text-[#A0A7AB]">{deal.property_details.mandate_brief}</p>
+                    <p className="text-cc-text-secondary">{deal.property_details.mandate_brief}</p>
                   )}
                   <div className="grid grid-cols-2 gap-3 mt-2">
                     <div>
-                      <span className="text-[#555555]">Exchange</span>
-                      <p className="text-[#A0A7AB]">{deal.property_details?.exchange_date || '—'}</p>
+                      <span className="text-cc-text-muted">Exchange</span>
+                      <p className="text-cc-text-secondary">{deal.property_details?.exchange_date || '—'}</p>
                     </div>
                     <div>
-                      <span className="text-[#555555]">Settlement</span>
-                      <p className="text-[#A0A7AB]">{deal.property_details?.settlement_date || '—'}</p>
+                      <span className="text-cc-text-muted">Settlement</span>
+                      <p className="text-cc-text-secondary">{deal.property_details?.settlement_date || '—'}</p>
                     </div>
                   </div>
                 </div>
               )}
             </div>
 
-            <Separator className="bg-[#222222]" />
+            <Separator className="bg-cc-border" />
 
             {/* Document links */}
             <div>
-              <h4 className="text-xs font-medium text-white mb-2 flex items-center gap-1">
+              <h4 className="text-xs font-medium text-cc-text-primary mb-2 flex items-center gap-1">
                 <LinkIcon className="h-3 w-3" /> Documents
               </h4>
               {docLinks.map(dl => (
                 <div key={dl.id} className="flex items-center gap-2 py-1.5">
-                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-white hover:underline flex items-center gap-1">
+                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-cc-text-primary hover:underline flex items-center gap-1">
                     <ExternalLink className="h-3 w-3" /> {dl.title}
                   </a>
-                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('deal', deal.id).then(setDocLinks) }} className="text-[#555555] hover:text-white ml-auto">
+                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('deal', deal.id).then(setDocLinks) }} className="text-cc-text-muted hover:text-cc-text-primary ml-auto">
                     <Trash2 className="h-3 w-3" />
                   </button>
                 </div>
@@ -261,11 +261,11 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               <div className="flex gap-2 mt-2">
                 <Input placeholder="Title" value={newDocTitle} onChange={e => setNewDocTitle(e.target.value)} className="h-7 text-xs flex-1" />
                 <Input placeholder="URL" value={newDocUrl} onChange={e => setNewDocUrl(e.target.value)} className="h-7 text-xs flex-1" />
-                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2 hover:text-white"><Plus className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2 hover:text-cc-text-primary"><Plus className="h-3 w-3" /></Button>
               </div>
             </div>
 
-            <Separator className="bg-[#222222]" />
+            <Separator className="bg-cc-border" />
 
             {/* Activity */}
             <ActivityTimeline entityType="deal" entityId={deal.id} userId={userId} />
@@ -274,10 +274,10 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
       </Sheet>
 
       <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <DialogContent className="bg-[#0a0a0a] border-[#222222]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-white">Delete Deal</DialogTitle>
-            <DialogDescription className="text-[#A0A7AB]">
+            <DialogTitle>Delete Deal</DialogTitle>
+            <DialogDescription>
               Are you sure you want to delete &quot;{deal.title}&quot;? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>

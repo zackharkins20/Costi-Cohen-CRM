@@ -76,32 +76,32 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="bg-[#0a0a0a] border-[#222222] overflow-y-auto w-full sm:max-w-lg">
+      <SheetContent className="overflow-y-auto w-full sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle className="text-white">Add Contact</SheetTitle>
+          <SheetTitle>Add Contact</SheetTitle>
         </SheetHeader>
         <form onSubmit={handleSubmit} className="space-y-5 mt-5 px-1">
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Name *</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Name *</Label>
             <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required className="mt-1.5" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Email</Label>
               <Input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="mt-1.5" />
             </div>
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Phone</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Phone</Label>
               <Input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="mt-1.5" />
             </div>
           </div>
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Company</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Company</Label>
             <Input value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} className="mt-1.5" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Type</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Type</Label>
               <Select value={form.type} onValueChange={v => setForm({ ...form, type: v as 'client' | 'other' })}>
                 <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -111,7 +111,7 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
               </Select>
             </div>
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Stage</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Stage</Label>
               <Select value={form.stage} onValueChange={v => setForm({ ...form, stage: v as PropertyStage })}>
                 <SelectTrigger className="mt-1.5"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -123,25 +123,25 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
             </div>
           </div>
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Asset Type</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Asset Type</Label>
             <Input value={form.asset_type} onChange={e => setForm({ ...form, asset_type: e.target.value })} placeholder="e.g. Residential, Commercial" className="mt-1.5" />
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Budget Min</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Budget Min</Label>
               <Input type="number" value={form.budget_min} onChange={e => setForm({ ...form, budget_min: e.target.value })} className="mt-1.5" />
             </div>
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Budget Max</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Budget Max</Label>
               <Input type="number" value={form.budget_max} onChange={e => setForm({ ...form, budget_max: e.target.value })} className="mt-1.5" />
             </div>
             <div>
-              <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Fee %</Label>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Fee %</Label>
               <Input type="number" step="0.1" value={form.fee_percentage} onChange={e => setForm({ ...form, fee_percentage: e.target.value })} className="mt-1.5" />
             </div>
           </div>
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Brief Notes</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Brief Notes</Label>
             <Textarea value={form.brief_notes} onChange={e => setForm({ ...form, brief_notes: e.target.value })} className="mt-1.5 min-h-[60px]" />
           </div>
           <Button type="submit" disabled={loading} className="w-full">

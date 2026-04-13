@@ -53,7 +53,7 @@ function DialogContent({
       <DialogPrimitive.Popup
         data-slot="dialog-content"
         className={cn(
-          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 bg-[#0a0a0a] p-4 text-sm text-white border border-[#222222] duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 bg-cc-surface p-4 text-sm text-cc-text-primary border border-cc-border duration-100 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className
         )}
         {...props}
@@ -102,7 +102,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        "-mx-4 -mb-4 flex flex-col-reverse gap-2 border-t border-[#222222] bg-[#0a0a0a] p-4 sm:flex-row sm:justify-end",
+        "-mx-4 -mb-4 flex flex-col-reverse gap-2 border-t border-cc-border bg-cc-surface p-4 sm:flex-row sm:justify-end",
         className
       )}
       {...props}
@@ -122,7 +122,7 @@ function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn(
-        "text-lg leading-none font-semibold tracking-[-0.02em] text-white",
+        "text-lg leading-none font-semibold tracking-[-0.02em] text-cc-text-primary",
         className
       )}
       {...props}
@@ -138,7 +138,7 @@ function DialogDescription({
     <DialogPrimitive.Description
       data-slot="dialog-description"
       className={cn(
-        "text-sm text-[#A0A7AB] *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-white",
+        "text-sm text-cc-text-secondary *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-cc-text-primary",
         className
       )}
       {...props}

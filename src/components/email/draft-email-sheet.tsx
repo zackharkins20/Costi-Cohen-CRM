@@ -65,9 +65,9 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="bg-[#0a0a0a] border-[#222222] overflow-y-auto w-full sm:max-w-xl">
+      <SheetContent className="overflow-y-auto w-full sm:max-w-xl">
         <SheetHeader>
-          <SheetTitle className="text-white">
+          <SheetTitle>
             Draft Email to {contact.name}
           </SheetTitle>
         </SheetHeader>
@@ -75,9 +75,9 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
         <div className="mt-5 space-y-5 px-1">
           {/* Template picker */}
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium mb-2 block">Template</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium mb-2 block">Template</Label>
             <div className="space-y-2">
-              <p className="text-[10px] uppercase tracking-wider text-[#555555]">Generic</p>
+              <p className="text-[10px] uppercase tracking-wider text-cc-text-muted">Generic</p>
               <div className="flex flex-wrap gap-1.5">
                 {genericTemplates.map(t => (
                   <button
@@ -85,15 +85,15 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
                     onClick={() => setSelectedTemplate(t)}
                     className={`px-2.5 py-1 text-xs border transition-colors ${
                       selectedTemplate?.id === t.id
-                        ? 'bg-transparent text-white border-white'
-                        : 'bg-transparent text-[#A0A7AB] border-[#333333] hover:border-white hover:text-white'
+                        ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                        : 'bg-transparent text-cc-text-secondary border-cc-border-hover hover:border-cc-btn-border hover:text-cc-text-primary'
                     }`}
                   >
                     {t.name}
                   </button>
                 ))}
               </div>
-              <p className="text-[10px] uppercase tracking-wider text-[#555555] mt-3">Property</p>
+              <p className="text-[10px] uppercase tracking-wider text-cc-text-muted mt-3">Property</p>
               <div className="flex flex-wrap gap-1.5">
                 {propertyTemplates.map(t => (
                   <button
@@ -101,8 +101,8 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
                     onClick={() => setSelectedTemplate(t)}
                     className={`px-2.5 py-1 text-xs border transition-colors ${
                       selectedTemplate?.id === t.id
-                        ? 'bg-transparent text-white border-white'
-                        : 'bg-transparent text-[#A0A7AB] border-[#333333] hover:border-white hover:text-white'
+                        ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                        : 'bg-transparent text-cc-text-secondary border-cc-border-hover hover:border-cc-btn-border hover:text-cc-text-primary'
                     }`}
                   >
                     {t.name}
@@ -114,7 +114,7 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
 
           {/* Subject */}
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Subject</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Subject</Label>
             <Input
               value={subject}
               onChange={e => setSubject(e.target.value)}
@@ -124,7 +124,7 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
 
           {/* Body */}
           <div>
-            <Label className="text-[#555555] text-[11px] uppercase tracking-[0.08em] font-medium">Body</Label>
+            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Body</Label>
             <Textarea
               value={body}
               onChange={e => setBody(e.target.value)}

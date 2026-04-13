@@ -30,8 +30,8 @@ function generatePassword(): string {
 }
 
 const roleColors: Record<string, string> = {
-  Admin: 'bg-transparent text-white border-white',
-  Agent: 'bg-transparent text-[#A0A7AB] border-[#333333]',
+  Admin: 'bg-transparent text-cc-text-primary border-cc-btn-border',
+  Agent: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
 }
 
 export default function TeamPage() {
@@ -159,11 +159,11 @@ export default function TeamPage() {
         <GlassCard hover={false} className="p-0 overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#222222]">
-                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-[#A0A7AB] px-5 py-3">Member</th>
-                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-[#A0A7AB] px-5 py-3">Email</th>
-                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-[#A0A7AB] px-5 py-3">Role</th>
-                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-[#A0A7AB] px-5 py-3">Joined</th>
+              <tr className="border-b border-cc-border">
+                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-cc-text-secondary px-5 py-3">Member</th>
+                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-cc-text-secondary px-5 py-3">Email</th>
+                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-cc-text-secondary px-5 py-3">Role</th>
+                <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-cc-text-secondary px-5 py-3">Joined</th>
               </tr>
             </thead>
             <tbody>
@@ -179,25 +179,25 @@ export default function TeamPage() {
                 return (
                   <tr
                     key={user.id}
-                    className="border-b border-[#111111] last:border-b-0 hover:bg-[#111111] transition-colors"
+                    className="border-b border-cc-surface-2 last:border-b-0 hover:bg-cc-surface-2 transition-colors"
                   >
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-[#111111] border border-[#222222] flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
+                        <div className="w-9 h-9 bg-cc-surface-2 border border-cc-border flex items-center justify-center text-cc-text-primary font-semibold text-xs flex-shrink-0">
                           {initials}
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-white">
+                          <p className="text-sm font-medium text-cc-text-primary">
                             {user.full_name || 'Unnamed'}
                             {isCurrentUser && (
-                              <span className="ml-2 text-[10px] text-[#555555]">(you)</span>
+                              <span className="ml-2 text-[10px] text-cc-text-muted">(you)</span>
                             )}
                           </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-4">
-                      <span className="flex items-center gap-1.5 text-sm text-[#A0A7AB]">
+                      <span className="flex items-center gap-1.5 text-sm text-cc-text-secondary">
                         <Mail className="h-3.5 w-3.5" />
                         {user.email}
                       </span>
@@ -209,7 +209,7 @@ export default function TeamPage() {
                       </span>
                     </td>
                     <td className="px-5 py-4">
-                      <span className="flex items-center gap-1.5 text-sm text-[#555555]">
+                      <span className="flex items-center gap-1.5 text-sm text-cc-text-muted">
                         <Calendar className="h-3.5 w-3.5" />
                         {format(new Date(user.created_at), 'd MMM yyyy')}
                       </span>
@@ -224,12 +224,12 @@ export default function TeamPage() {
 
       {/* Invite Team Member Modal */}
       <Dialog open={inviteOpen} onOpenChange={handleCloseInvite}>
-        <DialogContent className="bg-[#0a0a0a] border-[#222222] sm:max-w-md">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-white">
+            <DialogTitle>
               {successData ? 'Invitation Sent' : 'Invite Team Member'}
             </DialogTitle>
-            <DialogDescription className="text-[#A0A7AB]">
+            <DialogDescription>
               {successData
                 ? 'Share these credentials with the new team member.'
                 : 'Create an account for a new team member. They can sign in with these credentials.'}
@@ -238,18 +238,18 @@ export default function TeamPage() {
 
           {successData ? (
             <div className="space-y-4 pt-2">
-              <div className="bg-[#111111] border border-[#222222] p-4 space-y-3">
+              <div className="bg-cc-surface-2 border border-cc-border p-4 space-y-3">
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#555555] mb-1">Name</p>
-                  <p className="text-sm text-white">{successData.full_name}</p>
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-cc-text-muted mb-1">Name</p>
+                  <p className="text-sm text-cc-text-primary">{successData.full_name}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#555555] mb-1">Email</p>
-                  <p className="text-sm text-white">{successData.email}</p>
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-cc-text-muted mb-1">Email</p>
+                  <p className="text-sm text-cc-text-primary">{successData.email}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] uppercase tracking-[0.08em] text-[#555555] mb-1">Temporary Password</p>
-                  <p className="text-sm font-mono text-white">{successData.password}</p>
+                  <p className="text-[11px] uppercase tracking-[0.08em] text-cc-text-muted mb-1">Temporary Password</p>
+                  <p className="text-sm font-mono text-cc-text-primary">{successData.password}</p>
                 </div>
               </div>
 
@@ -264,13 +264,13 @@ export default function TeamPage() {
           ) : (
             <div className="space-y-4 pt-2">
               {error && (
-                <div className="bg-[#111111] border border-[#222222] px-4 py-3">
-                  <p className="text-sm text-[#888888]">{error}</p>
+                <div className="bg-cc-surface-2 border border-cc-border px-4 py-3">
+                  <p className="text-sm text-cc-destructive">{error}</p>
                 </div>
               )}
 
               <div className="space-y-2">
-                <Label className="text-[#A0A7AB] text-xs">Full Name</Label>
+                <Label className="text-cc-text-secondary text-xs">Full Name</Label>
                 <Input
                   value={fullName}
                   onChange={e => setFullName(e.target.value)}
@@ -279,7 +279,7 @@ export default function TeamPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[#A0A7AB] text-xs">Email</Label>
+                <Label className="text-cc-text-secondary text-xs">Email</Label>
                 <Input
                   type="email"
                   value={email}
@@ -289,15 +289,15 @@ export default function TeamPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[#A0A7AB] text-xs">Role</Label>
+                <Label className="text-cc-text-secondary text-xs">Role</Label>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setRole('Agent')}
                     className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 border text-sm font-medium transition-all ${
                       role === 'Agent'
-                        ? 'bg-transparent border-white text-white'
-                        : 'bg-transparent border-[#333333] text-[#A0A7AB] hover:text-white hover:border-white'
+                        ? 'bg-transparent border-cc-btn-border text-cc-text-primary'
+                        : 'bg-transparent border-cc-border-hover text-cc-text-secondary hover:text-cc-text-primary hover:border-cc-btn-border'
                     }`}
                   >
                     <UserCheck className="h-4 w-4" />
@@ -308,8 +308,8 @@ export default function TeamPage() {
                     onClick={() => setRole('Admin')}
                     className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 border text-sm font-medium transition-all ${
                       role === 'Admin'
-                        ? 'bg-transparent border-white text-white'
-                        : 'bg-transparent border-[#333333] text-[#A0A7AB] hover:text-white hover:border-white'
+                        ? 'bg-transparent border-cc-btn-border text-cc-text-primary'
+                        : 'bg-transparent border-cc-border-hover text-cc-text-secondary hover:text-cc-text-primary hover:border-cc-btn-border'
                     }`}
                   >
                     <Shield className="h-4 w-4" />
@@ -319,7 +319,7 @@ export default function TeamPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-[#A0A7AB] text-xs">Temporary Password</Label>
+                <Label className="text-cc-text-secondary text-xs">Temporary Password</Label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Input
@@ -330,7 +330,7 @@ export default function TeamPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#555555] hover:text-white"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-cc-text-muted hover:text-cc-text-primary"
                     >
                       {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                     </button>

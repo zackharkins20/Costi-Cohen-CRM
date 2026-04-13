@@ -10,7 +10,7 @@ export function GlassCard({ className, hover = true, children, ...props }: Glass
     <div
       className={cn(
         'glass-card p-4 transition-all duration-200',
-        hover && 'hover:border-[#333333] cursor-pointer',
+        hover && 'hover:border-cc-border-hover cursor-pointer',
         className
       )}
       {...props}

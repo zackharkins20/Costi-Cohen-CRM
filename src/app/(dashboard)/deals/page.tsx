@@ -46,7 +46,7 @@ export default function DealsPage() {
     <div>
       <PageHeader title="Deals" description={`${deals.length} deals`}>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555555]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-cc-text-muted" />
           <Input
             placeholder="Search deals..."
             value={search}
@@ -65,8 +65,8 @@ export default function DealsPage() {
           onClick={() => setStageFilter('all')}
           className={`px-3 py-1.5 text-xs border transition-colors whitespace-nowrap ${
             stageFilter === 'all'
-              ? 'bg-transparent text-white border-white'
-              : 'bg-transparent text-[#A0A7AB] border-[#333333] hover:border-white hover:text-white'
+              ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+              : 'bg-transparent text-cc-text-secondary border-cc-border-hover hover:border-cc-btn-border hover:text-cc-text-primary'
           }`}
         >
           All Stages
@@ -77,8 +77,8 @@ export default function DealsPage() {
             onClick={() => setStageFilter(s.key)}
             className={`px-3 py-1.5 text-xs border transition-colors whitespace-nowrap ${
               stageFilter === s.key
-                ? 'bg-transparent text-white border-white'
-                : 'bg-transparent text-[#A0A7AB] border-[#333333] hover:border-white hover:text-white'
+                ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                : 'bg-transparent text-cc-text-secondary border-cc-border-hover hover:border-cc-btn-border hover:text-cc-text-primary'
             }`}
           >
             {s.label}
@@ -107,18 +107,18 @@ export default function DealsPage() {
             >
               <div className="space-y-2">
                 <div className="flex items-start justify-between">
-                  <p className="text-sm font-medium text-white truncate flex-1">{deal.title}</p>
+                  <p className="text-sm font-medium text-cc-text-primary truncate flex-1">{deal.title}</p>
                 </div>
                 {deal.contact && (
-                  <p className="text-xs text-[#A0A7AB]">{deal.contact.name}</p>
+                  <p className="text-xs text-cc-text-secondary">{deal.contact.name}</p>
                 )}
                 <StageBadge stage={deal.stage} />
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-sm font-semibold text-white">
+                  <span className="text-sm font-semibold text-cc-text-primary">
                     {formatCurrency(deal.deal_value)}
                   </span>
                   {deal.fee_amount && (
-                    <span className="text-xs text-[#A0A7AB]">
+                    <span className="text-xs text-cc-text-secondary">
                       Fee: {formatCurrency(deal.fee_amount)}
                     </span>
                   )}

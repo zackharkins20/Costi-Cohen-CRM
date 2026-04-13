@@ -23,10 +23,10 @@ export function KanbanBoard<T>({ columns, onDragEnd, renderCard, getItemId }: Ka
         {columns.map(column => (
           <div key={column.id} className="flex-shrink-0 w-72">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-[11px] font-medium text-[#A0A7AB] uppercase tracking-[0.08em]">
+              <h3 className="text-[11px] font-medium text-cc-text-secondary uppercase tracking-[0.08em]">
                 {column.title}
               </h3>
-              <span className="text-[10px] px-1.5 py-0.5 bg-[#111111] border border-[#222222] text-[#555555]">
+              <span className="text-[10px] px-1.5 py-0.5 bg-cc-surface-2 border border-cc-border text-cc-text-muted">
                 {column.items.length}
               </span>
             </div>
@@ -37,7 +37,7 @@ export function KanbanBoard<T>({ columns, onDragEnd, renderCard, getItemId }: Ka
                   {...provided.droppableProps}
                   className={cn(
                     'min-h-[200px] p-2 transition-colors border border-transparent',
-                    snapshot.isDraggingOver ? 'bg-[#111111] border-[#222222]' : 'bg-[#0a0a0a]/50'
+                    snapshot.isDraggingOver ? 'bg-cc-surface-2 border-cc-border' : 'bg-cc-surface/50'
                   )}
                 >
                   {column.items.map((item, index) => (

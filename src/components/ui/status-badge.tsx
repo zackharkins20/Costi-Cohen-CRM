@@ -3,26 +3,26 @@ import { PROPERTY_STAGES, TASK_STATUSES, type PropertyStage, type TaskStatus, ty
 
 /* Monochrome badges — no color coding */
 const stageColors: Record<PropertyStage, string> = {
-  lead: 'bg-transparent text-[#A0A7AB] border-[#333333]',
-  initial_call: 'bg-transparent text-[#A0A7AB] border-[#333333]',
-  property_search: 'bg-transparent text-[#A0A7AB] border-[#555555]',
-  due_diligence: 'bg-transparent text-[#A0A7AB] border-[#555555]',
-  exchange: 'bg-transparent text-white border-white',
-  fees_collected: 'bg-transparent text-white border-white',
+  lead: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
+  initial_call: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
+  property_search: 'bg-transparent text-cc-text-secondary border-cc-text-muted',
+  due_diligence: 'bg-transparent text-cc-text-secondary border-cc-text-muted',
+  exchange: 'bg-transparent text-cc-text-primary border-cc-btn-border',
+  fees_collected: 'bg-transparent text-cc-text-primary border-cc-btn-border',
 }
 
 const taskStatusColors: Record<TaskStatus, string> = {
-  todo: 'bg-transparent text-[#A0A7AB] border-[#333333]',
-  in_progress: 'bg-transparent text-[#A0A7AB] border-[#555555]',
-  review: 'bg-transparent text-white border-[#555555]',
-  done: 'bg-transparent text-white border-white',
+  todo: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
+  in_progress: 'bg-transparent text-cc-text-secondary border-cc-text-muted',
+  review: 'bg-transparent text-cc-text-primary border-cc-text-muted',
+  done: 'bg-transparent text-cc-text-primary border-cc-btn-border',
 }
 
 const priorityColors: Record<TaskPriority, string> = {
-  low: 'bg-transparent text-[#555555] border-[#333333]',
-  medium: 'bg-transparent text-[#A0A7AB] border-[#333333]',
-  high: 'bg-transparent text-white border-[#555555]',
-  urgent: 'bg-transparent text-white border-white',
+  low: 'bg-transparent text-cc-text-muted border-cc-border-hover',
+  medium: 'bg-transparent text-cc-text-secondary border-cc-border-hover',
+  high: 'bg-transparent text-cc-text-primary border-cc-text-muted',
+  urgent: 'bg-transparent text-cc-text-primary border-cc-btn-border',
 }
 
 export function StageBadge({ stage, className }: { stage: PropertyStage; className?: string }) {
@@ -30,7 +30,7 @@ export function StageBadge({ stage, className }: { stage: PropertyStage; classNa
   return (
     <span className={cn(
       'inline-flex items-center px-2.5 py-0.5 text-[11px] font-medium border uppercase tracking-[0.04em]',
-      stageColors[stage] || 'bg-transparent text-[#A0A7AB] border-[#333333]',
+      stageColors[stage] || 'bg-transparent text-cc-text-secondary border-cc-border-hover',
       className
     )}>
       {stageInfo?.label || stage}
