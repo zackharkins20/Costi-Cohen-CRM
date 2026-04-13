@@ -234,15 +234,23 @@ export function useTour() {
   const [tourActive, setTourActive] = useState(false)
 
   const startTour = useCallback(() => {
+    try {
+      if (localStorage.getItem(LS_KEY) === 'true') return
+    } catch {}
     setTourActive(true)
   }, [])
 
   const completeTour = useCallback(() => {
+    try { localStorage.setItem(LS_KEY, 'true') } catch {}
     setTourActive(false)
   }, [])
 
   const isTourCompleted = useCallback(() => {
-    return localStorage.getItem(LS_KEY) === 'true'
+    try {
+      return localStorage.getItem(LS_KEY) === 'true'
+    } catch {
+      return false
+    }
   }, [])
 
   return {

@@ -92,20 +92,26 @@ export function WhatsNewModal({ open, onClose }: WhatsNewModalProps) {
 
 export function useWhatsNew() {
   const [showWhatsNew, setShowWhatsNew] = useState(false)
+  const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    const lastSeen = localStorage.getItem(LS_KEY)
-    if (lastSeen !== CURRENT_VERSION) {
-      setShowWhatsNew(true)
+    try {
+      const lastSeen = localStorage.getItem(LS_KEY)
+      if (lastSeen !== CURRENT_VERSION) {
+        setShowWhatsNew(true)
+      }
+    } catch {
+      // localStorage not available
     }
+    setChecked(true)
   }, [])
 
   return {
-    showWhatsNew,
+    showWhatsNew: checked && showWhatsNew,
     setShowWhatsNew,
     openWhatsNew: () => setShowWhatsNew(true),
     closeWhatsNew: () => {
-      localStorage.setItem(LS_KEY, CURRENT_VERSION)
+      try { localStorage.setItem(LS_KEY, CURRENT_VERSION) } catch {}
       setShowWhatsNew(false)
     },
   }
