@@ -177,6 +177,24 @@ export default function TasksPage() {
                   )
                 })()}
               </div>
+              {task.assigned_to && (() => {
+                const assignedUser = users.find(u => u.id === task.assigned_to)
+                if (!assignedUser) return null
+                const initials = assignedUser.full_name
+                  .split(' ')
+                  .map(n => n[0])
+                  .join('')
+                  .toUpperCase()
+                  .slice(0, 2)
+                return (
+                  <div className="mt-1.5 flex items-center gap-1.5">
+                    <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-cc-accent/15 text-cc-accent text-[9px] font-semibold">
+                      {initials}
+                    </span>
+                    <span className="text-[10px] text-cc-text-muted truncate">{assignedUser.full_name}</span>
+                  </div>
+                )
+              })()}
               {counts && counts.total > 0 && (
                 <div className="mt-2 flex items-center gap-2">
                   <div className="h-1.5 flex-1 bg-cc-surface-2 rounded-full overflow-hidden">
