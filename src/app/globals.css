@@ -49,6 +49,7 @@
 
   /* Semantic theme colors for use in components */
   --color-cc-bg: var(--cc-bg);
+  --color-cc-sidebar-bg: var(--cc-sidebar-bg);
   --color-cc-surface: var(--cc-surface);
   --color-cc-surface-2: var(--cc-surface-2);
   --color-cc-surface-3: var(--cc-surface-3);
@@ -73,80 +74,81 @@
 :root {
   --radius: 8px;
 
-  /* === DARK THEME (default) === */
-  --cc-bg: #000000;
-  --cc-surface: #0a0a0a;
-  --cc-surface-2: #111111;
-  --cc-surface-3: #161616;
-  --cc-surface-offset: #1a1a1a;
-  --cc-border: #222222;
-  --cc-border-hover: #333333;
-  --cc-text-primary: #FFFFFF;
-  --cc-text-secondary: #A0A7AB;
-  --cc-text-tertiary: #A0A7AB;
-  --cc-text-muted: #555555;
-  --cc-text-faint: #555555;
-  --cc-divider: #222222;
-  --cc-btn-border: #FFFFFF;
-  --cc-btn-text: #FFFFFF;
-  --cc-btn-hover-bg: #FFFFFF;
-  --cc-btn-hover-text: #000000;
-  --cc-destructive: #B85C5C;
+  /* === DARK THEME (default) — medium-dark blue-grey === */
+  --cc-bg: #1E2330;
+  --cc-surface: #252D3A;
+  --cc-surface-2: #2A3344;
+  --cc-surface-3: #303B4D;
+  --cc-surface-offset: #2E3848;
+  --cc-sidebar-bg: #1A2030;
+  --cc-border: #3A4556;
+  --cc-border-hover: #4A5568;
+  --cc-text-primary: #E8EAED;
+  --cc-text-secondary: #B0B8C4;
+  --cc-text-tertiary: #8B95A5;
+  --cc-text-muted: #8B95A5;
+  --cc-text-faint: #6B7585;
+  --cc-divider: #3A4556;
+  --cc-btn-border: #E8EAED;
+  --cc-btn-text: #E8EAED;
+  --cc-btn-hover-bg: #E8EAED;
+  --cc-btn-hover-text: #1E2330;
+  --cc-destructive: #C46A6A;
 
   /* Accent — blue-grey */
-  --cc-accent: #3B5068;
-  --cc-accent-light: rgba(59, 80, 104, 0.25);
+  --cc-accent: #4A6A88;
+  --cc-accent-light: rgba(74, 106, 136, 0.25);
   --cc-accent-text: #D8DEE4;
 
   /* Status badge colors — dark mode (blue-grey tinted) */
-  --cc-status-active-bg: rgba(74, 127, 165, 0.15);
+  --cc-status-active-bg: rgba(74, 127, 165, 0.18);
   --cc-status-active-text: #7EBAD4;
-  --cc-status-active-border: rgba(74, 127, 165, 0.3);
-  --cc-status-success-bg: rgba(90, 143, 106, 0.15);
+  --cc-status-active-border: rgba(74, 127, 165, 0.35);
+  --cc-status-success-bg: rgba(90, 143, 106, 0.18);
   --cc-status-success-text: #7FB893;
-  --cc-status-success-border: rgba(90, 143, 106, 0.3);
-  --cc-status-warning-bg: rgba(196, 147, 90, 0.15);
+  --cc-status-success-border: rgba(90, 143, 106, 0.35);
+  --cc-status-warning-bg: rgba(196, 147, 90, 0.18);
   --cc-status-warning-text: #D4A868;
-  --cc-status-warning-border: rgba(196, 147, 90, 0.3);
-  --cc-status-pending-bg: rgba(139, 149, 160, 0.15);
+  --cc-status-warning-border: rgba(196, 147, 90, 0.35);
+  --cc-status-pending-bg: rgba(139, 149, 160, 0.18);
   --cc-status-pending-text: #A0ACB8;
-  --cc-status-pending-border: rgba(139, 149, 160, 0.3);
-  --cc-status-neutral-bg: rgba(139, 149, 160, 0.12);
+  --cc-status-pending-border: rgba(139, 149, 160, 0.35);
+  --cc-status-neutral-bg: rgba(139, 149, 160, 0.15);
   --cc-status-neutral-text: #8B95A0;
-  --cc-status-neutral-border: rgba(139, 149, 160, 0.25);
+  --cc-status-neutral-border: rgba(139, 149, 160, 0.3);
 
   /* Map to shadcn variables */
-  --background: #000000;
-  --foreground: #FFFFFF;
-  --card: #0a0a0a;
-  --card-foreground: #FFFFFF;
-  --popover: #0a0a0a;
-  --popover-foreground: #FFFFFF;
-  --primary: #FFFFFF;
-  --primary-foreground: #000000;
-  --secondary: rgba(255, 255, 255, 0.06);
-  --secondary-foreground: #FFFFFF;
-  --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: #A0A7AB;
-  --accent: rgba(255, 255, 255, 0.06);
-  --accent-foreground: #FFFFFF;
-  --destructive: #B85C5C;
-  --border: #222222;
-  --input: #222222;
-  --ring: #3B5068;
+  --background: #1E2330;
+  --foreground: #E8EAED;
+  --card: #252D3A;
+  --card-foreground: #E8EAED;
+  --popover: #252D3A;
+  --popover-foreground: #E8EAED;
+  --primary: #E8EAED;
+  --primary-foreground: #1E2330;
+  --secondary: rgba(255, 255, 255, 0.08);
+  --secondary-foreground: #E8EAED;
+  --muted: rgba(255, 255, 255, 0.08);
+  --muted-foreground: #8B95A5;
+  --accent: rgba(74, 106, 136, 0.15);
+  --accent-foreground: #E8EAED;
+  --destructive: #C46A6A;
+  --border: #3A4556;
+  --input: #3A4556;
+  --ring: #4A6A88;
   --chart-1: #5A7A94;
   --chart-2: #8BA4B8;
   --chart-3: #A0B4C4;
   --chart-4: #D8DEE4;
-  --chart-5: #3B5068;
-  --sidebar: #0a0a0a;
-  --sidebar-foreground: #A0A7AB;
-  --sidebar-primary: #FFFFFF;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: rgba(59, 80, 104, 0.25);
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #222222;
-  --sidebar-ring: #3B5068;
+  --chart-5: #4A6A88;
+  --sidebar: #1A2030;
+  --sidebar-foreground: #B0B8C4;
+  --sidebar-primary: #E8EAED;
+  --sidebar-primary-foreground: #1A2030;
+  --sidebar-accent: rgba(74, 106, 136, 0.25);
+  --sidebar-accent-foreground: #E8EAED;
+  --sidebar-border: #3A4556;
+  --sidebar-ring: #4A6A88;
 
   --font-heading: 'Inter', sans-serif;
 }
@@ -154,6 +156,7 @@
 /* === LIGHT THEME === */
 [data-theme="light"] {
   --cc-bg: #FFFFFF;
+  --cc-sidebar-bg: #F7F7F7;
   --cc-surface: #F7F7F7;
   --cc-surface-2: #EDF0F4;
   --cc-surface-3: #F2F2F2;

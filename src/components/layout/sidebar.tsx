@@ -139,7 +139,10 @@ export function Sidebar() {
           width={160}
           height={40}
           className="h-6 w-auto"
-          style={{ filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'none' }}
+          style={{
+            filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'none',
+            mixBlendMode: theme === 'dark' ? 'lighten' : 'normal',
+          }}
           priority
         />
         <p className="text-[10px] uppercase tracking-[0.25em] text-cc-text-secondary mt-1.5 font-normal">
@@ -226,7 +229,7 @@ export function Sidebar() {
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="absolute inset-0 bg-cc-bg/80" onClick={() => setMobileOpen(false)} />
-          <div className="relative w-64 h-full bg-cc-surface border-r border-cc-border flex flex-col">
+          <div className="relative w-64 h-full bg-cc-sidebar-bg border-r border-cc-border flex flex-col">
             <button
               onClick={() => setMobileOpen(false)}
               className="absolute top-4 right-4 p-1"
@@ -241,7 +244,7 @@ export function Sidebar() {
       {/* Desktop sidebar */}
       <aside
         data-tour="sidebar"
-        className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 bg-cc-surface border-r border-cc-border z-30 overflow-hidden"
+        className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 bg-cc-sidebar-bg border-r border-cc-border z-30 overflow-hidden"
         style={{
           width: collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH,
           transition: 'width 250ms ease',
@@ -267,7 +270,10 @@ export function Sidebar() {
                 width={200}
                 height={25}
                 className="w-full h-auto"
-                style={{ filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'none' }}
+                style={{
+                  filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'none',
+                  mixBlendMode: theme === 'dark' ? 'lighten' : 'normal',
+                }}
                 priority
               />
               <p className="text-[10px] uppercase tracking-[0.25em] text-cc-text-secondary mt-1.5 font-normal">
