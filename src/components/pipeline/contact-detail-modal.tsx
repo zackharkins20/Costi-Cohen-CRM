@@ -19,8 +19,10 @@ import { updateContact, deleteContact, logActivity, getDeals } from '@/lib/queri
 import { DocumentManager } from '@/components/documents/document-manager'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { EmailHistory } from '@/components/email/email-history'
+import { CreateDealForm } from '@/components/forms/create-deal-form'
+import { StageBadge } from '@/components/ui/status-badge'
 import { PROPERTY_STAGES, type PropertyStage, type Contact, type Deal } from '@/lib/types'
-import { Mail, Pencil, Phone, Building2, AtSign, Trash2, Send } from 'lucide-react'
+import { Mail, Pencil, Phone, Building2, AtSign, Trash2, Send, Plus, DollarSign } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -45,18 +47,23 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
   const [emailOpen, setEmailOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [linkedDeals, setLinkedDeals] = useState<Deal[]>([])
+  const [createDealOpen, setCreateDealOpen] = useState(false)
   const [newNote, setNewNote] = useState('')
   const [addingNote, setAddingNote] = useState(false)
   const [inlineNotes, setInlineNotes] = useState<{ text: string; created_at: string }[]>([])
+
+  const refreshDeals = (contactId: string) => {
+    getDeals().then(deals => {
+      setLinkedDeals(deals.filter(d => d.contact_id === contactId))
+    })
+  }
 
   useEffect(() => {
     if (contact) {
       setForm(contact)
       setInlineNotes([])
       setNewNote('')
-      getDeals().then(deals => {
-        setLinkedDeals(deals.filter(d => d.contact_id === contact.id))
-      })
+      refreshDeals(contact.id)
     }
   }, [contact])
 
@@ -241,6 +248,57 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
               </div>
             </div>
 
+            {/* DEALS */}
+            <div>
+              <h4 className={sectionLabel}>
+                <span className="flex items-center justify-between">
+                  Deals ({linkedDeals.length})
+                  <button
+                    onClick={() => setCreateDealOpen(true)}
+                    className="text-[11px] text-cc-accent hover:text-cc-text-primary font-normal normal-case tracking-normal"
+                  >
+                    + Add Deal
+                  </button>
+                </span>
+              </h4>
+              <div className="rounded-xl border border-cc-border bg-cc-surface p-4">
+                {linkedDeals.length === 0 ? (
+                  <div className="text-center py-3">
+                    <p className="text-sm text-cc-text-muted mb-2">No deals linked</p>
+                    <Button size="sm" variant="outline" onClick={() => setCreateDealOpen(true)}>
+                      <Plus className="h-3.5 w-3.5 mr-1" /> Add Deal
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {linkedDeals.map(deal => (
+                      <button
+                        key={deal.id}
+                        onClick={() => {
+                          onClose()
+                          window.location.href = '/deals'
+                        }}
+                        className="w-full text-left p-3 rounded-lg border border-cc-border hover:bg-cc-surface-2 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-sm font-medium text-cc-text-primary truncate">{deal.title}</span>
+                          <StageBadge stage={deal.stage} />
+                        </div>
+                        {deal.deal_value && (
+                          <div className="flex items-center gap-1 mt-1.5 text-xs text-cc-text-secondary">
+                            <DollarSign className="h-3 w-3" />
+                            {deal.deal_value >= 1_000_000
+                              ? `$${(deal.deal_value / 1_000_000).toFixed(1)}M`
+                              : `$${deal.deal_value.toLocaleString()}`}
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* NOTES */}
             <div>
               <h4 className={sectionLabel}>Notes</h4>
@@ -334,6 +392,14 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
       </Sheet>
 
       <DraftEmailSheet open={emailOpen} onClose={() => setEmailOpen(false)} contact={contact} userId={userId} />
+
+      <CreateDealForm
+        open={createDealOpen}
+        onClose={() => setCreateDealOpen(false)}
+        onCreated={() => { refreshDeals(contact.id); onUpdated() }}
+        userId={userId}
+        defaultContactId={contact.id}
+      />
 
       <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <DialogContent>

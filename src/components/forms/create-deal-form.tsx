@@ -23,9 +23,10 @@ interface Props {
   onClose: () => void
   onCreated: (deal: Deal) => void
   userId?: string
+  defaultContactId?: string
 }
 
-export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
+export function CreateDealForm({ open, onClose, onCreated, userId, defaultContactId }: Props) {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [form, setForm] = useState({
     title: '',
@@ -38,8 +39,13 @@ export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (open) getContacts().then(setContacts)
-  }, [open])
+    if (open) {
+      getContacts().then(setContacts)
+      if (defaultContactId) {
+        setForm(prev => ({ ...prev, contact_id: defaultContactId }))
+      }
+    }
+  }, [open, defaultContactId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
