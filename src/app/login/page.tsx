@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { motion } from 'framer-motion'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import Image from 'next/image'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -73,9 +74,15 @@ export default function LoginPage() {
           custom={0}
           variants={fadeUp}
         >
-          <span className="text-[16px] font-semibold uppercase tracking-[0.15em] text-white" style={{ fontFamily: "'Inter', sans-serif" }}>
-            COSTI COHEN
-          </span>
+          <Image
+            src="/logo.jpg"
+            alt="Costi Cohen"
+            width={180}
+            height={45}
+            className="h-7 w-auto"
+            style={{ filter: 'brightness(0) invert(1)' }}
+            priority
+          />
         </motion.div>
 
         {/* Center — Headline */}
