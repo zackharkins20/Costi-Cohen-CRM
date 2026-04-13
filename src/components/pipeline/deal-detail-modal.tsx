@@ -16,10 +16,12 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { StageBadge } from '@/components/ui/status-badge'
 import { ActivityTimeline } from '@/components/activity/activity-timeline'
-import { updateDeal, updateDealPropertyDetails, deleteDeal, logActivity, getDocumentLinks, createDocumentLink, deleteDocumentLink } from '@/lib/queries'
+import { updateDeal, updateDealPropertyDetails, deleteDeal, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
-import { PROPERTY_STAGES, type PropertyStage, type Deal, type DocumentLink } from '@/lib/types'
-import { Trash2, Link as LinkIcon, Plus, ExternalLink } from 'lucide-react'
+import { DocumentManager } from '@/components/documents/document-manager'
+import { UpcomingEvents } from '@/components/events/upcoming-events'
+import { PROPERTY_STAGES, type PropertyStage, type Deal } from '@/lib/types'
+import { Trash2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -41,9 +43,6 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
   const [form, setForm] = useState<Partial<Deal>>({})
   const [propForm, setPropForm] = useState<Record<string, string | null>>({})
   const [confirmDelete, setConfirmDelete] = useState(false)
-  const [docLinks, setDocLinks] = useState<DocumentLink[]>([])
-  const [newDocUrl, setNewDocUrl] = useState('')
-  const [newDocTitle, setNewDocTitle] = useState('')
 
   useEffect(() => {
     if (deal) {
@@ -55,7 +54,6 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
         exchange_date: deal.property_details?.exchange_date || '',
         settlement_date: deal.property_details?.settlement_date || '',
       })
-      getDocumentLinks('deal', deal.id).then(setDocLinks)
     }
   }, [deal])
 
@@ -100,20 +98,6 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
     setConfirmDelete(false)
     onClose()
     onUpdated()
-  }
-
-  const handleAddDocLink = async () => {
-    if (!newDocUrl.trim() || !newDocTitle.trim()) return
-    await createDocumentLink({
-      entity_type: 'deal',
-      entity_id: deal.id,
-      url: newDocUrl,
-      title: newDocTitle,
-      created_by: userId || '',
-    })
-    setNewDocUrl('')
-    setNewDocTitle('')
-    getDocumentLinks('deal', deal.id).then(setDocLinks)
   }
 
   const formatCurrency = (n: number | null) => {
@@ -251,27 +235,13 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
 
             <Separator className="bg-cc-border" />
 
-            {/* Document links */}
-            <div>
-              <h4 className="text-xs font-medium text-cc-text-primary mb-2 flex items-center gap-1">
-                <LinkIcon className="h-3 w-3" /> Documents
-              </h4>
-              {docLinks.map(dl => (
-                <div key={dl.id} className="flex items-center gap-2 py-1.5">
-                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-cc-text-primary hover:underline flex items-center gap-1">
-                    <ExternalLink className="h-3 w-3" /> {dl.title}
-                  </a>
-                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('deal', deal.id).then(setDocLinks) }} className="text-cc-text-muted hover:text-cc-text-primary ml-auto">
-                    <Trash2 className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
-              <div className="flex gap-2 mt-2">
-                <Input placeholder="Title" value={newDocTitle} onChange={e => setNewDocTitle(e.target.value)} className="h-7 text-xs flex-1" />
-                <Input placeholder="URL" value={newDocUrl} onChange={e => setNewDocUrl(e.target.value)} className="h-7 text-xs flex-1" />
-                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2 hover:text-cc-text-primary"><Plus className="h-3 w-3" /></Button>
-              </div>
-            </div>
+            {/* Documents */}
+            <DocumentManager entityType="deal" entityId={deal.id} userId={userId} />
+
+            <Separator className="bg-cc-border" />
+
+            {/* Upcoming Events */}
+            <UpcomingEvents entityType="deal" entityId={deal.id} />
 
             <Separator className="bg-cc-border" />
 

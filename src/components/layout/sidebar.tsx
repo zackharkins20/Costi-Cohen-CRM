@@ -11,6 +11,7 @@ import {
   Users,
   FileText,
   CheckSquare,
+  Calendar,
   Settings,
   Shield,
   Menu,
@@ -36,6 +37,7 @@ const navigation = [
   { label: 'Contacts', href: '/contacts', icon: Users },
   { label: 'Deals', href: '/deals', icon: FileText },
   { label: 'Tasks', href: '/tasks', icon: CheckSquare },
+  { label: 'Calendar', href: '/calendar', icon: Calendar },
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
 

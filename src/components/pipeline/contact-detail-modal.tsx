@@ -17,9 +17,11 @@ import { Separator } from '@/components/ui/separator'
 import { StageBadge } from '@/components/ui/status-badge'
 import { ActivityTimeline } from '@/components/activity/activity-timeline'
 import { DraftEmailSheet } from '@/components/email/draft-email-sheet'
-import { updateContact, deleteContact, logActivity, getDocumentLinks, createDocumentLink, deleteDocumentLink } from '@/lib/queries'
-import { PROPERTY_STAGES, type PropertyStage, type Contact, type DocumentLink } from '@/lib/types'
-import { Mail, Trash2, Link as LinkIcon, Plus, ExternalLink } from 'lucide-react'
+import { updateContact, deleteContact, logActivity } from '@/lib/queries'
+import { DocumentManager } from '@/components/documents/document-manager'
+import { UpcomingEvents } from '@/components/events/upcoming-events'
+import { PROPERTY_STAGES, type PropertyStage, type Contact } from '@/lib/types'
+import { Mail, Trash2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -41,14 +43,10 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
   const [form, setForm] = useState<Partial<Contact>>({})
   const [emailOpen, setEmailOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
-  const [docLinks, setDocLinks] = useState<DocumentLink[]>([])
-  const [newDocUrl, setNewDocUrl] = useState('')
-  const [newDocTitle, setNewDocTitle] = useState('')
 
   useEffect(() => {
     if (contact) {
       setForm(contact)
-      getDocumentLinks('contact', contact.id).then(setDocLinks)
     }
   }, [contact])
 
@@ -74,20 +72,6 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
     setConfirmDelete(false)
     onClose()
     onUpdated()
-  }
-
-  const handleAddDocLink = async () => {
-    if (!newDocUrl.trim() || !newDocTitle.trim()) return
-    await createDocumentLink({
-      entity_type: 'contact',
-      entity_id: contact.id,
-      url: newDocUrl,
-      title: newDocTitle,
-      created_by: userId || '',
-    })
-    setNewDocUrl('')
-    setNewDocTitle('')
-    getDocumentLinks('contact', contact.id).then(setDocLinks)
   }
 
   const formatBudget = (n: number | null) => {
@@ -218,27 +202,13 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
 
             <Separator className="bg-cc-border" />
 
-            {/* Document links */}
-            <div>
-              <h4 className="text-xs font-medium text-cc-text-primary mb-2 flex items-center gap-1">
-                <LinkIcon className="h-3 w-3" /> Documents
-              </h4>
-              {docLinks.map(dl => (
-                <div key={dl.id} className="flex items-center gap-2 py-1.5">
-                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-cc-text-primary hover:underline flex items-center gap-1">
-                    <ExternalLink className="h-3 w-3" /> {dl.title}
-                  </a>
-                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('contact', contact.id).then(setDocLinks) }} className="text-cc-text-muted hover:text-cc-text-primary ml-auto">
-                    <Trash2 className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
-              <div className="flex gap-2 mt-2">
-                <Input placeholder="Title" value={newDocTitle} onChange={e => setNewDocTitle(e.target.value)} className="h-7 text-xs flex-1" />
-                <Input placeholder="URL" value={newDocUrl} onChange={e => setNewDocUrl(e.target.value)} className="h-7 text-xs flex-1" />
-                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2 hover:text-cc-text-primary"><Plus className="h-3 w-3" /></Button>
-              </div>
-            </div>
+            {/* Documents */}
+            <DocumentManager entityType="contact" entityId={contact.id} userId={userId} />
+
+            <Separator className="bg-cc-border" />
+
+            {/* Upcoming Events */}
+            <UpcomingEvents entityType="contact" entityId={contact.id} />
 
             <Separator className="bg-cc-border" />
 

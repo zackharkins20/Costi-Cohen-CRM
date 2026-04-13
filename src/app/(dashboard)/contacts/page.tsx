@@ -8,10 +8,11 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { CreateContactForm } from '@/components/forms/create-contact-form'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { getContacts, getCurrentUser } from '@/lib/queries'
+import { getDocumentCounts } from '@/lib/documents'
 import type { Contact } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Plus, Users, Mail, Phone } from 'lucide-react'
+import { Search, Plus, Users, Mail, Phone, Paperclip } from 'lucide-react'
 
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
@@ -20,9 +21,13 @@ export default function ContactsPage() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
   const [userId, setUserId] = useState<string>()
+  const [docCounts, setDocCounts] = useState<Record<string, number>>({})
 
   const load = () => {
-    getContacts().then(setContacts)
+    getContacts().then(c => {
+      setContacts(c)
+      getDocumentCounts('contact', c.map(ct => ct.id)).then(setDocCounts)
+    })
     getCurrentUser().then(u => { if (u) setUserId(u.id) })
   }
 
@@ -89,8 +94,13 @@ export default function ContactsPage() {
                         <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {contact.phone}</span>
                       )}
                     </div>
-                    <div className="mt-2">
+                    <div className="mt-2 flex items-center gap-2">
                       <StageBadge stage={contact.stage} />
+                      {docCounts[contact.id] > 0 && (
+                        <span className="flex items-center gap-0.5 text-[10px] text-cc-text-muted">
+                          <Paperclip className="h-3 w-3" /> {docCounts[contact.id]}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

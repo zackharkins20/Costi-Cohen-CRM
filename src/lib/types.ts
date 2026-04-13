@@ -128,8 +128,40 @@ export interface DocumentLink {
   entity_id: string
   url: string
   title: string
+  file_path: string | null
+  file_size: number | null
+  mime_type: string | null
+  link_type: 'url' | 'file'
   created_by: string
   created_at: string
+}
+
+export type EventType = 'meeting' | 'call' | 'deadline' | 'follow_up' | 'viewing' | 'other'
+
+export const EVENT_TYPES: { key: EventType; label: string }[] = [
+  { key: 'meeting', label: 'Meeting' },
+  { key: 'call', label: 'Call' },
+  { key: 'deadline', label: 'Deadline' },
+  { key: 'follow_up', label: 'Follow-up' },
+  { key: 'viewing', label: 'Viewing' },
+  { key: 'other', label: 'Other' },
+]
+
+export interface CalendarEvent {
+  id: string
+  title: string
+  description: string | null
+  event_type: EventType
+  start_time: string
+  end_time: string | null
+  all_day: boolean
+  location: string | null
+  entity_type: 'deal' | 'contact' | null
+  entity_id: string | null
+  attendees: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Notification {

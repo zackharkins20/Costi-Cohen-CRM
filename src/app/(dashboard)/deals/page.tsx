@@ -8,10 +8,11 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { CreateDealForm } from '@/components/forms/create-deal-form'
 import { DealDetailModal } from '@/components/pipeline/deal-detail-modal'
 import { getDeals, getCurrentUser } from '@/lib/queries'
+import { getDocumentCounts } from '@/lib/documents'
 import { PROPERTY_STAGES, type Deal, type PropertyStage } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Search, Plus, FileText } from 'lucide-react'
+import { Search, Plus, FileText, Paperclip } from 'lucide-react'
 
 export default function DealsPage() {
   const [deals, setDeals] = useState<Deal[]>([])
@@ -21,9 +22,13 @@ export default function DealsPage() {
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
   const [userId, setUserId] = useState<string>()
+  const [docCounts, setDocCounts] = useState<Record<string, number>>({})
 
   const load = () => {
-    getDeals().then(setDeals)
+    getDeals().then(d => {
+      setDeals(d)
+      getDocumentCounts('deal', d.map(dl => dl.id)).then(setDocCounts)
+    })
     getCurrentUser().then(u => { if (u) setUserId(u.id) })
   }
 
@@ -117,11 +122,18 @@ export default function DealsPage() {
                   <span className="text-sm font-semibold text-cc-text-primary">
                     {formatCurrency(deal.deal_value)}
                   </span>
-                  {deal.fee_amount && (
-                    <span className="text-xs text-cc-text-secondary">
-                      Fee: {formatCurrency(deal.fee_amount)}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {docCounts[deal.id] > 0 && (
+                      <span className="flex items-center gap-0.5 text-[10px] text-cc-text-muted">
+                        <Paperclip className="h-3 w-3" /> {docCounts[deal.id]}
+                      </span>
+                    )}
+                    {deal.fee_amount && (
+                      <span className="text-xs text-cc-text-secondary">
+                        Fee: {formatCurrency(deal.fee_amount)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </GlassCard>
