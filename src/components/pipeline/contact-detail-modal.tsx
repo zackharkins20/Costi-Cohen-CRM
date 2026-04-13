@@ -22,7 +22,9 @@ import { EmailHistory } from '@/components/email/email-history'
 import { CreateDealForm } from '@/components/forms/create-deal-form'
 import { StageBadge } from '@/components/ui/status-badge'
 import { PROPERTY_STAGES, type PropertyStage, type Contact, type Deal } from '@/lib/types'
-import { Mail, Pencil, Phone, Building2, AtSign, Trash2, Send, Plus, DollarSign } from 'lucide-react'
+import { getStageColor } from '@/lib/stage-colors'
+import { useTheme } from '@/components/theme-provider'
+import { Mail, Pencil, Phone, Building2, AtSign, Trash2, Send, Plus, DollarSign, ChevronRight } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -37,17 +39,19 @@ interface Props {
   onClose: () => void
   onUpdated: () => void
   userId?: string
+  onNavigateToDeal?: (deal: Deal) => void
 }
 
 const sectionLabel = "text-[12px] font-medium uppercase tracking-[0.05em] text-cc-text-muted mb-3"
 
-export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }: Props) {
+export function ContactDetailModal({ contact, open, onClose, onUpdated, userId, onNavigateToDeal }: Props) {
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState<Partial<Contact>>({})
   const [emailOpen, setEmailOpen] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [linkedDeals, setLinkedDeals] = useState<Deal[]>([])
   const [createDealOpen, setCreateDealOpen] = useState(false)
+  const { theme } = useTheme()
   const [newNote, setNewNote] = useState('')
   const [addingNote, setAddingNote] = useState(false)
   const [inlineNotes, setInlineNotes] = useState<{ text: string; created_at: string }[]>([])
@@ -200,12 +204,15 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
                     {PROPERTY_STAGES.map(s => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              ) : (
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-cc-surface border border-cc-border">
-                  <span className="w-2 h-2 rounded-full bg-cc-accent flex-shrink-0" />
-                  <span className="text-sm text-cc-text-primary">{stageInfo?.label || contact.stage}</span>
-                </div>
-              )}
+              ) : (() => {
+                const sc = getStageColor(contact.stage, theme === 'dark')
+                return (
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-full" style={{ backgroundColor: sc.bg }}>
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: sc.dot }} />
+                    <span className="text-sm font-medium" style={{ color: sc.text }}>{stageInfo?.label || contact.stage}</span>
+                  </div>
+                )
+              })()}
             </div>
 
             {/* BRIEF */}
@@ -271,29 +278,44 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    {linkedDeals.map(deal => (
-                      <button
-                        key={deal.id}
-                        onClick={() => {
-                          onClose()
-                          window.location.href = '/deals'
-                        }}
-                        className="w-full text-left p-3 rounded-lg border border-cc-border hover:bg-cc-surface-2 transition-colors"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-sm font-medium text-cc-text-primary truncate">{deal.title}</span>
-                          <StageBadge stage={deal.stage} />
-                        </div>
-                        {deal.deal_value && (
-                          <div className="flex items-center gap-1 mt-1.5 text-xs text-cc-text-secondary">
-                            <DollarSign className="h-3 w-3" />
-                            {deal.deal_value >= 1_000_000
-                              ? `$${(deal.deal_value / 1_000_000).toFixed(1)}M`
-                              : `$${deal.deal_value.toLocaleString()}`}
+                    {linkedDeals.map(deal => {
+                      const dealSc = getStageColor(deal.stage, theme === 'dark')
+                      const stageLabel = PROPERTY_STAGES.find(s => s.key === deal.stage)?.label ?? deal.stage
+                      return (
+                        <button
+                          key={deal.id}
+                          onClick={() => {
+                            if (onNavigateToDeal) {
+                              onClose()
+                              onNavigateToDeal(deal)
+                            }
+                          }}
+                          className="w-full text-left p-3 rounded-lg border border-cc-border hover:bg-cc-surface-2 transition-colors group"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-sm font-medium text-cc-text-primary truncate group-hover:text-cc-accent transition-colors">{deal.title}</span>
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-[10px] font-medium"
+                                style={{ backgroundColor: dealSc.bg, color: dealSc.text }}
+                              >
+                                <span className="w-1 h-1 rounded-full" style={{ backgroundColor: dealSc.dot }} />
+                                {stageLabel}
+                              </span>
+                              {onNavigateToDeal && <ChevronRight className="h-3.5 w-3.5 text-cc-text-muted group-hover:text-cc-accent" />}
+                            </div>
                           </div>
-                        )}
-                      </button>
-                    ))}
+                          {deal.deal_value && (
+                            <div className="flex items-center gap-1 mt-1.5 text-xs text-cc-text-secondary">
+                              <DollarSign className="h-3 w-3" />
+                              {deal.deal_value >= 1_000_000
+                                ? `$${(deal.deal_value / 1_000_000).toFixed(1)}M`
+                                : `$${deal.deal_value.toLocaleString()}`}
+                            </div>
+                          )}
+                        </button>
+                      )
+                    })}
                   </div>
                 )}
               </div>

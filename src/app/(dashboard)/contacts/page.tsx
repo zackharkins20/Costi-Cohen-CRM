@@ -7,9 +7,10 @@ import { StageBadge } from '@/components/ui/status-badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { CreateContactForm } from '@/components/forms/create-contact-form'
 import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
+import { DealDetailModal } from '@/components/pipeline/deal-detail-modal'
 import { getContacts, getCurrentUser } from '@/lib/queries'
 import { getDocumentCounts } from '@/lib/documents'
-import { PROPERTY_STAGES, type Contact, type PropertyStage } from '@/lib/types'
+import { PROPERTY_STAGES, type Contact, type Deal, type PropertyStage } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -52,6 +53,8 @@ export default function ContactsPage() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [userId, setUserId] = useState<string>()
   const [docCounts, setDocCounts] = useState<Record<string, number>>({})
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null)
+  const [dealDetailOpen, setDealDetailOpen] = useState(false)
 
   const load = () => {
     getContacts().then(c => {
@@ -237,6 +240,22 @@ export default function ContactsPage() {
         onClose={() => setDetailOpen(false)}
         onUpdated={load}
         userId={userId}
+        onNavigateToDeal={(deal) => {
+          setSelectedDeal(deal)
+          setDealDetailOpen(true)
+        }}
+      />
+
+      <DealDetailModal
+        deal={selectedDeal}
+        open={dealDetailOpen}
+        onClose={() => setDealDetailOpen(false)}
+        onUpdated={load}
+        userId={userId}
+        onNavigateToContact={(contact) => {
+          setSelectedContact(contact)
+          setDetailOpen(true)
+        }}
       />
     </div>
   )

@@ -19,7 +19,9 @@ import { notifyAllUsers } from '@/lib/notifications'
 import { DocumentManager } from '@/components/documents/document-manager'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { EmailHistory } from '@/components/email/email-history'
-import { PROPERTY_STAGES, type PropertyStage, type Deal } from '@/lib/types'
+import { PROPERTY_STAGES, type PropertyStage, type Deal, type Contact } from '@/lib/types'
+import { getStageColor } from '@/lib/stage-colors'
+import { useTheme } from '@/components/theme-provider'
 import { Pencil, Trash2, Building2, User, Send } from 'lucide-react'
 import {
   Dialog,
@@ -35,15 +37,17 @@ interface Props {
   onClose: () => void
   onUpdated: () => void
   userId?: string
+  onNavigateToContact?: (contact: Contact) => void
 }
 
 const sectionLabel = "text-[12px] font-medium uppercase tracking-[0.05em] text-cc-text-muted mb-3"
 
-export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Props) {
+export function DealDetailModal({ deal, open, onClose, onUpdated, userId, onNavigateToContact }: Props) {
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState<Partial<Deal>>({})
   const [propForm, setPropForm] = useState<Record<string, string | null>>({})
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const { theme } = useTheme()
   const [newNote, setNewNote] = useState('')
   const [addingNote, setAddingNote] = useState(false)
   const [inlineNotes, setInlineNotes] = useState<{ text: string; created_at: string }[]>([])
@@ -140,9 +144,18 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                 <span className="block text-lg font-bold text-cc-text-primary truncate">{deal.title}</span>
                 <div className="flex items-center gap-2 mt-1">
                   {deal.contact && (
-                    <span className="flex items-center gap-1 text-xs font-normal text-cc-text-secondary">
-                      <User className="h-3 w-3" /> {deal.contact.name}
-                    </span>
+                    onNavigateToContact ? (
+                      <button
+                        onClick={() => { onClose(); onNavigateToContact(deal.contact!) }}
+                        className="flex items-center gap-1 text-xs font-normal text-cc-accent hover:text-cc-text-primary transition-colors hover:underline"
+                      >
+                        <User className="h-3 w-3" /> {deal.contact.name}
+                      </button>
+                    ) : (
+                      <span className="flex items-center gap-1 text-xs font-normal text-cc-text-secondary">
+                        <User className="h-3 w-3" /> {deal.contact.name}
+                      </span>
+                    )
                   )}
                 </div>
               </SheetTitle>
@@ -222,12 +235,15 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                     {PROPERTY_STAGES.map(s => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              ) : (
-                <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-cc-surface border border-cc-border">
-                  <span className="w-2 h-2 rounded-full bg-cc-accent flex-shrink-0" />
-                  <span className="text-sm text-cc-text-primary">{stageInfo?.label || deal.stage}</span>
-                </div>
-              )}
+              ) : (() => {
+                const sc = getStageColor(deal.stage, theme === 'dark')
+                return (
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-full" style={{ backgroundColor: sc.bg }}>
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: sc.dot }} />
+                    <span className="text-sm font-medium" style={{ color: sc.text }}>{stageInfo?.label || deal.stage}</span>
+                  </div>
+                )
+              })()}
             </div>
 
             {/* BRIEF - from deal_property_details */}

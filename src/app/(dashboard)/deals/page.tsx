@@ -7,9 +7,12 @@ import { StageBadge } from '@/components/ui/status-badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { CreateDealForm } from '@/components/forms/create-deal-form'
 import { DealDetailModal } from '@/components/pipeline/deal-detail-modal'
+import { ContactDetailModal } from '@/components/pipeline/contact-detail-modal'
 import { getDeals, getCurrentUser } from '@/lib/queries'
 import { getDocumentCounts } from '@/lib/documents'
-import { PROPERTY_STAGES, type Deal, type PropertyStage } from '@/lib/types'
+import { getAssetTypeColor } from '@/lib/stage-colors'
+import { useTheme } from '@/components/theme-provider'
+import { PROPERTY_STAGES, type Deal, type Contact, type PropertyStage } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Search, Plus, FileText, Paperclip } from 'lucide-react'
@@ -23,6 +26,9 @@ export default function DealsPage() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [userId, setUserId] = useState<string>()
   const [docCounts, setDocCounts] = useState<Record<string, number>>({})
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
+  const [contactDetailOpen, setContactDetailOpen] = useState(false)
+  const { theme } = useTheme()
 
   const load = () => {
     getDeals().then(d => {
@@ -117,7 +123,17 @@ export default function DealsPage() {
                 {deal.contact && (
                   <p className="text-xs text-cc-text-secondary">{deal.contact.name}</p>
                 )}
-                <StageBadge stage={deal.stage} />
+                <div className="flex items-center gap-2 flex-wrap">
+                  <StageBadge stage={deal.stage} />
+                  {deal.contact?.asset_type && (() => {
+                    const atc = getAssetTypeColor(deal.contact!.asset_type!, theme === 'dark')
+                    return (
+                      <span className="text-[10px] px-1.5 py-0.5 font-medium rounded-sm" style={{ backgroundColor: atc.bg, color: atc.text }}>
+                        {deal.contact!.asset_type}
+                      </span>
+                    )
+                  })()}
+                </div>
                 <div className="flex items-center justify-between pt-1">
                   <span className="text-sm font-bold text-cc-text-primary tracking-[-0.01em]">
                     {formatCurrency(deal.deal_value)}
@@ -154,6 +170,22 @@ export default function DealsPage() {
         onClose={() => setDetailOpen(false)}
         onUpdated={load}
         userId={userId}
+        onNavigateToContact={(contact) => {
+          setSelectedContact(contact)
+          setContactDetailOpen(true)
+        }}
+      />
+
+      <ContactDetailModal
+        contact={selectedContact}
+        open={contactDetailOpen}
+        onClose={() => setContactDetailOpen(false)}
+        onUpdated={load}
+        userId={userId}
+        onNavigateToDeal={(deal) => {
+          setSelectedDeal(deal)
+          setDetailOpen(true)
+        }}
       />
     </div>
   )
