@@ -529,7 +529,7 @@ function GlobalRunRow({ run, workflowName }: { run: WorkflowRun; workflowName: s
                     <span className="text-cc-text-secondary">
                       {ACTION_TYPE_LABELS[(a.type as ActionType)] || (a.type as string)}
                     </span>
-                    {a.error && <span className="text-cc-text-muted text-[10px]">— {a.error as string}</span>}
+                    {a.error ? <span className="text-cc-text-muted text-[10px]">— {String(a.error)}</span> : null}
                   </div>
                 ))
               ) : (
