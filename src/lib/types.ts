@@ -164,6 +164,24 @@ export interface CalendarEvent {
   updated_at: string
 }
 
+export interface Email {
+  id: string
+  subject: string
+  body: string | null
+  to_address: string
+  from_address: string | null
+  cc: string[] | null
+  bcc: string[] | null
+  status: 'draft' | 'sent' | 'failed'
+  sent_at: string | null
+  entity_type: 'deal' | 'contact' | null
+  entity_id: string | null
+  thread_id: string | null
+  template_id: string | null
+  created_by: string
+  created_at: string
+}
+
 export interface Notification {
   id: string
   user_id: string

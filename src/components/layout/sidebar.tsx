@@ -12,6 +12,8 @@ import {
   FileText,
   CheckSquare,
   Calendar,
+  Mail,
+  BarChart3,
   Settings,
   Shield,
   Menu,
@@ -38,6 +40,8 @@ const navigation = [
   { label: 'Deals', href: '/deals', icon: FileText },
   { label: 'Tasks', href: '/tasks', icon: CheckSquare },
   { label: 'Calendar', href: '/calendar', icon: Calendar },
+  { label: 'Emails', href: '/emails', icon: Mail },
+  { label: 'Reports', href: '/reports', icon: BarChart3 },
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
 

@@ -20,6 +20,7 @@ import { DraftEmailSheet } from '@/components/email/draft-email-sheet'
 import { updateContact, deleteContact, logActivity } from '@/lib/queries'
 import { DocumentManager } from '@/components/documents/document-manager'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
+import { EmailHistory } from '@/components/email/email-history'
 import { PROPERTY_STAGES, type PropertyStage, type Contact } from '@/lib/types'
 import { Mail, Trash2 } from 'lucide-react'
 import {
@@ -209,6 +210,11 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
 
             {/* Upcoming Events */}
             <UpcomingEvents entityType="contact" entityId={contact.id} />
+
+            <Separator className="bg-cc-border" />
+
+            {/* Email History */}
+            <EmailHistory entityType="contact" entityId={contact.id} />
 
             <Separator className="bg-cc-border" />
 

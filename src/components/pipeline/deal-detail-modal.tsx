@@ -20,6 +20,7 @@ import { updateDeal, updateDealPropertyDetails, deleteDeal, logActivity } from '
 import { notifyAllUsers } from '@/lib/notifications'
 import { DocumentManager } from '@/components/documents/document-manager'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
+import { EmailHistory } from '@/components/email/email-history'
 import { PROPERTY_STAGES, type PropertyStage, type Deal } from '@/lib/types'
 import { Trash2 } from 'lucide-react'
 import {
@@ -242,6 +243,11 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
 
             {/* Upcoming Events */}
             <UpcomingEvents entityType="deal" entityId={deal.id} />
+
+            <Separator className="bg-cc-border" />
+
+            {/* Email History */}
+            <EmailHistory entityType="deal" entityId={deal.id} />
 
             <Separator className="bg-cc-border" />
 
