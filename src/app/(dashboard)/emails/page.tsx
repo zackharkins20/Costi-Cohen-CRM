@@ -60,7 +60,7 @@ export default function EmailsPage() {
   ]
 
   const entityFilters: { key: EntityFilter; label: string }[] = [
-    { key: 'all', label: 'All' },
+    { key: 'all', label: 'All Types' },
     { key: 'deal', label: 'Deals' },
     { key: 'contact', label: 'Contacts' },
   ]
@@ -111,6 +111,8 @@ export default function EmailsPage() {
             </button>
           ))}
         </div>
+
+        <div className="w-px h-6 bg-cc-border" />
 
         <div className="flex items-center gap-1">
           {entityFilters.map(f => (
