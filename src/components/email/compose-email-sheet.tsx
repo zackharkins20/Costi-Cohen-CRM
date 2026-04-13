@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -16,7 +16,20 @@ import {
 import { EMAIL_TEMPLATES, renderTemplate, type EmailTemplate } from '@/lib/email-templates'
 import { createEmail } from '@/lib/emails'
 import { logActivity } from '@/lib/queries'
-import { Copy, ExternalLink, CheckCircle, ChevronDown, ChevronUp, Save } from 'lucide-react'
+import { createClient } from '@/lib/supabase'
+import { formatFileSize } from '@/lib/documents'
+import { Copy, ExternalLink, CheckCircle, ChevronDown, ChevronUp, Save, Paperclip, X, FileText, Loader2 } from 'lucide-react'
+
+interface Attachment {
+  file: File
+  name: string
+  size: number
+  storagePath: string | null
+  uploading: boolean
+  error?: string
+}
+
+const ACCEPTED_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif,.webp'
 
 interface Props {
   open: boolean
@@ -37,6 +50,8 @@ export function ComposeEmailSheet({ open, onClose, userId, onSent, entityType, e
   const [body, setBody] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState<string>('')
   const [copied, setCopied] = useState(false)
+  const [attachments, setAttachments] = useState<Attachment[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (defaultTo) setTo(defaultTo)
@@ -51,8 +66,55 @@ export function ComposeEmailSheet({ open, onClose, userId, onSent, entityType, e
       setBody('')
       setSelectedTemplate('')
       setShowCcBcc(false)
+      setAttachments([])
     }
   }, [open, defaultTo])
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    for (const file of Array.from(files)) {
+      const attachment: Attachment = {
+        file,
+        name: file.name,
+        size: file.size,
+        storagePath: null,
+        uploading: true,
+      }
+      setAttachments(prev => [...prev, attachment])
+
+      try {
+        const supabase = createClient()
+        const filePath = `email-attachments/${Date.now()}_${file.name}`
+        const { error } = await supabase.storage.from('documents').upload(filePath, file)
+        if (error) {
+          setAttachments(prev =>
+            prev.map(a => a.file === file ? { ...a, uploading: false, error: 'Upload failed' } : a)
+          )
+        } else {
+          setAttachments(prev =>
+            prev.map(a => a.file === file ? { ...a, uploading: false, storagePath: filePath } : a)
+          )
+        }
+      } catch {
+        setAttachments(prev =>
+          prev.map(a => a.file === file ? { ...a, uploading: false, error: 'Upload failed' } : a)
+        )
+      }
+    }
+    // Reset input
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const removeAttachment = async (index: number) => {
+    const att = attachments[index]
+    if (att.storagePath) {
+      const supabase = createClient()
+      await supabase.storage.from('documents').remove([att.storagePath])
+    }
+    setAttachments(prev => prev.filter((_, i) => i !== index))
+  }
 
   const handleTemplateSelect = (templateId: string | null) => {
     if (!templateId) return
@@ -66,12 +128,22 @@ export function ComposeEmailSheet({ open, onClose, userId, onSent, entityType, e
   }
 
   const handleSend = async () => {
-    const mailtoUrl = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}${cc ? `&cc=${encodeURIComponent(cc)}` : ''}${bcc ? `&bcc=${encodeURIComponent(bcc)}` : ''}`
+    // Build body with attachment references
+    let fullBody = body
+    const uploadedAttachments = attachments.filter(a => a.storagePath && !a.error)
+    if (uploadedAttachments.length > 0) {
+      fullBody += '\n\n---\nAttachments (via The Exchange CRM):\n'
+      uploadedAttachments.forEach(a => {
+        fullBody += `- ${a.name} (${formatFileSize(a.size)})\n`
+      })
+    }
+
+    const mailtoUrl = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}${cc ? `&cc=${encodeURIComponent(cc)}` : ''}${bcc ? `&bcc=${encodeURIComponent(bcc)}` : ''}`
     window.open(mailtoUrl)
 
     await createEmail({
       subject,
-      body,
+      body: fullBody,
       to_address: to,
       from_address: null,
       cc: cc ? cc.split(',').map(s => s.trim()) : null,
@@ -90,7 +162,7 @@ export function ComposeEmailSheet({ open, onClose, userId, onSent, entityType, e
         entity_type: entityType as 'contact' | 'deal',
         entity_id: entityId,
         action: 'email_drafted',
-        description: `Email sent: "${subject}"`,
+        description: `Email sent: "${subject}"${uploadedAttachments.length > 0 ? ` with ${uploadedAttachments.length} attachment(s)` : ''}`,
         created_by: userId,
       })
     }
@@ -212,9 +284,57 @@ export function ComposeEmailSheet({ open, onClose, userId, onSent, entityType, e
             />
           </div>
 
+          {/* Attachments */}
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept={ACCEPTED_TYPES}
+              multiple
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 text-xs text-cc-text-secondary hover:text-cc-text-primary transition-colors"
+            >
+              <Paperclip className="h-3.5 w-3.5" /> Attach Files
+            </button>
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {attachments.map((att, i) => (
+                  <div
+                    key={i}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs border ${
+                      att.error
+                        ? 'border-cc-destructive text-cc-destructive bg-cc-surface-2'
+                        : 'border-cc-border text-cc-text-secondary bg-cc-surface-2'
+                    }`}
+                  >
+                    {att.uploading ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <FileText className="h-3 w-3" />
+                    )}
+                    <span className="max-w-[140px] truncate">{att.name}</span>
+                    <span className="text-cc-text-muted">{formatFileSize(att.size)}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeAttachment(i)}
+                      className="ml-0.5 hover:text-cc-text-primary transition-colors"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Actions */}
           <div className="flex flex-wrap gap-2 pt-2">
-            <Button size="sm" onClick={handleSend} disabled={!to || !subject}>
+            <Button size="sm" onClick={handleSend} disabled={!to || !subject || attachments.some(a => a.uploading)}>
               <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Send
             </Button>
             <Button variant="outline" size="sm" onClick={handleSaveDraft}>
