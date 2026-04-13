@@ -130,9 +130,18 @@ export default function ReportsPage() {
     { key: 'custom', label: 'Custom' },
   ]
 
+  const stageAbbreviations: Record<string, string> = {
+    lead: 'Lead',
+    initial_call: 'Initial Call',
+    property_search: 'Prop Search',
+    due_diligence: 'Due Diligence',
+    exchange: 'Exchange',
+    fees_collected: 'Fees Collected',
+  }
+
   // ── Pipeline Report ──
   const pipelineChartData = PROPERTY_STAGES.map(stage => ({
-    name: stage.label.length > 12 ? stage.label.slice(0, 12) + '…' : stage.label,
+    name: stageAbbreviations[stage.key] || stage.label,
     count: deals.filter(d => d.stage === stage.key).length,
     value: deals.filter(d => d.stage === stage.key).reduce((s, d) => s + (d.deal_value || 0), 0),
   }))
@@ -182,7 +191,7 @@ export default function ReportsPage() {
 
   // ── Contact Report ──
   const contactsByStage = PROPERTY_STAGES.map(stage => ({
-    name: stage.label.length > 12 ? stage.label.slice(0, 12) + '…' : stage.label,
+    name: stageAbbreviations[stage.key] || stage.label,
     count: contacts.filter(c => c.stage === stage.key).length,
   }))
 
@@ -283,8 +292,8 @@ export default function ReportsPage() {
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={pipelineChartData}>
-                  <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} />
-                  <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                  <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 10 }} axisLine={{ stroke: chartGridColor }} tickLine={false} angle={-35} textAnchor="end" height={60} />
+                  <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} label={{ value: 'Deal Count', angle: -90, position: 'insideLeft', style: { fill: chartAxisColor, fontSize: 11 } }} />
                   <Tooltip
                     contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
                   />
@@ -376,7 +385,7 @@ export default function ReportsPage() {
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="date" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} />
-                    <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formatCurrency(v)} />
+                    <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => formatCurrency(v)} label={{ value: 'Revenue', angle: -90, position: 'insideLeft', style: { fill: chartAxisColor, fontSize: 11 } }} />
                     <Tooltip
                       contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
                     />
@@ -459,8 +468,8 @@ export default function ReportsPage() {
               {activityByType.length > 0 ? (
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={activityByType}>
-                    <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} />
-                    <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                    <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 10 }} axisLine={{ stroke: chartGridColor }} tickLine={false} angle={-35} textAnchor="end" height={60} />
+                    <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} label={{ value: 'Count', angle: -90, position: 'insideLeft', style: { fill: chartAxisColor, fontSize: 11 } }} />
                     <Tooltip
                       contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
                     />
@@ -547,8 +556,8 @@ export default function ReportsPage() {
                 {newContactsByMonth.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={newContactsByMonth}>
-                      <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} />
-                      <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+                      <XAxis dataKey="name" tick={{ fill: chartAxisColor, fontSize: 10 }} axisLine={{ stroke: chartGridColor }} tickLine={false} angle={-35} textAnchor="end" height={60} />
+                      <YAxis tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} label={{ value: 'Contacts', angle: -90, position: 'insideLeft', style: { fill: chartAxisColor, fontSize: 11 } }} />
                       <Tooltip
                         contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
                       />
@@ -581,8 +590,8 @@ export default function ReportsPage() {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={contactsByStage} layout="vertical">
-                    <XAxis type="number" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                    <YAxis dataKey="name" type="category" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} width={100} />
+                    <XAxis type="number" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} label={{ value: 'Count', position: 'insideBottom', offset: -5, style: { fill: chartAxisColor, fontSize: 11 } }} />
+                    <YAxis dataKey="name" type="category" tick={{ fill: chartAxisColor, fontSize: 10 }} axisLine={{ stroke: chartGridColor }} tickLine={false} width={100} />
                     <Tooltip
                       contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
                     />

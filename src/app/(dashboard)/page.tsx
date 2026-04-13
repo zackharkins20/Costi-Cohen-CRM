@@ -6,7 +6,8 @@ import { MetricCard } from '@/components/ui/metric-card'
 import { GlassCard } from '@/components/ui/glass-card'
 import { getContacts, getDeals, getRecentActivities } from '@/lib/queries'
 import { PROPERTY_STAGES, type Contact, type Deal, type Activity } from '@/lib/types'
-import { DollarSign, TrendingUp, Users, CheckCircle, MessageSquare } from 'lucide-react'
+import { DollarSign, TrendingUp, Users, CheckCircle, MessageSquare, Pencil, ArrowRight, Phone, Video, Plus } from 'lucide-react'
+import { formatLabel } from '@/lib/utils'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { formatDistanceToNow } from 'date-fns'
 import { useTheme } from '@/components/theme-provider'
@@ -31,8 +32,26 @@ export default function DashboardPage() {
     .filter(d => d.stage === 'fees_collected')
     .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
 
+  const stageAbbreviations: Record<string, string> = {
+    lead: 'Lead',
+    initial_call: 'Initial Call',
+    property_search: 'Prop Search',
+    due_diligence: 'Due Diligence',
+    exchange: 'Exchange',
+    fees_collected: 'Fees Collected',
+  }
+
+  const getActivityIcon = (action: string) => {
+    if (action.includes('note')) return Pencil
+    if (action.includes('stage') || action.includes('status')) return ArrowRight
+    if (action.includes('call')) return Phone
+    if (action.includes('meeting')) return Video
+    if (action.includes('created') || action === 'created') return Plus
+    return MessageSquare
+  }
+
   const chartData = PROPERTY_STAGES.map(stage => ({
-    name: stage.label.length > 15 ? stage.label.slice(0, 15) + '…' : stage.label,
+    name: stageAbbreviations[stage.key] || stage.label,
     count: contacts.filter(c => c.stage === stage.key).length,
   }))
 
@@ -74,15 +93,19 @@ export default function DashboardPage() {
               <BarChart data={chartData}>
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: chartAxisColor, fontSize: 11 }}
+                  tick={{ fill: chartAxisColor, fontSize: 10 }}
                   axisLine={{ stroke: chartGridColor }}
                   tickLine={false}
+                  angle={-35}
+                  textAnchor="end"
+                  height={60}
                 />
                 <YAxis
                   tick={{ fill: chartAxisColor, fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   allowDecimals={false}
+                  label={{ value: 'Deal Count', angle: -90, position: 'insideLeft', style: { fill: chartAxisColor, fontSize: 11 } }}
                 />
                 <Tooltip
                   contentStyle={{
@@ -111,17 +134,20 @@ export default function DashboardPage() {
             {activities.length === 0 ? (
               <p className="text-xs text-cc-text-muted text-center py-8">No recent activity</p>
             ) : (
-              activities.map(a => (
-                <div key={a.id} className="flex gap-3 py-3 border-b border-cc-border last:border-0">
-                  <MessageSquare className="h-3.5 w-3.5 text-cc-text-muted mt-0.5 flex-shrink-0" />
-                  <div className="min-w-0">
-                    <p className="text-sm text-cc-text-secondary line-clamp-2">{a.description}</p>
-                    <p className="text-[10px] text-cc-text-muted mt-0.5">
-                      {formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}
-                    </p>
+              activities.map(a => {
+                const Icon = getActivityIcon(a.action)
+                return (
+                  <div key={a.id} className="flex gap-3 py-3 border-b border-cc-border last:border-0">
+                    <Icon className="h-3.5 w-3.5 text-cc-text-muted mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-sm text-cc-text-secondary line-clamp-2">{formatLabel(a.description)}</p>
+                      <p className="text-[10px] text-cc-text-muted mt-0.5">
+                        {formatDistanceToNow(new Date(a.created_at), { addSuffix: true })}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))
+                )
+              })
             )}
           </div>
         </GlassCard>
