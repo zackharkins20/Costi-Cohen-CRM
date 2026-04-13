@@ -47,7 +47,7 @@ export default function TasksPage() {
   return (
     <div>
       <PageHeader title="Tasks" description={`${tasks.length} tasks`}>
-        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-accent)] hover:bg-[var(--cc-accent)]/90 text-white">
+        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
           <Plus className="h-4 w-4 mr-1" /> New Task
         </Button>
       </PageHeader>

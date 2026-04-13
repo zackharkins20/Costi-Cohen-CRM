@@ -90,7 +90,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
     getDocumentLinks('contact', contact.id).then(setDocLinks)
   }
 
-  const inputClass = 'bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]'
+  const inputClass = 'bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]'
 
   const formatBudget = (n: number | null) => {
     if (!n) return '—'
@@ -100,11 +100,11 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)] overflow-y-auto w-full sm:max-w-xl">
+        <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-border)] overflow-y-auto w-full sm:max-w-xl">
           <SheetHeader>
             <SheetTitle className="text-[var(--cc-text-primary)] flex items-center gap-3">
               {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-[var(--cc-accent-soft)] flex items-center justify-center text-[var(--cc-accent)] font-semibold text-sm flex-shrink-0">
+              <div className="w-10 h-10 rounded-full bg-[var(--cc-gold-soft)] flex items-center justify-center text-[var(--cc-gold)] font-semibold text-sm flex-shrink-0">
                 {contact.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
               </div>
               <div>
@@ -116,14 +116,14 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
             </SheetTitle>
           </SheetHeader>
 
-          <div className="mt-4 space-y-4 px-1">
+          <div className="mt-5 space-y-5 px-1">
             {/* Stage */}
             <div className="flex items-center gap-2">
               <StageBadge stage={contact.stage} />
               {editing && (
                 <Select value={form.stage} onValueChange={v => setForm({ ...form, stage: v as PropertyStage })}>
                   <SelectTrigger className={`w-48 ${inputClass}`}><SelectValue /></SelectTrigger>
-                  <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+                  <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
                     {PROPERTY_STAGES.map(s => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
                   </SelectContent>
                 </Select>
@@ -134,26 +134,26 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
             <div className="flex gap-2">
               {editing ? (
                 <>
-                  <Button size="sm" onClick={handleSave} className="bg-[var(--cc-accent)] text-white">Save</Button>
+                  <Button size="sm" onClick={handleSave} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">Save</Button>
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(false); setForm(contact) }}>Cancel</Button>
                 </>
               ) : (
                 <>
-                  <Button size="sm" variant="outline" onClick={() => setEditing(true)} className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]">Edit</Button>
-                  <Button size="sm" variant="outline" onClick={() => setEmailOpen(true)} className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]">
+                  <Button size="sm" variant="outline" onClick={() => setEditing(true)} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">Edit</Button>
+                  <Button size="sm" variant="outline" onClick={() => setEmailOpen(true)} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">
                     <Mail className="h-3.5 w-3.5 mr-1" /> Draft Email
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} className="text-red-400 hover:text-red-300 ml-auto">
+                  <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} className="text-[#a0705a] hover:text-[#c08060] ml-auto">
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </>
               )}
             </div>
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Contact details */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-[var(--cc-text-muted)] text-[10px] uppercase tracking-wider">Email</Label>
                 {editing ? (
@@ -173,9 +173,9 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
             </div>
 
             {/* Brief */}
-            <div className="p-3 rounded-lg bg-[var(--cc-glass-bg)] border border-[var(--cc-glass-border)]">
-              <h4 className="text-xs font-medium text-[var(--cc-text-primary)] mb-2">Property Brief</h4>
-              <div className="grid grid-cols-3 gap-2 text-xs">
+            <div className="p-4 rounded-lg bg-[var(--cc-surface-2)] border border-[var(--cc-border)]">
+              <h4 className="text-xs font-medium text-[var(--cc-text-primary)] mb-3">Property Brief</h4>
+              <div className="grid grid-cols-3 gap-3 text-xs">
                 <div>
                   <span className="text-[var(--cc-text-muted)]">Asset Type</span>
                   {editing ? (
@@ -186,7 +186,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
                 </div>
                 <div>
                   <span className="text-[var(--cc-text-muted)]">Budget</span>
-                  <p className="text-[var(--cc-text-secondary)]">
+                  <p className="text-[var(--cc-gold)]">
                     {formatBudget(contact.budget_min)} – {formatBudget(contact.budget_max)}
                   </p>
                 </div>
@@ -200,11 +200,11 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
                 </div>
               </div>
               {editing ? (
-                <div className="mt-2">
+                <div className="mt-3">
                   <Textarea value={form.brief_notes || ''} onChange={e => setForm({ ...form, brief_notes: e.target.value })} placeholder="Brief notes..." className={`text-xs min-h-[40px] ${inputClass}`} />
                 </div>
               ) : contact.brief_notes ? (
-                <p className="text-xs text-[var(--cc-text-tertiary)] mt-2">{contact.brief_notes}</p>
+                <p className="text-xs text-[var(--cc-text-tertiary)] mt-3">{contact.brief_notes}</p>
               ) : null}
             </div>
 
@@ -218,7 +218,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
               )}
             </div>
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Document links */}
             <div>
@@ -227,10 +227,10 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
               </h4>
               {docLinks.map(dl => (
                 <div key={dl.id} className="flex items-center gap-2 py-1.5">
-                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--cc-accent)] hover:underline flex items-center gap-1">
+                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--cc-gold)] hover:underline flex items-center gap-1">
                     <ExternalLink className="h-3 w-3" /> {dl.title}
                   </a>
-                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('contact', contact.id).then(setDocLinks) }} className="text-[var(--cc-text-muted)] hover:text-red-400 ml-auto">
+                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('contact', contact.id).then(setDocLinks) }} className="text-[var(--cc-text-muted)] hover:text-[#a0705a] ml-auto">
                     <Trash2 className="h-3 w-3" />
                   </button>
                 </div>
@@ -238,11 +238,11 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
               <div className="flex gap-2 mt-2">
                 <Input placeholder="Title" value={newDocTitle} onChange={e => setNewDocTitle(e.target.value)} className={`h-7 text-xs flex-1 ${inputClass}`} />
                 <Input placeholder="URL" value={newDocUrl} onChange={e => setNewDocUrl(e.target.value)} className={`h-7 text-xs flex-1 ${inputClass}`} />
-                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2"><Plus className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2 hover:text-[var(--cc-gold)]"><Plus className="h-3 w-3" /></Button>
               </div>
             </div>
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Activity */}
             <ActivityTimeline entityType="contact" entityId={contact.id} userId={userId} />
@@ -255,7 +255,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
 
       {/* Delete confirmation */}
       <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <DialogContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+        <DialogContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
           <DialogHeader>
             <DialogTitle className="text-[var(--cc-text-primary)]">Delete Contact</DialogTitle>
             <DialogDescription className="text-[var(--cc-text-tertiary)]">

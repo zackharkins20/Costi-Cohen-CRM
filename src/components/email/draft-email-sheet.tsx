@@ -65,17 +65,17 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)] overflow-y-auto w-full sm:max-w-xl">
+      <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-border)] overflow-y-auto w-full sm:max-w-xl">
         <SheetHeader>
           <SheetTitle className="text-[var(--cc-text-primary)]">
             Draft Email to {contact.name}
           </SheetTitle>
         </SheetHeader>
 
-        <div className="mt-4 space-y-4 px-1">
+        <div className="mt-5 space-y-5 px-1">
           {/* Template picker */}
           <div>
-            <Label className="text-[var(--cc-text-secondary)] text-xs mb-2 block">Template</Label>
+            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider mb-2 block">Template</Label>
             <div className="space-y-2">
               <p className="text-[10px] uppercase tracking-wider text-[var(--cc-text-muted)]">Generic</p>
               <div className="flex flex-wrap gap-1.5">
@@ -85,8 +85,8 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
                     onClick={() => setSelectedTemplate(t)}
                     className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${
                       selectedTemplate?.id === t.id
-                        ? 'bg-[var(--cc-accent-soft)] text-[var(--cc-accent)] border-[var(--cc-accent)]/30'
-                        : 'bg-[var(--cc-glass-bg)] text-[var(--cc-text-secondary)] border-[var(--cc-glass-border)] hover:bg-[var(--cc-glass-hover)]'
+                        ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-[var(--cc-gold)]/30'
+                        : 'bg-[var(--cc-surface-2)] text-[var(--cc-text-tertiary)] border-[var(--cc-border)] hover:bg-[var(--cc-surface-offset)]'
                     }`}
                   >
                     {t.name}
@@ -101,8 +101,8 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
                     onClick={() => setSelectedTemplate(t)}
                     className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${
                       selectedTemplate?.id === t.id
-                        ? 'bg-[var(--cc-accent-soft)] text-[var(--cc-accent)] border-[var(--cc-accent)]/30'
-                        : 'bg-[var(--cc-glass-bg)] text-[var(--cc-text-secondary)] border-[var(--cc-glass-border)] hover:bg-[var(--cc-glass-hover)]'
+                        ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-[var(--cc-gold)]/30'
+                        : 'bg-[var(--cc-surface-2)] text-[var(--cc-text-tertiary)] border-[var(--cc-border)] hover:bg-[var(--cc-surface-offset)]'
                     }`}
                   >
                     {t.name}
@@ -114,37 +114,37 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
 
           {/* Subject */}
           <div>
-            <Label className="text-[var(--cc-text-secondary)] text-xs">Subject</Label>
+            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Subject</Label>
             <Input
               value={subject}
               onChange={e => setSubject(e.target.value)}
-              className="mt-1 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]"
+              className="mt-1.5 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]"
             />
           </div>
 
           {/* Body */}
           <div>
-            <Label className="text-[var(--cc-text-secondary)] text-xs">Body</Label>
+            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Body</Label>
             <Textarea
               value={body}
               onChange={e => setBody(e.target.value)}
-              className="mt-1 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)] min-h-[200px] font-mono text-sm"
+              className="mt-1.5 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] min-h-[200px] font-mono text-sm placeholder:text-[var(--cc-text-faint)]"
             />
           </div>
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={handleCopyAll} className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]">
-              {copied ? <CheckCircle className="h-3.5 w-3.5 mr-1.5 text-[var(--cc-accent)]" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
+            <Button variant="outline" size="sm" onClick={handleCopyAll} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">
+              {copied ? <CheckCircle className="h-3.5 w-3.5 mr-1.5 text-[var(--cc-gold)]" /> : <Copy className="h-3.5 w-3.5 mr-1.5" />}
               {copied ? 'Copied!' : 'Copy All'}
             </Button>
-            <Button variant="outline" size="sm" onClick={handleOpenMail} className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]">
+            <Button variant="outline" size="sm" onClick={handleOpenMail} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">
               <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open in Mail
             </Button>
-            <Button variant="outline" size="sm" onClick={handleOpenGmail} className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]">
+            <Button variant="outline" size="sm" onClick={handleOpenGmail} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">
               <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open in Gmail
             </Button>
-            <Button size="sm" onClick={handleMarkSent} className="bg-[var(--cc-accent)] text-white ml-auto">
+            <Button size="sm" onClick={handleMarkSent} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] ml-auto">
               Mark as Sent
             </Button>
           </div>

@@ -38,11 +38,14 @@ export default function DashboardPage() {
     return `$${n}`
   }
 
+  /* Muted warm chart palette: golds, champagne, warm grays */
+  const chartColors = ['#c9a96e', '#b8924f', '#a07a38', '#8a8680', '#6b6560', '#5c584f']
+
   return (
     <div>
       <PageHeader title="Dashboard" description="Overview of your pipeline and activity" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
         <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} />
         <MetricCard label="Active Deals" value={activeDeals} icon={TrendingUp} />
         <MetricCard label="Contacts" value={contacts.length} icon={Users} />
@@ -51,35 +54,35 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Pipeline chart */}
-        <GlassCard hover={false} className="lg:col-span-2 p-5">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-4">Pipeline by Stage</h3>
+        <GlassCard hover={false} className="lg:col-span-2 p-6">
+          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-5">Pipeline by Stage</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <XAxis
                   dataKey="name"
-                  tick={{ fill: 'var(--cc-text-muted)', fontSize: 11 }}
-                  axisLine={{ stroke: 'var(--cc-divider)' }}
+                  tick={{ fill: '#5c584f', fontSize: 11 }}
+                  axisLine={{ stroke: 'rgba(201, 169, 110, 0.08)' }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: 'var(--cc-text-muted)', fontSize: 11 }}
+                  tick={{ fill: '#5c584f', fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
                   allowDecimals={false}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: 'var(--cc-surface)',
-                    border: '1px solid var(--cc-glass-border)',
+                    background: '#1a1917',
+                    border: '1px solid rgba(201, 169, 110, 0.15)',
                     borderRadius: '8px',
-                    color: 'var(--cc-text-primary)',
+                    color: '#f5f0e8',
                     fontSize: '12px',
                   }}
                 />
                 <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                   {chartData.map((_, i) => (
-                    <Cell key={i} fill={`hsl(${150 + i * 20}, 50%, ${45 + i * 5}%)`} />
+                    <Cell key={i} fill={chartColors[i % chartColors.length]} />
                   ))}
                 </Bar>
               </BarChart>
@@ -88,14 +91,14 @@ export default function DashboardPage() {
         </GlassCard>
 
         {/* Recent activity */}
-        <GlassCard hover={false} className="p-5">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-4">Recent Activity</h3>
+        <GlassCard hover={false} className="p-6">
+          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-5">Recent Activity</h3>
           <div className="space-y-0">
             {activities.length === 0 ? (
               <p className="text-xs text-[var(--cc-text-muted)] text-center py-8">No recent activity</p>
             ) : (
               activities.map(a => (
-                <div key={a.id} className="flex gap-3 py-2.5 border-b border-[var(--cc-divider)] last:border-0">
+                <div key={a.id} className="flex gap-3 py-3 border-b border-[var(--cc-border)] last:border-0">
                   <MessageSquare className="h-3.5 w-3.5 text-[var(--cc-text-muted)] mt-0.5 flex-shrink-0" />
                   <div className="min-w-0">
                     <p className="text-sm text-[var(--cc-text-secondary)] line-clamp-2">{a.description}</p>

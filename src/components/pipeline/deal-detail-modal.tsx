@@ -108,7 +108,7 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
     getDocumentLinks('deal', deal.id).then(setDocLinks)
   }
 
-  const inputClass = 'bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]'
+  const inputClass = 'bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]'
 
   const formatCurrency = (n: number | null) => {
     if (!n) return '—'
@@ -119,12 +119,12 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
   return (
     <>
       <Sheet open={open} onOpenChange={onClose}>
-        <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)] overflow-y-auto w-full sm:max-w-xl">
+        <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-border)] overflow-y-auto w-full sm:max-w-xl">
           <SheetHeader>
             <SheetTitle className="text-[var(--cc-text-primary)]">{deal.title}</SheetTitle>
           </SheetHeader>
 
-          <div className="mt-4 space-y-4 px-1">
+          <div className="mt-5 space-y-5 px-1">
             <div className="flex items-center gap-2">
               <StageBadge stage={deal.stage} />
               {deal.contact && (
@@ -135,24 +135,24 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
             <div className="flex gap-2">
               {editing ? (
                 <>
-                  <Button size="sm" onClick={handleSave} className="bg-[var(--cc-accent)] text-white">Save</Button>
+                  <Button size="sm" onClick={handleSave} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">Save</Button>
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(false); setForm(deal) }}>Cancel</Button>
                 </>
               ) : (
                 <>
-                  <Button size="sm" variant="outline" onClick={() => setEditing(true)} className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]">Edit</Button>
-                  <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} className="text-red-400 hover:text-red-300 ml-auto">
+                  <Button size="sm" variant="outline" onClick={() => setEditing(true)} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">Edit</Button>
+                  <Button size="sm" variant="ghost" onClick={() => setConfirmDelete(true)} className="text-[#a0705a] hover:text-[#c08060] ml-auto">
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </>
               )}
             </div>
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Deal fields */}
             {editing ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div>
                   <Label className="text-[var(--cc-text-muted)] text-[10px] uppercase tracking-wider">Title</Label>
                   <Input value={form.title || ''} onChange={e => setForm({ ...form, title: e.target.value })} className={`mt-1 ${inputClass}`} />
@@ -161,12 +161,12 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                   <Label className="text-[var(--cc-text-muted)] text-[10px] uppercase tracking-wider">Stage</Label>
                   <Select value={form.stage} onValueChange={v => setForm({ ...form, stage: v as PropertyStage })}>
                     <SelectTrigger className={`mt-1 ${inputClass}`}><SelectValue /></SelectTrigger>
-                    <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+                    <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
                       {PROPERTY_STAGES.map(s => <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="text-[var(--cc-text-muted)] text-[10px] uppercase tracking-wider">Deal Value</Label>
                     <Input type="number" value={form.deal_value || ''} onChange={e => setForm({ ...form, deal_value: Number(e.target.value) })} className={`mt-1 ${inputClass}`} />
@@ -182,10 +182,10 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-3 text-xs">
+              <div className="grid grid-cols-3 gap-4 text-xs">
                 <div>
                   <span className="text-[var(--cc-text-muted)]">Deal Value</span>
-                  <p className="text-[var(--cc-text-primary)] font-medium">{formatCurrency(deal.deal_value)}</p>
+                  <p className="text-[var(--cc-gold)] font-semibold">{formatCurrency(deal.deal_value)}</p>
                 </div>
                 <div>
                   <span className="text-[var(--cc-text-muted)]">Fee %</span>
@@ -193,7 +193,7 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                 </div>
                 <div>
                   <span className="text-[var(--cc-text-muted)]">Est. Fee</span>
-                  <p className="text-[var(--cc-accent)] font-medium">{formatCurrency(deal.fee_amount)}</p>
+                  <p className="text-[var(--cc-gold)] font-semibold">{formatCurrency(deal.fee_amount)}</p>
                 </div>
               </div>
             )}
@@ -202,18 +202,18 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               <p className="text-sm text-[var(--cc-text-secondary)]">{deal.description}</p>
             )}
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Property details */}
-            <div className="p-3 rounded-lg bg-[var(--cc-glass-bg)] border border-[var(--cc-glass-border)]">
-              <h4 className="text-xs font-medium text-[var(--cc-text-primary)] mb-2">Property Details</h4>
+            <div className="p-4 rounded-lg bg-[var(--cc-surface-2)] border border-[var(--cc-border)]">
+              <h4 className="text-xs font-medium text-[var(--cc-text-primary)] mb-3">Property Details</h4>
               {editing ? (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div>
                     <Label className="text-[var(--cc-text-muted)] text-[10px]">Mandate Brief</Label>
                     <Textarea value={propForm.mandate_brief || ''} onChange={e => setPropForm({ ...propForm, mandate_brief: e.target.value })} className={`text-xs min-h-[40px] ${inputClass}`} />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
                       <Label className="text-[var(--cc-text-muted)] text-[10px]">Exchange Date</Label>
                       <Input type="date" value={propForm.exchange_date || ''} onChange={e => setPropForm({ ...propForm, exchange_date: e.target.value })} className={`h-7 text-xs ${inputClass}`} />
@@ -229,7 +229,7 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
                   {deal.property_details?.mandate_brief && (
                     <p className="text-[var(--cc-text-secondary)]">{deal.property_details.mandate_brief}</p>
                   )}
-                  <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="grid grid-cols-2 gap-3 mt-2">
                     <div>
                       <span className="text-[var(--cc-text-muted)]">Exchange</span>
                       <p className="text-[var(--cc-text-secondary)]">{deal.property_details?.exchange_date || '—'}</p>
@@ -243,7 +243,7 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               )}
             </div>
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Document links */}
             <div>
@@ -252,10 +252,10 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               </h4>
               {docLinks.map(dl => (
                 <div key={dl.id} className="flex items-center gap-2 py-1.5">
-                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--cc-accent)] hover:underline flex items-center gap-1">
+                  <a href={dl.url} target="_blank" rel="noopener noreferrer" className="text-xs text-[var(--cc-gold)] hover:underline flex items-center gap-1">
                     <ExternalLink className="h-3 w-3" /> {dl.title}
                   </a>
-                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('deal', deal.id).then(setDocLinks) }} className="text-[var(--cc-text-muted)] hover:text-red-400 ml-auto">
+                  <button onClick={() => { deleteDocumentLink(dl.id); getDocumentLinks('deal', deal.id).then(setDocLinks) }} className="text-[var(--cc-text-muted)] hover:text-[#a0705a] ml-auto">
                     <Trash2 className="h-3 w-3" />
                   </button>
                 </div>
@@ -263,11 +263,11 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
               <div className="flex gap-2 mt-2">
                 <Input placeholder="Title" value={newDocTitle} onChange={e => setNewDocTitle(e.target.value)} className={`h-7 text-xs flex-1 ${inputClass}`} />
                 <Input placeholder="URL" value={newDocUrl} onChange={e => setNewDocUrl(e.target.value)} className={`h-7 text-xs flex-1 ${inputClass}`} />
-                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2"><Plus className="h-3 w-3" /></Button>
+                <Button size="sm" variant="ghost" onClick={handleAddDocLink} className="h-7 px-2 hover:text-[var(--cc-gold)]"><Plus className="h-3 w-3" /></Button>
               </div>
             </div>
 
-            <Separator className="bg-[var(--cc-divider)]" />
+            <Separator className="bg-[var(--cc-border)]" />
 
             {/* Activity */}
             <ActivityTimeline entityType="deal" entityId={deal.id} userId={userId} />
@@ -276,7 +276,7 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
       </Sheet>
 
       <Dialog open={confirmDelete} onOpenChange={setConfirmDelete}>
-        <DialogContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+        <DialogContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
           <DialogHeader>
             <DialogTitle className="text-[var(--cc-text-primary)]">Delete Deal</DialogTitle>
             <DialogDescription className="text-[var(--cc-text-tertiary)]">

@@ -43,10 +43,10 @@ export default function ContactsPage() {
             placeholder="Search contacts..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 w-56 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)] h-9"
+            className="pl-9 w-56 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] h-9"
           />
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-accent)] hover:bg-[var(--cc-accent)]/90 text-white">
+        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
           <Plus className="h-4 w-4 mr-1" /> Add Contact
         </Button>
       </PageHeader>
@@ -57,23 +57,23 @@ export default function ContactsPage() {
           title="No contacts yet"
           description="Add your first contact to start building your pipeline."
           action={
-            <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-accent)] text-white">
+            <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
               <Plus className="h-4 w-4 mr-1" /> Add Contact
             </Button>
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(contact => {
             const initials = contact.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
             return (
               <GlassCard
                 key={contact.id}
-                className="p-4"
+                className="p-5"
                 onClick={() => { setSelectedContact(contact); setDetailOpen(true) }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[var(--cc-accent-soft)] flex items-center justify-center text-[var(--cc-accent)] font-semibold text-sm flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-[var(--cc-gold-soft)] flex items-center justify-center text-[var(--cc-gold)] font-semibold text-sm flex-shrink-0">
                     {initials}
                   </div>
                   <div className="min-w-0 flex-1">

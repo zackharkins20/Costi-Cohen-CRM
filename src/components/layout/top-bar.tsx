@@ -30,14 +30,14 @@ export function TopBar() {
   }
 
   return (
-    <header className="sticky top-0 z-20 h-16 border-b border-[var(--cc-divider)] bg-[var(--cc-bg)]/80 backdrop-blur-xl flex items-center px-6 gap-4">
+    <header className="sticky top-0 z-20 h-16 border-b border-[var(--cc-border)] bg-[var(--cc-bg)]/90 backdrop-blur-xl flex items-center px-8 gap-4">
       {/* Search */}
       <div className="flex-1 max-w-md ml-12 lg:ml-0">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--cc-text-muted)]" />
           <Input
             placeholder="Search contacts, deals..."
-            className="pl-9 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-muted)] h-9"
+            className="pl-9 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)] h-9"
           />
         </div>
       </div>
@@ -46,22 +46,22 @@ export function TopBar() {
       <div className="relative">
         <button
           onClick={() => setShowNotifications(!showNotifications)}
-          className="relative p-2 rounded-lg hover:bg-[var(--cc-glass-hover)] transition-colors"
+          className="relative p-2 rounded-lg hover:bg-[var(--cc-surface-2)] transition-colors"
         >
-          <Bell className="h-5 w-5 text-[var(--cc-text-secondary)]" />
+          <Bell className="h-5 w-5 text-[var(--cc-text-tertiary)]" />
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-[var(--cc-accent)] rounded-full" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-[var(--cc-gold)] rounded-full" />
           )}
         </button>
 
         {showNotifications && (
-          <div className="absolute right-0 top-full mt-2 w-80 glass-card p-0 overflow-hidden z-50">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--cc-divider)]">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-[var(--cc-surface)] border border-[var(--cc-border)] rounded-xl overflow-hidden z-50 shadow-2xl">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--cc-border)]">
               <h3 className="text-sm font-medium text-[var(--cc-text-primary)]">Notifications</h3>
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllRead}
-                  className="text-xs text-[var(--cc-accent)] hover:underline"
+                  className="text-xs text-[var(--cc-gold)] hover:underline"
                 >
                   Mark all read
                 </button>
@@ -76,8 +76,8 @@ export function TopBar() {
                 notifications.map(n => (
                   <div
                     key={n.id}
-                    className={`px-4 py-3 border-b border-[var(--cc-divider)] last:border-0 ${
-                      !n.read ? 'bg-[var(--cc-accent-soft)]' : ''
+                    className={`px-4 py-3 border-b border-[var(--cc-border)] last:border-0 ${
+                      !n.read ? 'bg-[var(--cc-gold-soft)]' : ''
                     }`}
                   >
                     <p className="text-sm font-medium text-[var(--cc-text-primary)]">{n.title}</p>

@@ -61,25 +61,25 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
     onClose()
   }
 
-  const inputClass = 'bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]'
+  const inputClass = 'bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]'
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)] overflow-y-auto w-full sm:max-w-lg">
+      <SheetContent className="bg-[var(--cc-surface)] border-[var(--cc-border)] overflow-y-auto w-full sm:max-w-lg">
         <SheetHeader>
           <SheetTitle className="text-[var(--cc-text-primary)]">New Task</SheetTitle>
         </SheetHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4 px-1">
+        <form onSubmit={handleSubmit} className="space-y-5 mt-5 px-1">
           <div>
-            <Label className="text-[var(--cc-text-secondary)] text-xs">Title *</Label>
-            <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required className={`mt-1 ${inputClass}`} />
+            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Title *</Label>
+            <Input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required className={`mt-1.5 ${inputClass}`} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-[var(--cc-text-secondary)] text-xs">Priority</Label>
+              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Priority</Label>
               <Select value={form.priority} onValueChange={v => setForm({ ...form, priority: v as TaskPriority })}>
-                <SelectTrigger className={`mt-1 ${inputClass}`}><SelectValue /></SelectTrigger>
-                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+                <SelectTrigger className={`mt-1.5 ${inputClass}`}><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
                   <SelectItem value="low">Low</SelectItem>
                   <SelectItem value="medium">Medium</SelectItem>
                   <SelectItem value="high">High</SelectItem>
@@ -88,10 +88,10 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
               </Select>
             </div>
             <div>
-              <Label className="text-[var(--cc-text-secondary)] text-xs">Type</Label>
+              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Type</Label>
               <Select value={form.type} onValueChange={v => setForm({ ...form, type: v as TaskType })}>
-                <SelectTrigger className={`mt-1 ${inputClass}`}><SelectValue /></SelectTrigger>
-                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+                <SelectTrigger className={`mt-1.5 ${inputClass}`}><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
                   <SelectItem value="general">General</SelectItem>
                   <SelectItem value="deal">Deal</SelectItem>
                 </SelectContent>
@@ -100,10 +100,10 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
           </div>
           {form.type === 'deal' && (
             <div>
-              <Label className="text-[var(--cc-text-secondary)] text-xs">Linked Deal</Label>
+              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Linked Deal</Label>
               <Select value={form.deal_id} onValueChange={v => setForm({ ...form, deal_id: v ?? '' })}>
-                <SelectTrigger className={`mt-1 ${inputClass}`}><SelectValue placeholder="Select deal" /></SelectTrigger>
-                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-glass-border)]">
+                <SelectTrigger className={`mt-1.5 ${inputClass}`}><SelectValue placeholder="Select deal" /></SelectTrigger>
+                <SelectContent className="bg-[var(--cc-surface)] border-[var(--cc-border)]">
                   {deals.map(d => (
                     <SelectItem key={d.id} value={d.id}>{d.title}</SelectItem>
                   ))}
@@ -112,14 +112,14 @@ export function CreateTaskForm({ open, onClose, onCreated, userId }: Props) {
             </div>
           )}
           <div>
-            <Label className="text-[var(--cc-text-secondary)] text-xs">Due Date</Label>
-            <Input type="date" value={form.due_date} onChange={e => setForm({ ...form, due_date: e.target.value })} className={`mt-1 ${inputClass}`} />
+            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Due Date</Label>
+            <Input type="date" value={form.due_date} onChange={e => setForm({ ...form, due_date: e.target.value })} className={`mt-1.5 ${inputClass}`} />
           </div>
           <div>
-            <Label className="text-[var(--cc-text-secondary)] text-xs">Description</Label>
-            <Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className={`mt-1 ${inputClass} min-h-[60px]`} />
+            <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Description</Label>
+            <Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className={`mt-1.5 ${inputClass} min-h-[60px]`} />
           </div>
-          <Button type="submit" disabled={loading} className="w-full bg-[var(--cc-accent)] hover:bg-[var(--cc-accent)]/90 text-white">
+          <Button type="submit" disabled={loading} className="w-full bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] font-medium">
             {loading ? 'Creating...' : 'Create Task'}
           </Button>
         </form>

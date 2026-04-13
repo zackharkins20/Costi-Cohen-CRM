@@ -7,16 +7,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getCurrentUser, updateUser } from '@/lib/queries'
-import { useTheme } from '@/components/theme-provider'
 import type { User } from '@/lib/types'
-import { Sun, Moon } from 'lucide-react'
 
 export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null)
   const [form, setForm] = useState({ full_name: '', email: '', role: '' })
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
-  const { theme, toggleTheme } = useTheme()
 
   useEffect(() => {
     getCurrentUser().then(u => {
@@ -36,7 +33,7 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
-  const inputClass = 'bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]'
+  const inputClass = 'bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]'
 
   return (
     <div className="max-w-2xl">
@@ -44,44 +41,33 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         {/* Profile */}
-        <GlassCard hover={false} className="p-5">
-          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-4">Profile</h3>
-          <div className="space-y-3">
+        <GlassCard hover={false} className="p-6">
+          <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-5">Profile</h3>
+          <div className="space-y-4">
             <div>
-              <Label className="text-[var(--cc-text-secondary)] text-xs">Full Name</Label>
-              <Input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className={`mt-1 ${inputClass}`} />
+              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Full Name</Label>
+              <Input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })} className={`mt-1.5 ${inputClass}`} />
             </div>
             <div>
-              <Label className="text-[var(--cc-text-secondary)] text-xs">Email</Label>
-              <Input value={form.email} disabled className={`mt-1 ${inputClass} opacity-50`} />
+              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Email</Label>
+              <Input value={form.email} disabled className={`mt-1.5 ${inputClass} opacity-50`} />
             </div>
             <div>
-              <Label className="text-[var(--cc-text-secondary)] text-xs">Role</Label>
-              <Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className={`mt-1 ${inputClass}`} />
+              <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Role</Label>
+              <Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className={`mt-1.5 ${inputClass}`} />
             </div>
-            <Button onClick={handleSave} disabled={saving} className="bg-[var(--cc-accent)] hover:bg-[var(--cc-accent)]/90 text-white">
+            <Button onClick={handleSave} disabled={saving} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
               {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
             </Button>
           </div>
         </GlassCard>
 
-        {/* Theme */}
-        <GlassCard hover={false} className="p-5">
+        {/* Theme info */}
+        <GlassCard hover={false} className="p-6">
           <h3 className="text-sm font-medium text-[var(--cc-text-primary)] mb-4">Appearance</h3>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-[var(--cc-text-secondary)]">Theme</p>
-              <p className="text-xs text-[var(--cc-text-muted)]">Switch between dark and light mode</p>
-            </div>
-            <Button
-              variant="outline"
-              onClick={toggleTheme}
-              className="border-[var(--cc-glass-border)] text-[var(--cc-text-secondary)]"
-            >
-              {theme === 'dark' ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
-              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            </Button>
-          </div>
+          <p className="text-sm text-[var(--cc-text-tertiary)]">
+            Dark mode is the default theme for the Costi Cohen Property Advisory CRM.
+          </p>
         </GlassCard>
       </div>
     </div>

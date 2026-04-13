@@ -46,17 +46,17 @@ export function Sidebar() {
   const navContent = (
     <>
       {/* Logo */}
-      <div className="px-4 py-6 border-b border-[var(--cc-divider)]">
-        <h1 className="text-xl font-bold text-[var(--cc-text-primary)]" style={{ fontFamily: "'DM Serif Display', serif" }}>
+      <div className="px-5 py-7 border-b border-[var(--cc-border)]">
+        <h1 className="text-xl text-[var(--cc-gold)] tracking-wide" style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}>
           Costi Cohen
         </h1>
-        <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--cc-text-muted)] mt-0.5">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--cc-text-muted)] mt-1 font-medium">
           Property Advisory
         </p>
       </div>
 
       {/* Nav items */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-5 space-y-1">
         {navigation.map((item) => {
           const active = isActive(item.href)
           return (
@@ -67,8 +67,8 @@ export function Sidebar() {
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
                 active
-                  ? 'bg-[var(--cc-accent-soft)] text-[var(--cc-accent)]'
-                  : 'text-[var(--cc-text-secondary)] hover:bg-[var(--cc-glass-hover)] hover:text-[var(--cc-text-primary)]'
+                  ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-l-2 border-[var(--cc-gold)]'
+                  : 'text-[var(--cc-text-tertiary)] hover:bg-[var(--cc-surface-2)] hover:text-[var(--cc-text-primary)]'
               )}
             >
               <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -79,10 +79,10 @@ export function Sidebar() {
       </nav>
 
       {/* Sign out */}
-      <div className="px-3 py-4 border-t border-[var(--cc-divider)]">
+      <div className="px-3 py-4 border-t border-[var(--cc-border)]">
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[var(--cc-text-secondary)] hover:bg-[var(--cc-glass-hover)] hover:text-[var(--cc-text-primary)] transition-all w-full"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-[var(--cc-text-tertiary)] hover:bg-[var(--cc-surface-2)] hover:text-[var(--cc-text-primary)] transition-all w-full"
         >
           <LogOut className="h-4 w-4" />
           Sign Out
@@ -96,7 +96,7 @@ export function Sidebar() {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-[var(--cc-surface)] border border-[var(--cc-glass-border)] lg:hidden"
+        className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-[var(--cc-surface)] border border-[var(--cc-border)] lg:hidden"
       >
         <Menu className="h-5 w-5 text-[var(--cc-text-primary)]" />
       </button>
@@ -104,13 +104,13 @@ export function Sidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} />
-          <div className="relative w-64 h-full bg-[var(--cc-surface)] border-r border-[var(--cc-glass-border)] flex flex-col">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
+          <div className="relative w-64 h-full bg-[var(--cc-surface)] border-r border-[var(--cc-border)] flex flex-col">
             <button
               onClick={() => setMobileOpen(false)}
               className="absolute top-4 right-4 p-1"
             >
-              <X className="h-5 w-5 text-[var(--cc-text-secondary)]" />
+              <X className="h-5 w-5 text-[var(--cc-text-tertiary)]" />
             </button>
             {navContent}
           </div>
@@ -118,7 +118,7 @@ export function Sidebar() {
       )}
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 bg-[var(--cc-surface)] border-r border-[var(--cc-glass-border)] z-30">
+      <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:fixed lg:inset-y-0 bg-[var(--cc-surface)] border-r border-[var(--cc-border)] z-30">
         {navContent}
       </aside>
     </>

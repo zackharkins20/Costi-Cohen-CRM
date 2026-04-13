@@ -80,12 +80,12 @@ export default function PipelinePage() {
             placeholder="Search..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 w-56 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)] h-9"
+            className="pl-9 w-56 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] h-9"
           />
         </div>
       </PageHeader>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-3 gap-5 mb-8">
         <MetricCard label="Total Contacts" value={contacts.length} icon={Users} />
         <MetricCard label="Pipeline Value" value={formatCurrency(pipelineValue)} icon={DollarSign} />
         <MetricCard label="Est. Fees" value={formatCurrency(estFees)} icon={TrendingUp} />

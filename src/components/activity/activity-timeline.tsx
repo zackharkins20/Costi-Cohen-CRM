@@ -55,14 +55,14 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
           variant="ghost"
           size="sm"
           onClick={() => setShowForm(!showForm)}
-          className="text-[var(--cc-accent)] hover:text-[var(--cc-accent)] h-7 text-xs"
+          className="text-[var(--cc-gold)] hover:text-[var(--cc-gold)] h-7 text-xs"
         >
           <Plus className="h-3 w-3 mr-1" /> Add
         </Button>
       </div>
 
       {showForm && (
-        <div className="space-y-2 p-3 rounded-lg bg-[var(--cc-glass-bg)] border border-[var(--cc-glass-border)]">
+        <div className="space-y-2 p-4 rounded-lg bg-[var(--cc-surface-2)] border border-[var(--cc-border)]">
           <div className="flex gap-1">
             {(['note', 'call', 'meeting', 'email_drafted'] as const).map(type => (
               <button
@@ -70,7 +70,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
                 onClick={() => setActionType(type)}
                 className={`px-2 py-1 rounded text-xs capitalize ${
                   actionType === type
-                    ? 'bg-[var(--cc-accent-soft)] text-[var(--cc-accent)]'
+                    ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)]'
                     : 'text-[var(--cc-text-muted)] hover:text-[var(--cc-text-secondary)]'
                 }`}
               >
@@ -82,13 +82,13 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
             value={noteText}
             onChange={e => setNoteText(e.target.value)}
             placeholder="Add a note..."
-            className="bg-transparent border-[var(--cc-glass-border)] text-[var(--cc-text-primary)] text-sm min-h-[60px]"
+            className="bg-transparent border-[var(--cc-border)] text-[var(--cc-text-primary)] text-sm min-h-[60px] placeholder:text-[var(--cc-text-faint)]"
           />
           <div className="flex justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} className="text-xs h-7">
               Cancel
             </Button>
-            <Button size="sm" onClick={handleAddActivity} className="bg-[var(--cc-accent)] text-white text-xs h-7">
+            <Button size="sm" onClick={handleAddActivity} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] text-xs h-7">
               Save
             </Button>
           </div>
@@ -102,7 +102,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
           activities.map(activity => {
             const Icon = actionIcons[activity.action] || MessageSquare
             return (
-              <div key={activity.id} className="flex gap-3 py-2.5 border-b border-[var(--cc-divider)] last:border-0">
+              <div key={activity.id} className="flex gap-3 py-3 border-b border-[var(--cc-border)] last:border-0">
                 <div className="mt-0.5">
                   <Icon className="h-3.5 w-3.5 text-[var(--cc-text-muted)]" />
                 </div>

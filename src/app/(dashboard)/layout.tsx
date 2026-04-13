@@ -13,7 +13,7 @@ export default function DashboardLayout({
       <Sidebar />
       <div className="lg:pl-60 flex flex-col min-h-screen relative z-10">
         <TopBar />
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-8">
           {children}
         </main>
       </div>

@@ -51,22 +51,22 @@ export default function DealsPage() {
             placeholder="Search deals..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-9 w-56 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)] h-9"
+            className="pl-9 w-56 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] h-9"
           />
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-accent)] hover:bg-[var(--cc-accent)]/90 text-white">
+        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
           <Plus className="h-4 w-4 mr-1" /> New Deal
         </Button>
       </PageHeader>
 
       {/* Stage filter chips */}
-      <div className="flex gap-1.5 mb-6 overflow-x-auto pb-1">
+      <div className="flex gap-1.5 mb-8 overflow-x-auto pb-1">
         <button
           onClick={() => setStageFilter('all')}
           className={`px-3 py-1.5 rounded-full text-xs border transition-colors whitespace-nowrap ${
             stageFilter === 'all'
-              ? 'bg-[var(--cc-accent-soft)] text-[var(--cc-accent)] border-[var(--cc-accent)]/30'
-              : 'bg-[var(--cc-glass-bg)] text-[var(--cc-text-secondary)] border-[var(--cc-glass-border)] hover:bg-[var(--cc-glass-hover)]'
+              ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-[var(--cc-gold)]/30'
+              : 'bg-[var(--cc-surface-2)] text-[var(--cc-text-tertiary)] border-[var(--cc-border)] hover:bg-[var(--cc-surface-offset)]'
           }`}
         >
           All Stages
@@ -77,8 +77,8 @@ export default function DealsPage() {
             onClick={() => setStageFilter(s.key)}
             className={`px-3 py-1.5 rounded-full text-xs border transition-colors whitespace-nowrap ${
               stageFilter === s.key
-                ? 'bg-[var(--cc-accent-soft)] text-[var(--cc-accent)] border-[var(--cc-accent)]/30'
-                : 'bg-[var(--cc-glass-bg)] text-[var(--cc-text-secondary)] border-[var(--cc-glass-border)] hover:bg-[var(--cc-glass-hover)]'
+                ? 'bg-[var(--cc-gold-soft)] text-[var(--cc-gold)] border-[var(--cc-gold)]/30'
+                : 'bg-[var(--cc-surface-2)] text-[var(--cc-text-tertiary)] border-[var(--cc-border)] hover:bg-[var(--cc-surface-offset)]'
             }`}
           >
             {s.label}
@@ -92,17 +92,17 @@ export default function DealsPage() {
           title="No deals yet"
           description="Create your first deal to start tracking property transactions."
           action={
-            <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-accent)] text-white">
+            <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
               <Plus className="h-4 w-4 mr-1" /> New Deal
             </Button>
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map(deal => (
             <GlassCard
               key={deal.id}
-              className="p-4"
+              className="p-5"
               onClick={() => { setSelectedDeal(deal); setDetailOpen(true) }}
             >
               <div className="space-y-2">
@@ -114,11 +114,11 @@ export default function DealsPage() {
                 )}
                 <StageBadge stage={deal.stage} />
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-sm font-medium text-[var(--cc-text-primary)]">
+                  <span className="text-sm font-semibold text-[var(--cc-gold)]">
                     {formatCurrency(deal.deal_value)}
                   </span>
                   {deal.fee_amount && (
-                    <span className="text-xs text-[var(--cc-accent)]">
+                    <span className="text-xs text-[var(--cc-gold)]">
                       Fee: {formatCurrency(deal.fee_amount)}
                     </span>
                   )}

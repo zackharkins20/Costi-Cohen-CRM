@@ -55,47 +55,47 @@ export default function LoginPage() {
 
       <div className="w-full max-w-sm relative z-10">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <h1
-            className="text-3xl font-bold text-[var(--cc-text-primary)]"
-            style={{ fontFamily: "'DM Serif Display', serif" }}
+            className="text-3xl text-[var(--cc-gold)] tracking-wide"
+            style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}
           >
             Costi Cohen
           </h1>
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--cc-text-muted)] mt-1">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--cc-text-muted)] mt-1.5 font-medium">
             Property Advisory
           </p>
         </div>
 
-        <div className="glass-card p-6">
-          <h2 className="text-lg font-semibold text-[var(--cc-text-primary)] mb-4">
+        <div className="bg-[var(--cc-surface)] border border-[var(--cc-border)] rounded-xl p-8">
+          <h2 className="text-lg font-medium text-[var(--cc-text-primary)] mb-6" style={{ fontFamily: "var(--font-heading), 'Cormorant Garamond', serif" }}>
             Sign in
           </h2>
 
           <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <Label className="text-[var(--cc-text-secondary)] text-sm">Email</Label>
+                <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Email</Label>
                 <Input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="mt-1 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]"
+                  className="mt-1.5 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]"
                 />
               </div>
 
               {mode === 'password' && (
                 <div>
-                  <Label className="text-[var(--cc-text-secondary)] text-sm">Password</Label>
+                  <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Password</Label>
                   <Input
                     type="password"
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="mt-1 bg-[var(--cc-glass-bg)] border-[var(--cc-glass-border)] text-[var(--cc-text-primary)]"
+                    className="mt-1.5 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] placeholder:text-[var(--cc-text-faint)]"
                   />
                 </div>
               )}
@@ -103,7 +103,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[var(--cc-accent)] hover:bg-[var(--cc-accent)]/90 text-white"
+                className="w-full bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] font-medium"
               >
                 {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
               </Button>
@@ -111,14 +111,14 @@ export default function LoginPage() {
           </form>
 
           {message && (
-            <p className={`text-sm mt-3 ${message.includes('Check') ? 'text-[var(--cc-accent)]' : 'text-red-400'}`}>
+            <p className={`text-sm mt-4 ${message.includes('Check') ? 'text-[var(--cc-gold)]' : 'text-[#a0705a]'}`}>
               {message}
             </p>
           )}
 
           <button
             onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
-            className="text-xs text-[var(--cc-text-muted)] hover:text-[var(--cc-text-secondary)] mt-4 block w-full text-center"
+            className="text-xs text-[var(--cc-text-muted)] hover:text-[var(--cc-text-secondary)] mt-5 block w-full text-center"
           >
             {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
           </button>
