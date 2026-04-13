@@ -54,7 +54,7 @@ export default function DealsPage() {
             className="pl-9 w-56 bg-[var(--cc-surface-2)] border-[var(--cc-border)] text-[var(--cc-text-primary)] h-9"
           />
         </div>
-        <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
+        <Button onClick={() => setCreateOpen(true)} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
           <Plus className="h-4 w-4 mr-1" /> New Deal
         </Button>
       </PageHeader>
@@ -92,7 +92,7 @@ export default function DealsPage() {
           title="No deals yet"
           description="Create your first deal to start tracking property transactions."
           action={
-            <Button onClick={() => setCreateOpen(true)} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
+            <Button onClick={() => setCreateOpen(true)} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
               <Plus className="h-4 w-4 mr-1" /> New Deal
             </Button>
           }

@@ -56,7 +56,7 @@ export default function SettingsPage() {
               <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Role</Label>
               <Input value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} className={`mt-1.5 ${inputClass}`} />
             </div>
-            <Button onClick={handleSave} disabled={saving} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">
+            <Button onClick={handleSave} disabled={saving} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">
               {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
             </Button>
           </div>

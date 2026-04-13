@@ -103,7 +103,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] font-medium"
+                className="w-full bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c] font-medium"
               >
                 {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
               </Button>

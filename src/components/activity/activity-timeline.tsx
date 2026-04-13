@@ -88,7 +88,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
             <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} className="text-xs h-7">
               Cancel
             </Button>
-            <Button size="sm" onClick={handleAddActivity} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] text-xs h-7">
+            <Button size="sm" onClick={handleAddActivity} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c] text-xs h-7">
               Save
             </Button>
           </div>

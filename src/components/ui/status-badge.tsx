@@ -7,15 +7,15 @@ const stageColors: Record<PropertyStage, string> = {
   initial_call: 'bg-[#3a3530]/60 text-[#b8a890] border-[#3a3530]',
   property_search: 'bg-[#3a3228]/60 text-[#c9a96e] border-[#3a3228]',
   due_diligence: 'bg-[#382e24]/60 text-[#b8924f] border-[#382e24]',
-  exchange: 'bg-[#2e3228]/60 text-[#8a9a70] border-[#2e3228]',
-  fees_collected: 'bg-[#2e3228]/60 text-[#7a9a68] border-[#2e3228]',
+  exchange: 'bg-[#332e24]/60 text-[#a09070] border-[#332e24]',
+  fees_collected: 'bg-[#332e24]/60 text-[#8a8068] border-[#332e24]',
 }
 
 const taskStatusColors: Record<TaskStatus, string> = {
   todo: 'bg-[#2a2826]/60 text-[#8a8680] border-[#2a2826]',
   in_progress: 'bg-[#3a3228]/60 text-[#c9a96e] border-[#3a3228]',
   review: 'bg-[#382e24]/60 text-[#b8924f] border-[#382e24]',
-  done: 'bg-[#2e3228]/60 text-[#8a9a70] border-[#2e3228]',
+  done: 'bg-[#332e24]/60 text-[#a09070] border-[#332e24]',
 }
 
 const priorityColors: Record<TaskPriority, string> = {

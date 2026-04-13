@@ -134,7 +134,7 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId }
             <div className="flex gap-2">
               {editing ? (
                 <>
-                  <Button size="sm" onClick={handleSave} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c]">Save</Button>
+                  <Button size="sm" onClick={handleSave} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c]">Save</Button>
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(false); setForm(contact) }}>Cancel</Button>
                 </>
               ) : (

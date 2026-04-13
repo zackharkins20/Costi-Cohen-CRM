@@ -144,7 +144,7 @@ export function DraftEmailSheet({ open, onClose, contact, userId }: Props) {
             <Button variant="outline" size="sm" onClick={handleOpenGmail} className="border-[var(--cc-border)] text-[var(--cc-text-secondary)] hover:text-[var(--cc-gold)]">
               <ExternalLink className="h-3.5 w-3.5 mr-1.5" /> Open in Gmail
             </Button>
-            <Button size="sm" onClick={handleMarkSent} className="bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] ml-auto">
+            <Button size="sm" onClick={handleMarkSent} className="bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c] ml-auto">
               Mark as Sent
             </Button>
           </div>

@@ -124,7 +124,7 @@ export function CreateDealForm({ open, onClose, onCreated, userId }: Props) {
             <Label className="text-[var(--cc-text-muted)] text-xs uppercase tracking-wider">Description</Label>
             <Textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className={`mt-1.5 ${inputClass} min-h-[60px]`} />
           </div>
-          <Button type="submit" disabled={loading} className="w-full bg-[var(--cc-gold)] hover:bg-[var(--cc-gold-hover)] text-[#0f0e0c] font-medium">
+          <Button type="submit" disabled={loading} className="w-full bg-[#c9a96e] hover:bg-[#b8924f] text-[#0f0e0c] font-medium">
             {loading ? 'Creating...' : 'Create Deal'}
           </Button>
         </form>
