@@ -5,7 +5,7 @@ import { getActivities, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
 import type { Activity } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
-import { MessageSquare, Phone, Calendar, Mail, ArrowRight, Plus } from 'lucide-react'
+import { MessageSquare, Phone, Calendar, Mail, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 
@@ -17,6 +17,13 @@ const actionIcons: Record<string, typeof MessageSquare> = {
   stage_change: ArrowRight,
 }
 
+const ACTION_TABS = [
+  { key: 'note', label: 'Note' },
+  { key: 'call', label: 'Call' },
+  { key: 'meeting', label: 'Meeting' },
+  { key: 'email_drafted', label: 'Email' },
+] as const
+
 interface ActivityTimelineProps {
   entityType: 'contact' | 'deal' | 'task'
   entityId: string
@@ -25,7 +32,6 @@ interface ActivityTimelineProps {
 
 export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimelineProps) {
   const [activities, setActivities] = useState<Activity[]>([])
-  const [showForm, setShowForm] = useState(false)
   const [noteText, setNoteText] = useState('')
   const [actionType, setActionType] = useState<string>('note')
 
@@ -49,71 +55,73 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
       entity_id: entityId,
     })
     setNoteText('')
-    setShowForm(false)
     const updated = await getActivities(entityType, entityId)
     setActivities(updated)
   }
 
+  const logLabel = actionType === 'note' ? 'Log Note'
+    : actionType === 'call' ? 'Log Call'
+    : actionType === 'meeting' ? 'Log Meeting'
+    : 'Log Email'
+
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-cc-text-primary">Activity</h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowForm(!showForm)}
-          className="text-cc-text-primary hover:text-cc-text-primary h-7 text-xs"
-        >
-          <Plus className="h-3 w-3 mr-1" /> Add
-        </Button>
+    <div>
+      {/* Tabbed input */}
+      <div className="mb-4">
+        <div className="flex border-b border-cc-border mb-3">
+          {ACTION_TABS.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActionType(tab.key)}
+              className={`px-3 py-1.5 text-xs transition-colors border-b-2 -mb-px ${
+                actionType === tab.key
+                  ? 'border-cc-accent text-cc-text-primary font-medium'
+                  : 'border-transparent text-cc-text-muted hover:text-cc-text-secondary'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+        <Textarea
+          value={noteText}
+          onChange={e => setNoteText(e.target.value)}
+          placeholder="Jot a quick note..."
+          className="text-sm min-h-[50px] rounded-lg resize-none"
+        />
+        <div className="flex justify-end mt-2">
+          <Button
+            size="sm"
+            onClick={handleAddActivity}
+            disabled={!noteText.trim()}
+            className="h-7 text-xs rounded-lg"
+          >
+            {logLabel}
+          </Button>
+        </div>
       </div>
 
-      {showForm && (
-        <div className="space-y-2 p-4 bg-cc-surface-2 border border-cc-border">
-          <div className="flex gap-1">
-            {(['note', 'call', 'meeting', 'email_drafted'] as const).map(type => (
-              <button
-                key={type}
-                onClick={() => setActionType(type)}
-                className={`px-2 py-1 text-xs capitalize ${
-                  actionType === type
-                    ? 'bg-transparent text-cc-text-primary border border-cc-btn-border'
-                    : 'text-cc-text-muted hover:text-cc-text-secondary'
-                }`}
-              >
-                {type.replace('_', ' ')}
-              </button>
-            ))}
-          </div>
-          <Textarea
-            value={noteText}
-            onChange={e => setNoteText(e.target.value)}
-            placeholder="Add a note..."
-            className="text-sm min-h-[60px]"
-          />
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} className="text-xs h-7">
-              Cancel
-            </Button>
-            <Button size="sm" onClick={handleAddActivity} className="text-xs h-7">
-              Save
-            </Button>
-          </div>
-        </div>
-      )}
-
-      <div className="space-y-0">
+      {/* History */}
+      <div>
         {activities.length === 0 ? (
-          <p className="text-xs text-cc-text-muted py-4 text-center">No activity yet</p>
+          <p className="text-xs text-cc-text-muted py-2 text-center">No activity yet</p>
         ) : (
           activities.map(activity => {
             const Icon = actionIcons[activity.action] || MessageSquare
             return (
-              <div key={activity.id} className="flex gap-3 py-3 border-b border-cc-border last:border-0">
-                <div className="mt-0.5">
-                  <Icon className="h-3.5 w-3.5 text-cc-text-muted" />
+              <div key={activity.id} className="flex gap-3 py-2.5 border-b border-cc-border last:border-0">
+                <div className="mt-0.5 flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-cc-surface-2 flex items-center justify-center">
+                    <Icon className="h-3 w-3 text-cc-text-muted" />
+                  </div>
                 </div>
                 <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    {activity.user?.full_name && (
+                      <span className="text-xs font-medium text-cc-text-primary">{activity.user.full_name}</span>
+                    )}
+                    <span className="text-[10px] text-cc-text-muted capitalize">{activity.action.replace('_', ' ')}</span>
+                  </div>
                   <p className="text-sm text-cc-text-secondary line-clamp-2">{activity.description}</p>
                   <p className="text-[10px] text-cc-text-muted mt-0.5">
                     {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}

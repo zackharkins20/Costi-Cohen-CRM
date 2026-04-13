@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { getEventsByEntity } from '@/lib/events'
 import type { CalendarEvent, EventType } from '@/lib/types'
 import { EVENT_TYPES } from '@/lib/types'
-import { Calendar, Clock, MapPin } from 'lucide-react'
+import { Clock, MapPin } from 'lucide-react'
 import { format, isPast, parseISO } from 'date-fns'
 
 interface UpcomingEventsProps {
@@ -38,42 +38,39 @@ export function UpcomingEvents({ entityType, entityId }: UpcomingEventsProps) {
     })
   }, [entityType, entityId])
 
-  if (events.length === 0) return null
+  if (events.length === 0) {
+    return <p className="text-xs text-cc-text-muted py-2 text-center">No upcoming events</p>
+  }
 
   return (
-    <div>
-      <h4 className="text-xs font-medium text-cc-text-primary mb-2 flex items-center gap-1">
-        <Calendar className="h-3 w-3" /> Upcoming Events
-      </h4>
-      <div className="space-y-2">
-        {events.map(event => (
-          <div
-            key={event.id}
-            className="p-2.5 bg-cc-surface-2 border border-cc-border rounded-lg"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium text-cc-text-primary truncate flex-1">
-                {event.title}
-              </p>
-              <EventTypeBadge type={event.event_type} />
-            </div>
-            <div className="flex items-center gap-3 mt-1.5 text-[10px] text-cc-text-muted">
-              <span className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {event.all_day
-                  ? format(parseISO(event.start_time), 'MMM d')
-                  : format(parseISO(event.start_time), 'MMM d, h:mm a')}
-              </span>
-              {event.location && (
-                <span className="flex items-center gap-1 truncate">
-                  <MapPin className="h-3 w-3" />
-                  {event.location}
-                </span>
-              )}
-            </div>
+    <div className="space-y-2">
+      {events.map(event => (
+        <div
+          key={event.id}
+          className="p-2.5 bg-cc-surface-2 border border-cc-border rounded-lg"
+        >
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-xs font-medium text-cc-text-primary truncate flex-1">
+              {event.title}
+            </p>
+            <EventTypeBadge type={event.event_type} />
           </div>
-        ))}
-      </div>
+          <div className="flex items-center gap-3 mt-1.5 text-[10px] text-cc-text-muted">
+            <span className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {event.all_day
+                ? format(parseISO(event.start_time), 'MMM d')
+                : format(parseISO(event.start_time), 'MMM d, h:mm a')}
+            </span>
+            {event.location && (
+              <span className="flex items-center gap-1 truncate">
+                <MapPin className="h-3 w-3" />
+                {event.location}
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
