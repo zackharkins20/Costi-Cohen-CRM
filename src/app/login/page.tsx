@@ -74,7 +74,7 @@ export default function LoginPage() {
         <motion.div initial="hidden" animate="visible" custom={0} variants={fadeUp}>
           <span
             style={{
-              color: 'rgba(255,255,255,0.7)',
+              color: '#ffffff',
               fontSize: '14px',
               fontWeight: 500,
               letterSpacing: '0.18em',
@@ -99,8 +99,8 @@ export default function LoginPage() {
           </motion.h1>
 
           <motion.div
-            className="w-12 h-[3px] mt-5 mb-5"
-            style={{ background: '#3B5068' }}
+            className="h-[3px] mt-5 mb-5"
+            style={{ background: '#5A7A94', width: '60px' }}
             initial="hidden"
             animate="visible"
             custom={2}
@@ -109,24 +109,13 @@ export default function LoginPage() {
 
           <motion.p
             className="text-[20px] font-light"
-            style={{ color: 'rgba(255,255,255,0.85)', fontFamily: "'Inter', sans-serif" }}
+            style={{ color: '#B8C4D0', fontFamily: "'Inter', sans-serif" }}
             initial="hidden"
             animate="visible"
             custom={2}
             variants={fadeUp}
           >
             Where deals change hands.
-          </motion.p>
-
-          <motion.p
-            className="text-[14px] mt-2"
-            style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'Inter', sans-serif" }}
-            initial="hidden"
-            animate="visible"
-            custom={3}
-            variants={fadeUp}
-          >
-            Your commercial property command centre.
           </motion.p>
 
           {/* Feature cards */}
@@ -136,8 +125,8 @@ export default function LoginPage() {
                 key={f.title}
                 className="flex items-center gap-4 rounded-lg px-5 py-4"
                 style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(255,255,255,0.08)',
+                  border: '1px solid rgba(255,255,255,0.15)',
                   backdropFilter: 'blur(8px)',
                 }}
                 initial="hidden"
@@ -153,7 +142,7 @@ export default function LoginPage() {
                 </div>
                 <div>
                   <p className="text-[14px] font-medium" style={{ color: '#FFFFFF' }}>{f.title}</p>
-                  <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{f.desc}</p>
+                  <p className="text-[12px]" style={{ color: '#B8C4D0' }}>{f.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -168,10 +157,10 @@ export default function LoginPage() {
           custom={7}
           variants={fadeUp}
         >
-          <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <span className="text-[12px]" style={{ color: '#6B7C93' }}>
             costicohen.com.au
           </span>
-          <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+          <span className="text-[12px]" style={{ color: '#6B7C93' }}>
             &copy; 2026 Costi Cohen
           </span>
         </motion.div>
@@ -210,7 +199,7 @@ export default function LoginPage() {
           <h2 className="text-[28px] font-semibold" style={{ fontFamily: "'Inter', sans-serif", color: '#1a1a1a' }}>
             Welcome back
           </h2>
-          <p className="mt-1.5 mb-8 text-[14px]" style={{ color: '#555' }}>
+          <p className="mt-1.5 mb-8 text-[14px]" style={{ color: '#555555' }}>
             Sign in to The Exchange
           </p>
 
