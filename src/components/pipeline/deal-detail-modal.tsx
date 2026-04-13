@@ -20,7 +20,7 @@ import { DocumentManager } from '@/components/documents/document-manager'
 import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { EmailHistory } from '@/components/email/email-history'
 import { PROPERTY_STAGES, type PropertyStage, type Deal } from '@/lib/types'
-import { Pencil, Trash2, Building2, User } from 'lucide-react'
+import { Pencil, Trash2, Building2, User, Send } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -44,10 +44,15 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
   const [form, setForm] = useState<Partial<Deal>>({})
   const [propForm, setPropForm] = useState<Record<string, string | null>>({})
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [newNote, setNewNote] = useState('')
+  const [addingNote, setAddingNote] = useState(false)
+  const [inlineNotes, setInlineNotes] = useState<{ text: string; created_at: string }[]>([])
 
   useEffect(() => {
     if (deal) {
       setForm(deal)
+      setInlineNotes([])
+      setNewNote('')
       setPropForm({
         mandate_brief: deal.property_details?.mandate_brief || '',
         purchase_price: deal.property_details?.purchase_price?.toString() || '',
@@ -57,6 +62,21 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
       })
     }
   }, [deal])
+
+  const handleAddNote = async () => {
+    if (!newNote.trim() || !deal) return
+    setAddingNote(true)
+    await logActivity({
+      entity_type: 'deal',
+      entity_id: deal.id,
+      action: 'note',
+      description: newNote.trim(),
+      created_by: userId,
+    })
+    setInlineNotes(prev => [{ text: newNote.trim(), created_at: new Date().toISOString() }, ...prev])
+    setNewNote('')
+    setAddingNote(false)
+  }
 
   if (!deal) return null
 
@@ -273,11 +293,38 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId }: Prop
             </div>
 
             {/* NOTES - using description */}
-            {!editing && deal.description && (
+            {!editing && (
               <div>
                 <h4 className={sectionLabel}>Notes</h4>
-                <div className="rounded-xl border border-cc-border bg-cc-surface p-4">
-                  <p className="text-sm text-cc-text-secondary">{deal.description}</p>
+                <div className="rounded-xl border border-cc-border bg-cc-surface p-4 space-y-3">
+                  {/* Inline add note */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newNote}
+                      onChange={e => setNewNote(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAddNote() } }}
+                      placeholder="Add a note..."
+                      className="flex-1 bg-cc-surface-2 border border-cc-border rounded-lg px-3 py-2 text-sm text-cc-text-primary placeholder:text-cc-text-muted focus:outline-none focus:border-cc-accent"
+                    />
+                    <Button size="sm" onClick={handleAddNote} disabled={!newNote.trim() || addingNote} className="h-9 px-3">
+                      <Send className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                  {/* Inline notes just added */}
+                  {inlineNotes.map((note, i) => (
+                    <div key={`inline-${i}`} className="rounded-lg bg-cc-surface-2 border border-cc-border px-3 py-2">
+                      <p className="text-sm text-cc-text-secondary">{note.text}</p>
+                      <p className="text-[10px] text-cc-text-muted mt-1">Just now</p>
+                    </div>
+                  ))}
+                  {/* Existing description as note */}
+                  {deal.description && (
+                    <p className="text-sm text-cc-text-secondary">{deal.description}</p>
+                  )}
+                  {!deal.description && inlineNotes.length === 0 && (
+                    <p className="text-sm text-cc-text-muted">No notes yet</p>
+                  )}
                 </div>
               </div>
             )}
