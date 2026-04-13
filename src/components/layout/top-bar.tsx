@@ -42,7 +42,7 @@ export function TopBar() {
   const [searchLoading, setSearchLoading] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const loadNotifications = useCallback(async (uid: string) => {
     const data = await getNotifications(uid)
@@ -310,4 +310,60 @@ export function TopBar() {
               {unreadCount > 99 ? '99+' : unreadCount}
             </span>
           )}
-        </
+        </button>
+
+        {showNotifications && (
+          <div className="absolute right-0 top-full mt-2 w-96 bg-cc-surface border border-cc-border rounded-lg overflow-hidden z-50 shadow-2xl">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-cc-border">
+              <h3 className="text-sm font-medium text-cc-text-primary">
+                Notifications
+                {unreadCount > 0 && (
+                  <span className="ml-2 text-xs text-cc-text-muted">({unreadCount} unread)</span>
+                )}
+              </h3>
+              {unreadCount > 0 && (
+                <button
+                  onClick={handleMarkAllRead}
+                  className="flex items-center gap-1 text-xs text-cc-text-secondary hover:text-cc-text-primary transition-colors"
+                >
+                  <Check className="h-3 w-3" />
+                  Mark all read
+                </button>
+              )}
+            </div>
+            <div className="max-h-96 overflow-y-auto">
+              {notifications.length === 0 ? (
+                <p className="px-4 py-8 text-sm text-cc-text-muted text-center">
+                  No notifications yet
+                </p>
+              ) : (
+                notifications.map(n => (
+                  <button
+                    key={n.id}
+                    onClick={() => handleNotificationClick(n)}
+                    className={`w-full text-left px-4 py-3 border-b border-cc-border last:border-0 hover:bg-cc-surface-2 transition-colors flex gap-3 ${
+                      !n.read ? 'bg-cc-surface-2/50' : ''
+                    }`}
+                  >
+                    <div className="pt-1.5 flex-shrink-0">
+                      <div className={`w-2 h-2 rounded-full ${!n.read ? 'bg-cc-text-primary' : 'bg-transparent'}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-sm truncate ${!n.read ? 'font-medium text-cc-text-primary' : 'text-cc-text-secondary'}`}>
+                        {n.title}
+                      </p>
+                      <p className="text-xs text-cc-text-muted mt-0.5 line-clamp-2">{n.message}</p>
+                      <p className="text-[10px] text-cc-text-muted mt-1">
+                        {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+                      </p>
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
