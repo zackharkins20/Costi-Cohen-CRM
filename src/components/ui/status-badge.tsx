@@ -1,15 +1,9 @@
+'use client'
+
 import { cn } from '@/lib/utils'
 import { PROPERTY_STAGES, TASK_STATUSES, type PropertyStage, type TaskStatus, type TaskPriority } from '@/lib/types'
-
-/* Muted, desaturated badge tones — subtle differentiation */
-const stageColors: Record<PropertyStage, string> = {
-  lead: 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
-  initial_call: 'bg-[var(--cc-status-pending-bg)] text-[var(--cc-status-pending-text)] border-[var(--cc-status-pending-border)]',
-  property_search: 'bg-[var(--cc-status-active-bg)] text-[var(--cc-status-active-text)] border-[var(--cc-status-active-border)]',
-  due_diligence: 'bg-[var(--cc-status-active-bg)] text-[var(--cc-status-active-text)] border-[var(--cc-status-active-border)]',
-  exchange: 'bg-[var(--cc-status-pending-bg)] text-[var(--cc-status-pending-text)] border-[var(--cc-status-pending-border)]',
-  fees_collected: 'bg-[var(--cc-status-success-bg)] text-[var(--cc-status-success-text)] border-[var(--cc-status-success-border)]',
-}
+import { getStageColor } from '@/lib/stage-colors'
+import { useTheme } from '@/components/theme-provider'
 
 const taskStatusColors: Record<TaskStatus, string> = {
   todo: 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
@@ -27,12 +21,17 @@ const priorityColors: Record<TaskPriority, string> = {
 
 export function StageBadge({ stage, className }: { stage: PropertyStage; className?: string }) {
   const stageInfo = PROPERTY_STAGES.find(s => s.key === stage)
+  const { theme } = useTheme()
+  const colors = getStageColor(stage, theme === 'dark')
   return (
-    <span className={cn(
-      'inline-flex items-center rounded-sm px-2.5 py-0.5 text-[11px] font-medium border uppercase tracking-[0.04em]',
-      stageColors[stage] || 'bg-[var(--cc-status-neutral-bg)] text-[var(--cc-status-neutral-text)] border-[var(--cc-status-neutral-border)]',
-      className
-    )}>
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-sm px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-[0.04em]',
+        className
+      )}
+      style={{ backgroundColor: colors.bg, color: colors.text }}
+    >
+      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: colors.dot }} />
       {stageInfo?.label || stage}
     </span>
   )
