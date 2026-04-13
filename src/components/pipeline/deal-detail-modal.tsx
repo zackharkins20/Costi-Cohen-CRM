@@ -289,13 +289,13 @@ export function DealDetailModal({ deal, open, onClose, onUpdated, userId, onNavi
                         <div>
                           <span className="text-[11px] uppercase tracking-[0.05em] text-cc-text-muted block mb-1">Fee Status</span>
                           <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${
-                            deal.stage === 'fees_collected'
+                            deal.stage === 'settled'
                               ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                              : deal.stage === 'exchange'
+                              : deal.stage === 'contracts_exchanged'
                                 ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
                                 : 'bg-cc-surface-2 text-cc-text-secondary'
                           }`}>
-                            {deal.stage === 'fees_collected' ? 'Paid' : deal.stage === 'exchange' ? 'Invoiced' : 'Pending'}
+                            {deal.stage === 'settled' ? 'Paid' : deal.stage === 'contracts_exchanged' ? 'Invoiced' : 'Pending'}
                           </span>
                         </div>
                       </div>

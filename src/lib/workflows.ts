@@ -363,7 +363,7 @@ export const WORKFLOW_TEMPLATES: Omit<Workflow, 'id' | 'created_at' | 'updated_a
     description: 'When a deal reaches Exchange of Contracts, create settlement tasks and schedule deadlines.',
     enabled: true,
     trigger_type: 'deal_stage_change',
-    trigger_config: { to_stage: 'exchange' },
+    trigger_config: { to_stage: 'contracts_exchanged' },
     actions: [
       {
         type: 'create_task',

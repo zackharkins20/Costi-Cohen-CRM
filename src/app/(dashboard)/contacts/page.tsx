@@ -11,7 +11,7 @@ import { DealDetailModal } from '@/components/pipeline/deal-detail-modal'
 import { getContacts, getCurrentUser } from '@/lib/queries'
 import { formatPhone } from '@/lib/utils'
 import { getDocumentCounts } from '@/lib/documents'
-import { PROPERTY_STAGES, type Contact, type Deal, type PropertyStage } from '@/lib/types'
+import { PROPERTY_STAGES, BUYER_TYPES, type Contact, type Deal, type PropertyStage, type BuyerType } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -35,18 +35,22 @@ const SORT_OPTIONS: { key: SortOption; label: string }[] = [
 ]
 
 const STAGE_ORDER: Record<PropertyStage, number> = {
-  lead: 0,
-  initial_call: 1,
-  property_search: 2,
-  due_diligence: 3,
-  exchange: 4,
-  fees_collected: 5,
+  active_leads: 0,
+  proposal_sent: 1,
+  agreement_sent: 2,
+  agreement_signed: 3,
+  retainer_invoice_sent: 4,
+  property_search: 5,
+  contracts_exchanged: 6,
+  settled: 7,
+  marketing_only: 8,
 }
 
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [search, setSearch] = useState('')
   const [stageFilter, setStageFilter] = useState<PropertyStage | 'all'>('all')
+  const [buyerTypeFilter, setBuyerTypeFilter] = useState<BuyerType | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [sort, setSort] = useState<SortOption>('newest')
   const [createOpen, setCreateOpen] = useState(false)
@@ -80,6 +84,8 @@ export default function ContactsPage() {
       }
       // Stage filter
       if (stageFilter !== 'all' && c.stage !== stageFilter) return false
+      // Buyer type filter
+      if (buyerTypeFilter !== 'all' && c.buyer_type !== buyerTypeFilter) return false
       // Type filter
       if (typeFilter !== 'all' && c.type !== typeFilter) return false
       return true
@@ -104,7 +110,7 @@ export default function ContactsPage() {
     })
 
     return result
-  }, [contacts, search, stageFilter, typeFilter, sort])
+  }, [contacts, search, stageFilter, buyerTypeFilter, typeFilter, sort])
 
   return (
     <div>
@@ -136,6 +142,19 @@ export default function ContactsPage() {
             <SelectItem value="all">All Stages</SelectItem>
             {PROPERTY_STAGES.map(s => (
               <SelectItem key={s.key} value={s.key}>{s.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Buyer type filter */}
+        <Select value={buyerTypeFilter} onValueChange={v => setBuyerTypeFilter(v as BuyerType | 'all')}>
+          <SelectTrigger className="w-44 h-9 text-xs">
+            <SelectValue placeholder="All Buyer Types" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Buyer Types</SelectItem>
+            {BUYER_TYPES.map(b => (
+              <SelectItem key={b.key} value={b.key}>{b.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -212,8 +231,22 @@ export default function ContactsPage() {
                         <span className="flex items-center gap-1"><Phone className="h-3 w-3" /> {formatPhone(contact.phone)}</span>
                       )}
                     </div>
-                    <div className="mt-2 flex items-center gap-2">
+                    <div className="mt-2 flex items-center gap-2 flex-wrap">
                       <StageBadge stage={contact.stage} />
+                      {contact.buyer_type && (() => {
+                        const buyerColors: Record<string, { bg: string; text: string }> = {
+                          investor: { bg: '#DBEAFE', text: '#1E40AF' },
+                          developer: { bg: '#EDE9FE', text: '#5B21B6' },
+                          owner_occupier: { bg: '#D1FAE5', text: '#065F46' },
+                        }
+                        const btc = buyerColors[contact.buyer_type]
+                        const label = BUYER_TYPES.find(b => b.key === contact.buyer_type)?.label
+                        return btc && label ? (
+                          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-medium rounded-sm" style={{ backgroundColor: btc.bg, color: btc.text }}>
+                            {label}
+                          </span>
+                        ) : null
+                      })()}
                       {docCounts[contact.id] > 0 && (
                         <span className="flex items-center gap-0.5 text-[10px] text-cc-text-muted">
                           <Paperclip className="h-3 w-3" /> {docCounts[contact.id]}

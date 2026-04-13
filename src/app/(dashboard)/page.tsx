@@ -61,35 +61,38 @@ export default function DashboardPage() {
   const filteredActivities = activities.filter(a => inRange(a.created_at))
 
   const pipelineValue = filteredDeals
-    .filter(d => d.stage !== 'fees_collected')
+    .filter(d => d.stage !== 'settled' && d.stage !== 'marketing_only')
     .reduce((sum, d) => sum + (d.deal_value || 0), 0)
-  const activeDeals = filteredDeals.filter(d => d.stage !== 'fees_collected').length
+  const activeDeals = filteredDeals.filter(d => d.stage !== 'settled' && d.stage !== 'marketing_only').length
   const feesEarned = filteredDeals
-    .filter(d => d.stage === 'fees_collected')
+    .filter(d => d.stage === 'settled')
     .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
 
   // Fee summary calculations
   const pendingFees = filteredDeals
-    .filter(d => d.stage !== 'fees_collected')
+    .filter(d => d.stage !== 'settled' && d.stage !== 'marketing_only')
     .reduce((sum, d) => {
       if (!d.deal_value || !d.fee_percentage) return sum
       return sum + (d.deal_value * d.fee_percentage) / 100
     }, 0)
   const collectedFees = filteredDeals
-    .filter(d => d.stage === 'fees_collected')
+    .filter(d => d.stage === 'settled')
     .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
   const thisMonthStart = startOfMonth(new Date())
   const thisMonthFees = deals
-    .filter(d => d.stage === 'fees_collected' && isAfter(new Date(d.updated_at), thisMonthStart))
+    .filter(d => d.stage === 'settled' && isAfter(new Date(d.updated_at), thisMonthStart))
     .reduce((sum, d) => sum + (d.fee_amount || 0), 0)
 
   const stageAbbreviations: Record<string, string> = {
-    lead: 'Lead',
-    initial_call: 'Initial Call',
-    property_search: 'Prop Search',
-    due_diligence: 'Due Diligence',
-    exchange: 'Exchange',
-    fees_collected: 'Fees Collected',
+    active_leads: 'Active Leads',
+    proposal_sent: 'Proposal',
+    agreement_sent: 'Agreement',
+    agreement_signed: 'Signed',
+    retainer_invoice_sent: 'Invoice',
+    property_search: 'Search',
+    contracts_exchanged: 'Exchanged',
+    settled: 'Settled',
+    marketing_only: 'Marketing',
   }
 
   const getActivityIcon = (action: string) => {
@@ -117,8 +120,8 @@ export default function DashboardPage() {
 
   /* Theme-aware chart palette — blue-grey tones */
   const chartColors = isDark
-    ? ['#5A7A94', '#8BA4B8', '#A0B4C4', '#D8DEE4', '#4A7FA5', '#5A7A94']
-    : ['#3B5068', '#5A7A94', '#8BA4B8', '#D8DEE4', '#2A3A4D', '#3B5068']
+    ? ['#34D399', '#60A5FA', '#FBBF24', '#FB7185', '#A78BFA', '#22D3EE', '#F97316', '#059669', '#9CA3AF']
+    : ['#10B981', '#3B82F6', '#F59E0B', '#FB7185', '#8B5CF6', '#06B6D4', '#F97316', '#059669', '#9CA3AF']
   const chartAxisColor = isDark ? '#555555' : '#8B95A0'
   const chartGridColor = isDark ? '#222222' : '#D8DEE4'
   const chartTooltipBg = isDark ? '#111111' : '#FFFFFF'

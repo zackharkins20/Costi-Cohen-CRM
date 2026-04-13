@@ -6,12 +6,15 @@ import { GripVertical } from 'lucide-react'
 
 /* Stage column top-border colors — blue-grey progressive tints */
 const stageTopBorders: Record<string, string> = {
-  lead: 'border-t-[3px] border-t-[#8BA4B8]',
-  initial_call: 'border-t-[3px] border-t-[#6B8FA8]',
-  property_search: 'border-t-[3px] border-t-[#5A7A94]',
-  due_diligence: 'border-t-[3px] border-t-[#3B5068]',
-  exchange: 'border-t-[3px] border-t-[#2A3A4D]',
-  fees_collected: 'border-t-[3px] border-t-[#5A8F6A]',
+  active_leads: 'border-t-[3px] border-t-[#10B981]',
+  proposal_sent: 'border-t-[3px] border-t-[#3B82F6]',
+  agreement_sent: 'border-t-[3px] border-t-[#F59E0B]',
+  agreement_signed: 'border-t-[3px] border-t-[#FB7185]',
+  retainer_invoice_sent: 'border-t-[3px] border-t-[#8B5CF6]',
+  property_search: 'border-t-[3px] border-t-[#06B6D4]',
+  contracts_exchanged: 'border-t-[3px] border-t-[#F97316]',
+  settled: 'border-t-[3px] border-t-[#059669]',
+  marketing_only: 'border-t-[3px] border-t-[#9CA3AF]',
   /* task statuses */
   todo: 'border-t-[3px] border-t-[#8BA4B8]',
   in_progress: 'border-t-[3px] border-t-[#5A7A94]',
@@ -21,12 +24,15 @@ const stageTopBorders: Record<string, string> = {
 
 /* Card left-border accents by stage */
 const stageLeftBorders: Record<string, string> = {
-  lead: 'border-l-[3px] border-l-[#8BA4B8]',
-  initial_call: 'border-l-[3px] border-l-[#6B8FA8]',
-  property_search: 'border-l-[3px] border-l-[#5A7A94]',
-  due_diligence: 'border-l-[3px] border-l-[#3B5068]',
-  exchange: 'border-l-[3px] border-l-[#2A3A4D]',
-  fees_collected: 'border-l-[3px] border-l-[#5A8F6A]',
+  active_leads: 'border-l-[3px] border-l-[#10B981]',
+  proposal_sent: 'border-l-[3px] border-l-[#3B82F6]',
+  agreement_sent: 'border-l-[3px] border-l-[#F59E0B]',
+  agreement_signed: 'border-l-[3px] border-l-[#FB7185]',
+  retainer_invoice_sent: 'border-l-[3px] border-l-[#8B5CF6]',
+  property_search: 'border-l-[3px] border-l-[#06B6D4]',
+  contracts_exchanged: 'border-l-[3px] border-l-[#F97316]',
+  settled: 'border-l-[3px] border-l-[#059669]',
+  marketing_only: 'border-l-[3px] border-l-[#9CA3AF]',
   todo: 'border-l-[3px] border-l-[#8BA4B8]',
   in_progress: 'border-l-[3px] border-l-[#5A7A94]',
   review: 'border-l-[3px] border-l-[#3B5068]',

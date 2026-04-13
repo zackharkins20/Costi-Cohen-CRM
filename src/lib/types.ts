@@ -1,13 +1,34 @@
 // Pipeline stages
-export type PropertyStage = 'lead' | 'initial_call' | 'property_search' | 'due_diligence' | 'exchange' | 'fees_collected'
+export type PropertyStage =
+  | 'active_leads'
+  | 'proposal_sent'
+  | 'agreement_sent'
+  | 'agreement_signed'
+  | 'retainer_invoice_sent'
+  | 'property_search'
+  | 'contracts_exchanged'
+  | 'settled'
+  | 'marketing_only'
 
-export const PROPERTY_STAGES: { key: PropertyStage; label: string }[] = [
-  { key: 'lead', label: 'Lead' },
-  { key: 'initial_call', label: 'Initial Call/Meeting' },
-  { key: 'property_search', label: 'Property Search' },
-  { key: 'due_diligence', label: 'Due Diligence/Negotiation' },
-  { key: 'exchange', label: 'Exchange of Contracts' },
-  { key: 'fees_collected', label: 'Fees Collected' },
+export const PROPERTY_STAGES: { key: PropertyStage; label: string; probability: number }[] = [
+  { key: 'active_leads', label: 'Active Leads', probability: 10 },
+  { key: 'proposal_sent', label: 'Proposal Sent', probability: 20 },
+  { key: 'agreement_sent', label: 'Agreement Sent', probability: 25 },
+  { key: 'agreement_signed', label: 'Agreement Signed', probability: 30 },
+  { key: 'retainer_invoice_sent', label: 'Retainer Invoice Sent', probability: 30 },
+  { key: 'property_search', label: 'Property Search', probability: 50 },
+  { key: 'contracts_exchanged', label: 'Contracts Exchanged', probability: 100 },
+  { key: 'settled', label: 'Settled', probability: 100 },
+  { key: 'marketing_only', label: 'Marketing Only', probability: 0 },
+]
+
+// Buyer types
+export type BuyerType = 'investor' | 'developer' | 'owner_occupier'
+
+export const BUYER_TYPES: { key: BuyerType; label: string }[] = [
+  { key: 'investor', label: 'Investor' },
+  { key: 'developer', label: 'Developer' },
+  { key: 'owner_occupier', label: 'Owner Occupier' },
 ]
 
 const STAGE_LABEL_TO_KEY: Record<string, PropertyStage> = {}
@@ -26,7 +47,7 @@ export function normalizeStage(raw: string): PropertyStage {
     if (s.key.replace(/[^a-z0-9]/g, '') === stripped) return s.key
     if (s.label.toLowerCase().replace(/[^a-z0-9]/g, '') === stripped) return s.key
   }
-  return 'lead'
+  return 'active_leads'
 }
 
 // Task statuses
@@ -78,6 +99,7 @@ export interface Contact {
   company: string | null
   type: 'client' | 'other'
   stage: PropertyStage
+  buyer_type: BuyerType | null
   asset_type: string | null
   budget_min: number | null
   budget_max: number | null

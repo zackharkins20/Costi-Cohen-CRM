@@ -16,7 +16,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { createContact, logActivity } from '@/lib/queries'
 import { notifyAllUsers } from '@/lib/notifications'
 import { executeWorkflows } from '@/lib/workflows'
-import { PROPERTY_STAGES, type PropertyStage, type Contact } from '@/lib/types'
+import { PROPERTY_STAGES, BUYER_TYPES, type PropertyStage, type BuyerType, type Contact } from '@/lib/types'
 
 interface Props {
   open: boolean
@@ -32,7 +32,8 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
     phone: '',
     company: '',
     type: 'client' as 'client' | 'other',
-    stage: 'lead' as PropertyStage,
+    stage: 'active_leads' as PropertyStage,
+    buyer_type: '',
     asset_type: '',
     budget_min: '',
     budget_max: '',
@@ -53,6 +54,7 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
       company: form.company || null,
       type: form.type,
       stage: form.stage,
+      buyer_type: (form.buyer_type || null) as BuyerType | null,
       asset_type: form.asset_type || null,
       budget_min: form.budget_min ? Number(form.budget_min) : null,
       budget_max: form.budget_max ? Number(form.budget_max) : null,
@@ -82,7 +84,7 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
       })
       onCreated(contact)
     }
-    setForm({ name: '', email: '', phone: '', company: '', type: 'client', stage: 'lead', asset_type: '', budget_min: '', budget_max: '', fee_percentage: '', brief_notes: '', notes: '' })
+    setForm({ name: '', email: '', phone: '', company: '', type: 'client', stage: 'active_leads', buyer_type: '', asset_type: '', budget_min: '', budget_max: '', fee_percentage: '', brief_notes: '', notes: '' })
     setLoading(false)
     onClose()
   }
@@ -135,9 +137,22 @@ export function CreateContactForm({ open, onClose, onCreated, userId }: Props) {
               </Select>
             </div>
           </div>
-          <div>
-            <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Asset Type</Label>
-            <Input value={form.asset_type} onChange={e => setForm({ ...form, asset_type: e.target.value })} placeholder="e.g. Residential, Commercial" className="mt-1.5" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Buyer Type</Label>
+              <Select value={form.buyer_type ?? ''} onValueChange={v => setForm({ ...form, buyer_type: v || '' })}>
+                <SelectTrigger className="mt-1.5"><SelectValue placeholder="Select type" /></SelectTrigger>
+                <SelectContent>
+                  {BUYER_TYPES.map(b => (
+                    <SelectItem key={b.key} value={b.key}>{b.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="text-cc-text-muted text-[11px] uppercase tracking-[0.08em] font-medium">Asset Type</Label>
+              <Input value={form.asset_type} onChange={e => setForm({ ...form, asset_type: e.target.value })} placeholder="e.g. Residential, Commercial" className="mt-1.5" />
+            </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>

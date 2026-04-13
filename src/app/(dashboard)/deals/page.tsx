@@ -31,12 +31,15 @@ type SortField = 'title' | 'contact' | 'stage' | 'deal_value' | 'fee' | 'created
 type SortDir = 'asc' | 'desc'
 
 const STAGE_ORDER: Record<PropertyStage, number> = {
-  lead: 0,
-  initial_call: 1,
-  property_search: 2,
-  due_diligence: 3,
-  exchange: 4,
-  fees_collected: 5,
+  active_leads: 0,
+  proposal_sent: 1,
+  agreement_sent: 2,
+  agreement_signed: 3,
+  retainer_invoice_sent: 4,
+  property_search: 5,
+  contracts_exchanged: 6,
+  settled: 7,
+  marketing_only: 8,
 }
 
 export default function DealsPage() {

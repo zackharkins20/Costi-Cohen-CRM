@@ -30,7 +30,7 @@ export function CreateDealForm({ open, onClose, onCreated, userId, defaultContac
   const [contacts, setContacts] = useState<Contact[]>([])
   const [form, setForm] = useState({
     title: '',
-    stage: 'lead' as PropertyStage,
+    stage: 'active_leads' as PropertyStage,
     contact_id: '',
     deal_value: '',
     fee_percentage: '',
@@ -87,7 +87,7 @@ export function CreateDealForm({ open, onClose, onCreated, userId, defaultContac
       })
       onCreated(deal)
     }
-    setForm({ title: '', stage: 'lead', contact_id: '', deal_value: '', fee_percentage: '', description: '' })
+    setForm({ title: '', stage: 'active_leads', contact_id: '', deal_value: '', fee_percentage: '', description: '' })
     setLoading(false)
     onClose()
   }

@@ -106,8 +106,8 @@ export default function ReportsPage() {
 
   const isDark = theme === 'dark'
   const chartColors = isDark
-    ? ['#5A7A94', '#8BA4B8', '#A0B4C4', '#D8DEE4', '#4A7FA5', '#5A7A94']
-    : ['#3B5068', '#5A7A94', '#8BA4B8', '#D8DEE4', '#2A3A4D', '#3B5068']
+    ? ['#34D399', '#60A5FA', '#FBBF24', '#FB7185', '#A78BFA', '#22D3EE', '#F97316', '#059669', '#9CA3AF']
+    : ['#10B981', '#3B82F6', '#F59E0B', '#FB7185', '#8B5CF6', '#06B6D4', '#F97316', '#059669', '#9CA3AF']
   const chartAxisColor = isDark ? '#555555' : '#8B95A0'
   const chartGridColor = isDark ? '#222222' : '#D8DEE4'
   const chartTooltipBg = isDark ? '#111111' : '#F7F7F7'
@@ -131,12 +131,15 @@ export default function ReportsPage() {
   ]
 
   const stageAbbreviations: Record<string, string> = {
-    lead: 'Lead',
-    initial_call: 'Initial Call',
-    property_search: 'Prop Search',
-    due_diligence: 'Due Diligence',
-    exchange: 'Exchange',
-    fees_collected: 'Fees Collected',
+    active_leads: 'Active Leads',
+    proposal_sent: 'Proposal',
+    agreement_sent: 'Agreement',
+    agreement_signed: 'Signed',
+    retainer_invoice_sent: 'Invoice',
+    property_search: 'Search',
+    contracts_exchanged: 'Exchanged',
+    settled: 'Settled',
+    marketing_only: 'Marketing',
   }
 
   // ── Pipeline Report ──
@@ -146,15 +149,15 @@ export default function ReportsPage() {
     value: deals.filter(d => d.stage === stage.key).reduce((s, d) => s + (d.deal_value || 0), 0),
   }))
 
-  const activeDealsArr = deals.filter(d => d.stage !== 'fees_collected')
+  const activeDealsArr = deals.filter(d => d.stage !== 'settled' && d.stage !== 'marketing_only')
   const pipelineValue = activeDealsArr.reduce((s, d) => s + (d.deal_value || 0), 0)
   const activeDeals = activeDealsArr.length
   const avgDealSize = activeDealsArr.length > 0 ? pipelineValue / activeDealsArr.length : 0
-  const winRate = deals.length > 0 ? Math.round((deals.filter(d => d.stage === 'fees_collected').length / deals.length) * 100) : 0
+  const winRate = deals.length > 0 ? Math.round((deals.filter(d => d.stage === 'settled').length / deals.length) * 100) : 0
   const topDeals = [...deals].sort((a, b) => (b.deal_value || 0) - (a.deal_value || 0)).slice(0, 10)
 
   // ── Revenue Report ──
-  const feeDeals = deals.filter(d => d.stage === 'fees_collected' && d.fee_amount)
+  const feeDeals = deals.filter(d => d.stage === 'settled' && d.fee_amount)
   const totalFees = feeDeals.reduce((s, d) => s + (d.fee_amount || 0), 0)
   const avgFee = feeDeals.length > 0 ? totalFees / feeDeals.length : 0
   const largestFee = feeDeals.reduce((max, d) => Math.max(max, d.fee_amount || 0), 0)

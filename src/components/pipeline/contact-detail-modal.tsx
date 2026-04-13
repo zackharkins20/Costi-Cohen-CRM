@@ -21,7 +21,7 @@ import { UpcomingEvents } from '@/components/events/upcoming-events'
 import { EmailHistory } from '@/components/email/email-history'
 import { CreateDealForm } from '@/components/forms/create-deal-form'
 import { StageBadge } from '@/components/ui/status-badge'
-import { PROPERTY_STAGES, type PropertyStage, type Contact, type Deal } from '@/lib/types'
+import { PROPERTY_STAGES, BUYER_TYPES, type PropertyStage, type BuyerType, type Contact, type Deal } from '@/lib/types'
 import { getStageColor } from '@/lib/stage-colors'
 import { useTheme } from '@/components/theme-provider'
 import { Mail, Pencil, Phone, Building2, AtSign, Trash2, Send, Plus, DollarSign, ChevronRight } from 'lucide-react'
@@ -238,6 +238,21 @@ export function ContactDetailModal({ contact, open, onClose, onUpdated, userId, 
                       <span className="text-sm text-cc-text-primary">{contact.fee_percentage ? `${contact.fee_percentage}%` : '—'}</span>
                     )}
                   </div>
+                </div>
+                <div className="mb-3">
+                  <span className="text-[11px] uppercase tracking-[0.05em] text-cc-text-muted block mb-1">Buyer Type</span>
+                  {editing ? (
+                    <Select value={(form.buyer_type as string) || ''} onValueChange={v => setForm({ ...form, buyer_type: (v || null) as BuyerType | null })}>
+                      <SelectTrigger className="h-7 text-xs"><SelectValue placeholder="Select type" /></SelectTrigger>
+                      <SelectContent>
+                        {BUYER_TYPES.map(b => (
+                          <SelectItem key={b.key} value={b.key}>{b.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <span className="text-sm text-cc-text-primary">{BUYER_TYPES.find(b => b.key === contact.buyer_type)?.label || '—'}</span>
+                  )}
                 </div>
                 <div className="mb-3">
                   <span className="text-[11px] uppercase tracking-[0.05em] text-cc-text-muted block mb-1">Budget Range</span>
