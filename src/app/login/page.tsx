@@ -75,7 +75,7 @@ export default function LoginPage() {
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="mt-1.5"
+                  className="mt-1.5 rounded-none"
                 />
               </div>
 
@@ -88,7 +88,7 @@ export default function LoginPage() {
                     onChange={e => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="mt-1.5"
+                    className="mt-1.5 rounded-none"
                   />
                 </div>
               )}
@@ -96,7 +96,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full"
+                className="w-full bg-transparent border-[1.5px] border-white text-white hover:bg-white hover:text-black"
               >
                 {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
               </Button>
