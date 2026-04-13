@@ -6,16 +6,23 @@ import { notifyAllUsers } from '@/lib/notifications'
 import type { Activity } from '@/lib/types'
 import { formatDistanceToNow } from 'date-fns'
 import { formatLabel } from '@/lib/utils'
-import { MessageSquare, Phone, Calendar, Mail, ArrowRight } from 'lucide-react'
+import { MessageSquare, Phone, Calendar, Mail, ArrowRightLeft, FileText, PlusCircle, Users, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 
 const actionIcons: Record<string, typeof MessageSquare> = {
-  note: MessageSquare,
+  note: FileText,
+  note_added: FileText,
   call: Phone,
-  meeting: Calendar,
+  call_logged: Phone,
+  meeting: Users,
+  meeting_logged: Users,
   email_drafted: Mail,
-  stage_change: ArrowRight,
+  email_sent: Mail,
+  email: Mail,
+  stage_change: ArrowRightLeft,
+  status_change: ArrowRightLeft,
+  created: PlusCircle,
 }
 
 const ACTION_TABS = [
@@ -24,6 +31,52 @@ const ACTION_TABS = [
   { key: 'meeting', label: 'Meeting' },
   { key: 'email_drafted', label: 'Email' },
 ] as const
+
+type FilterType = 'all' | 'notes' | 'calls' | 'stage_changes' | 'emails' | 'meetings'
+
+const FILTER_CHIPS: { key: FilterType; label: string }[] = [
+  { key: 'all', label: 'All' },
+  { key: 'notes', label: 'Notes' },
+  { key: 'calls', label: 'Calls' },
+  { key: 'stage_changes', label: 'Stage Changes' },
+  { key: 'emails', label: 'Emails' },
+  { key: 'meetings', label: 'Meetings' },
+]
+
+function matchesFilter(action: string, filter: FilterType): boolean {
+  if (filter === 'all') return true
+  if (filter === 'notes') return action.includes('note')
+  if (filter === 'calls') return action.includes('call')
+  if (filter === 'stage_changes') return action.includes('stage') || action.includes('status')
+  if (filter === 'emails') return action.includes('email')
+  if (filter === 'meetings') return action.includes('meeting')
+  return true
+}
+
+function ExpandableText({ text }: { text: string }) {
+  const [expanded, setExpanded] = useState(false)
+  const isLong = text.length > 120
+
+  if (!isLong) {
+    return <p className="text-sm text-cc-text-secondary">{text}</p>
+  }
+
+  return (
+    <div>
+      <p className={`text-sm text-cc-text-secondary ${expanded ? '' : 'line-clamp-2'}`}>{text}</p>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="text-[11px] text-cc-accent hover:text-cc-text-primary mt-0.5 flex items-center gap-0.5"
+      >
+        {expanded ? (
+          <>Show less <ChevronUp className="h-3 w-3" /></>
+        ) : (
+          <>Show more <ChevronDown className="h-3 w-3" /></>
+        )}
+      </button>
+    </div>
+  )
+}
 
 interface ActivityTimelineProps {
   entityType: 'contact' | 'deal' | 'task'
@@ -35,6 +88,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
   const [activities, setActivities] = useState<Activity[]>([])
   const [noteText, setNoteText] = useState('')
   const [actionType, setActionType] = useState<string>('note')
+  const [filter, setFilter] = useState<FilterType>('all')
 
   useEffect(() => {
     getActivities(entityType, entityId).then(setActivities)
@@ -64,6 +118,8 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
     : actionType === 'call' ? 'Log Call'
     : actionType === 'meeting' ? 'Log Meeting'
     : 'Log Email'
+
+  const filtered = activities.filter(a => matchesFilter(a.action, filter))
 
   return (
     <div>
@@ -102,12 +158,31 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
         </div>
       </div>
 
+      {/* Filter chips */}
+      <div className="flex gap-1 mb-3 flex-wrap">
+        {FILTER_CHIPS.map(chip => (
+          <button
+            key={chip.key}
+            onClick={() => setFilter(chip.key)}
+            className={`px-2 py-1 text-[10px] border rounded transition-colors ${
+              filter === chip.key
+                ? 'bg-cc-accent text-white border-cc-accent'
+                : 'bg-transparent text-cc-text-muted border-cc-border hover:border-cc-btn-border hover:text-cc-text-secondary'
+            }`}
+          >
+            {chip.label}
+          </button>
+        ))}
+      </div>
+
       {/* History */}
       <div>
-        {activities.length === 0 ? (
-          <p className="text-xs text-cc-text-muted py-2 text-center">No activity yet</p>
+        {filtered.length === 0 ? (
+          <p className="text-xs text-cc-text-muted py-2 text-center">
+            {activities.length === 0 ? 'No activity yet' : 'No matching activity'}
+          </p>
         ) : (
-          activities.map(activity => {
+          filtered.map(activity => {
             const Icon = actionIcons[activity.action] || MessageSquare
             return (
               <div key={activity.id} className="flex gap-3 py-2.5 border-b border-cc-border last:border-0">
@@ -123,7 +198,7 @@ export function ActivityTimeline({ entityType, entityId, userId }: ActivityTimel
                     )}
                     <span className="text-[10px] text-cc-text-muted">{formatLabel(activity.action)}</span>
                   </div>
-                  <p className="text-sm text-cc-text-secondary line-clamp-2">{activity.description}</p>
+                  <ExpandableText text={activity.description} />
                   <p className="text-[10px] text-cc-text-muted mt-0.5">
                     {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true })}
                   </p>
