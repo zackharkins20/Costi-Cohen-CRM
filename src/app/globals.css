@@ -287,3 +287,72 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--cc-text-muted);
 }
+
+/* ─── Login page scoped overrides ─── */
+.login-page {
+  --foreground: 0 0% 0%;
+  --background: 0 0% 96%;
+}
+
+.login-left-panel,
+.login-left-panel * {
+  color: #ffffff !important;
+}
+
+.login-left-panel h1 {
+  color: #ffffff !important;
+}
+
+.login-left-panel .login-tagline,
+.login-left-panel .login-tagline * {
+  color: #B8C4D0 !important;
+}
+
+.login-left-panel .login-feature-desc {
+  color: #B8C4D0 !important;
+}
+
+.login-left-panel .login-footer-text {
+  color: #6B7C93 !important;
+}
+
+.login-left-panel .login-icon {
+  color: #D8DEE4 !important;
+}
+
+.login-right-panel {
+  color: #1a1a1a !important;
+}
+
+.login-right-panel h2 {
+  color: #1a1a1a !important;
+}
+
+.login-right-panel .login-subtitle {
+  color: #555555 !important;
+}
+
+.login-right-panel .login-label {
+  color: #333333 !important;
+}
+
+.login-right-panel .login-footer-muted {
+  color: #888888 !important;
+}
+
+.login-right-panel .login-mode-toggle {
+  color: #3B5068 !important;
+}
+
+.login-right-panel input {
+  color: #000000 !important;
+}
+
+.login-sign-in-btn {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.login-sign-in-btn:hover {
+  background-color: #222222 !important;
+}

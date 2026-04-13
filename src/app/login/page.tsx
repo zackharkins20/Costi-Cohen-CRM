@@ -64,10 +64,10 @@ export default function LoginPage() {
   ]
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#F5F5F5' }}>
+    <div className="login-page flex min-h-screen" style={{ background: '#F5F5F5' }}>
       {/* ─── Left Panel: Branded Splash ─── */}
       <div
-        className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden"
+        className="login-left-panel hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden"
         style={{ background: 'linear-gradient(160deg, #1a1a1a 0%, #2A3A4D 100%)' }}
       >
         {/* Logo */}
@@ -108,7 +108,7 @@ export default function LoginPage() {
           />
 
           <motion.p
-            className="text-[20px] font-light"
+            className="login-tagline text-[20px] font-light"
             style={{ color: '#B8C4D0', fontFamily: "'Inter', sans-serif" }}
             initial="hidden"
             animate="visible"
@@ -138,11 +138,11 @@ export default function LoginPage() {
                   className="flex items-center justify-center w-10 h-10 rounded-lg flex-shrink-0"
                   style={{ background: 'rgba(59, 80, 104, 0.4)', border: '1px solid rgba(59, 80, 104, 0.3)' }}
                 >
-                  <f.icon className="w-5 h-5" style={{ color: '#D8DEE4' }} />
+                  <f.icon className="login-icon w-5 h-5" style={{ color: '#D8DEE4' }} />
                 </div>
                 <div>
                   <p className="text-[14px] font-medium" style={{ color: '#FFFFFF' }}>{f.title}</p>
-                  <p className="text-[12px]" style={{ color: '#B8C4D0' }}>{f.desc}</p>
+                  <p className="login-feature-desc text-[12px]" style={{ color: '#B8C4D0' }}>{f.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -157,17 +157,17 @@ export default function LoginPage() {
           custom={7}
           variants={fadeUp}
         >
-          <span className="text-[12px]" style={{ color: '#6B7C93' }}>
+          <span className="login-footer-text text-[12px]" style={{ color: '#6B7C93' }}>
             costicohen.com.au
           </span>
-          <span className="text-[12px]" style={{ color: '#6B7C93' }}>
+          <span className="login-footer-text text-[12px]" style={{ color: '#6B7C93' }}>
             &copy; 2026 Costi Cohen
           </span>
         </motion.div>
       </div>
 
       {/* ─── Right Panel: Login Form ─── */}
-      <div className="flex flex-1 flex-col items-center justify-center px-6 lg:w-1/2" style={{ background: '#F5F5F5' }}>
+      <div className="login-right-panel flex flex-1 flex-col items-center justify-center px-6 lg:w-1/2" style={{ background: '#F5F5F5' }}>
         {/* Mobile-only logo */}
         <motion.div
           className="mb-8 lg:hidden"
@@ -199,7 +199,7 @@ export default function LoginPage() {
           <h2 className="text-[28px] font-semibold" style={{ fontFamily: "'Inter', sans-serif", color: '#1a1a1a' }}>
             Welcome back
           </h2>
-          <p className="mt-1.5 mb-8 text-[14px]" style={{ color: '#555555' }}>
+          <p className="login-subtitle mt-1.5 mb-8 text-[14px]" style={{ color: '#555555' }}>
             Sign in to The Exchange
           </p>
 
@@ -210,7 +210,7 @@ export default function LoginPage() {
             <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
               <div className="space-y-5">
                 <div>
-                  <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
+                  <label className="login-label block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
                     Email
                   </label>
                   <input
@@ -226,7 +226,7 @@ export default function LoginPage() {
 
                 {mode === 'password' && (
                   <div>
-                    <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
+                    <label className="login-label block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
                       Password
                     </label>
                     <div className="relative">
@@ -260,7 +260,7 @@ export default function LoginPage() {
                   disabled={loading}
                   onMouseEnter={() => setBtnHover(true)}
                   onMouseLeave={() => setBtnHover(false)}
-                  className="w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="login-sign-in-btn w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ backgroundColor: btnHover ? '#222222' : '#000000', color: '#ffffff' }}
                 >
                   {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
@@ -276,7 +276,7 @@ export default function LoginPage() {
 
             <button
               onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
-              className="text-xs mt-5 block w-full text-center transition-colors hover:opacity-80"
+              className="login-mode-toggle text-xs mt-5 block w-full text-center transition-colors hover:opacity-80"
               style={{ color: '#3B5068' }}
             >
               {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
@@ -286,7 +286,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <motion.p
-          className="mt-8 text-[13px]"
+          className="login-footer-muted mt-8 text-[13px]"
           style={{ color: '#888888' }}
           initial="hidden"
           animate="visible"
