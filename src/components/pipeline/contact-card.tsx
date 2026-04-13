@@ -1,4 +1,8 @@
+'use client'
+
 import { GlassCard } from '@/components/ui/glass-card'
+import { getAssetTypeColor } from '@/lib/stage-colors'
+import { useTheme } from '@/components/theme-provider'
 import type { Contact } from '@/lib/types'
 
 interface ContactCardProps {
@@ -7,6 +11,7 @@ interface ContactCardProps {
 }
 
 export function ContactCard({ contact, onClick }: ContactCardProps) {
+  const { theme } = useTheme()
   const initials = contact.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
 
   const formatBudget = (min: number | null, max: number | null) => {
@@ -32,11 +37,14 @@ export function ContactCard({ contact, onClick }: ContactCardProps) {
             <p className="text-xs text-cc-text-secondary truncate">{contact.company}</p>
           )}
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {contact.asset_type && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-cc-surface-2 border border-cc-border text-cc-text-secondary">
-                {contact.asset_type}
-              </span>
-            )}
+            {contact.asset_type && (() => {
+              const atc = getAssetTypeColor(contact.asset_type, theme === 'dark')
+              return (
+                <span className="text-[10px] px-1.5 py-0.5 font-medium rounded-sm" style={{ backgroundColor: atc.bg, color: atc.text }}>
+                  {contact.asset_type}
+                </span>
+              )
+            })()}
             {budget && (
               <span className="text-[10px] text-cc-text-primary font-medium">{budget}</span>
             )}
