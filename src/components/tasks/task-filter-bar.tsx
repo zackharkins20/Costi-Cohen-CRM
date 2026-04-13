@@ -70,7 +70,7 @@ export function TaskFilterBar({ filters, onChange, users }: Props) {
               onClick={() => togglePriority(p.key)}
               className={`px-3 py-1.5 text-xs border rounded-md transition-colors ${
                 active
-                  ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                  ? 'bg-cc-accent text-white border-cc-accent'
                   : 'bg-transparent text-cc-text-muted border-cc-border hover:border-cc-border-hover hover:text-cc-text-secondary'
               }`}
             >

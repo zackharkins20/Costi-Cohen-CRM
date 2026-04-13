@@ -2,10 +2,10 @@ import { GlassCard } from './glass-card'
 import type { LucideIcon } from 'lucide-react'
 
 const accentBorders = [
-  'border-t-[3px] border-t-[#1A1F36]',
-  'border-t-[3px] border-t-[#4A5568]',
-  'border-t-[3px] border-t-[#9BA3AF]',
-  'border-t-[3px] border-t-[#6B7C93]',
+  'border-t-[3px] border-t-[#3B5068]',
+  'border-t-[3px] border-t-[#5A7A94]',
+  'border-t-[3px] border-t-[#8BA4B8]',
+  'border-t-[3px] border-t-[#4A7FA5]',
 ]
 
 interface MetricCardProps {

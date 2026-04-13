@@ -12,10 +12,10 @@ export const EMAIL_TEMPLATES: EmailTemplate[] = [
     id: 'initial-intro',
     name: 'Initial Introduction',
     category: 'generic',
-    subject: 'Introduction — Costi Cohen Property Advisory',
+    subject: 'Introduction — Costi Cohen Buyers Agency',
     body: `Hi {{first_name}},
 
-Thank you for your interest in our property advisory services. I'm Costi Cohen, and I'd love to learn more about what you're looking for.
+Thank you for your interest in our buyers agency services. I'm Costi Cohen, and I'd love to learn more about what you're looking for.
 
 Whether you're searching for residential or commercial property, our team provides end-to-end buyers agency support — from defining your brief through to settlement.
 

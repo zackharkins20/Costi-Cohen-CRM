@@ -91,29 +91,29 @@
   --cc-btn-text: #FFFFFF;
   --cc-btn-hover-bg: #FFFFFF;
   --cc-btn-hover-text: #000000;
-  --cc-destructive: #888888;
+  --cc-destructive: #B85C5C;
 
-  /* Accent — dark navy-charcoal */
-  --cc-accent: #1A1F36;
-  --cc-accent-light: rgba(26, 31, 54, 0.5);
-  --cc-accent-text: #C8CCD8;
+  /* Accent — blue-grey */
+  --cc-accent: #3B5068;
+  --cc-accent-light: rgba(59, 80, 104, 0.25);
+  --cc-accent-text: #D8DEE4;
 
-  /* Status badge colors — dark mode */
-  --cc-status-active-bg: rgba(107, 124, 147, 0.15);
-  --cc-status-active-text: #8FA0B5;
-  --cc-status-active-border: rgba(107, 124, 147, 0.3);
-  --cc-status-success-bg: rgba(93, 122, 106, 0.15);
-  --cc-status-success-text: #7FA693;
-  --cc-status-success-border: rgba(93, 122, 106, 0.3);
-  --cc-status-warning-bg: rgba(138, 125, 117, 0.15);
-  --cc-status-warning-text: #A69689;
-  --cc-status-warning-border: rgba(138, 125, 117, 0.3);
-  --cc-status-pending-bg: rgba(122, 130, 142, 0.15);
-  --cc-status-pending-text: #95A0AE;
-  --cc-status-pending-border: rgba(122, 130, 142, 0.3);
-  --cc-status-neutral-bg: rgba(155, 163, 175, 0.12);
-  --cc-status-neutral-text: #7A828E;
-  --cc-status-neutral-border: rgba(155, 163, 175, 0.25);
+  /* Status badge colors — dark mode (blue-grey tinted) */
+  --cc-status-active-bg: rgba(74, 127, 165, 0.15);
+  --cc-status-active-text: #7EBAD4;
+  --cc-status-active-border: rgba(74, 127, 165, 0.3);
+  --cc-status-success-bg: rgba(90, 143, 106, 0.15);
+  --cc-status-success-text: #7FB893;
+  --cc-status-success-border: rgba(90, 143, 106, 0.3);
+  --cc-status-warning-bg: rgba(196, 147, 90, 0.15);
+  --cc-status-warning-text: #D4A868;
+  --cc-status-warning-border: rgba(196, 147, 90, 0.3);
+  --cc-status-pending-bg: rgba(139, 149, 160, 0.15);
+  --cc-status-pending-text: #A0ACB8;
+  --cc-status-pending-border: rgba(139, 149, 160, 0.3);
+  --cc-status-neutral-bg: rgba(139, 149, 160, 0.12);
+  --cc-status-neutral-text: #8B95A0;
+  --cc-status-neutral-border: rgba(139, 149, 160, 0.25);
 
   /* Map to shadcn variables */
   --background: #000000;
@@ -130,23 +130,23 @@
   --muted-foreground: #A0A7AB;
   --accent: rgba(255, 255, 255, 0.06);
   --accent-foreground: #FFFFFF;
-  --destructive: #888888;
+  --destructive: #B85C5C;
   --border: #222222;
   --input: #222222;
-  --ring: #FFFFFF;
-  --chart-1: #1A1F36;
-  --chart-2: #4A5568;
-  --chart-3: #9BA3AF;
-  --chart-4: #D1D5DB;
-  --chart-5: #222222;
+  --ring: #3B5068;
+  --chart-1: #5A7A94;
+  --chart-2: #8BA4B8;
+  --chart-3: #A0B4C4;
+  --chart-4: #D8DEE4;
+  --chart-5: #3B5068;
   --sidebar: #0a0a0a;
   --sidebar-foreground: #A0A7AB;
   --sidebar-primary: #FFFFFF;
   --sidebar-primary-foreground: #000000;
-  --sidebar-accent: rgba(255, 255, 255, 0.06);
+  --sidebar-accent: rgba(59, 80, 104, 0.25);
   --sidebar-accent-foreground: #FFFFFF;
   --sidebar-border: #222222;
-  --sidebar-ring: #FFFFFF;
+  --sidebar-ring: #3B5068;
 
   --font-heading: 'Inter', sans-serif;
 }
@@ -155,44 +155,44 @@
 [data-theme="light"] {
   --cc-bg: #FFFFFF;
   --cc-surface: #F7F7F7;
-  --cc-surface-2: #EEEEEE;
+  --cc-surface-2: #EDF0F4;
   --cc-surface-3: #F2F2F2;
   --cc-surface-offset: #E8E8E8;
-  --cc-border: #DDDDDD;
-  --cc-border-hover: #CCCCCC;
+  --cc-border: #D8DEE4;
+  --cc-border-hover: #B8C4D0;
   --cc-text-primary: #000000;
-  --cc-text-secondary: #4A5568;
-  --cc-text-tertiary: #A0A7AB;
-  --cc-text-muted: #999999;
-  --cc-text-faint: #BBBBBB;
-  --cc-divider: #DDDDDD;
-  --cc-btn-border: #1A1F36;
-  --cc-btn-text: #1A1F36;
-  --cc-btn-hover-bg: #1A1F36;
+  --cc-text-secondary: #3B5068;
+  --cc-text-tertiary: #8B95A0;
+  --cc-text-muted: #8B95A0;
+  --cc-text-faint: #B8C4D0;
+  --cc-divider: #D8DEE4;
+  --cc-btn-border: #3B5068;
+  --cc-btn-text: #3B5068;
+  --cc-btn-hover-bg: #3B5068;
   --cc-btn-hover-text: #FFFFFF;
-  --cc-destructive: #888888;
+  --cc-destructive: #B85C5C;
 
-  /* Accent — dark navy */
-  --cc-accent: #1A1F36;
-  --cc-accent-light: rgba(26, 31, 54, 0.08);
-  --cc-accent-text: #1A1F36;
+  /* Accent — blue-grey */
+  --cc-accent: #3B5068;
+  --cc-accent-light: rgba(59, 80, 104, 0.08);
+  --cc-accent-text: #3B5068;
 
-  /* Status badge colors — light mode */
-  --cc-status-active-bg: rgba(107, 124, 147, 0.1);
-  --cc-status-active-text: #5A6B7E;
-  --cc-status-active-border: rgba(107, 124, 147, 0.25);
-  --cc-status-success-bg: rgba(93, 122, 106, 0.1);
-  --cc-status-success-text: #4A6B58;
-  --cc-status-success-border: rgba(93, 122, 106, 0.25);
-  --cc-status-warning-bg: rgba(138, 125, 117, 0.1);
-  --cc-status-warning-text: #6E5E54;
-  --cc-status-warning-border: rgba(138, 125, 117, 0.25);
-  --cc-status-pending-bg: rgba(122, 130, 142, 0.1);
+  /* Status badge colors — light mode (blue-grey tinted) */
+  --cc-status-active-bg: rgba(74, 127, 165, 0.1);
+  --cc-status-active-text: #3A6F8F;
+  --cc-status-active-border: rgba(74, 127, 165, 0.25);
+  --cc-status-success-bg: rgba(90, 143, 106, 0.1);
+  --cc-status-success-text: #3D7A50;
+  --cc-status-success-border: rgba(90, 143, 106, 0.25);
+  --cc-status-warning-bg: rgba(196, 147, 90, 0.1);
+  --cc-status-warning-text: #8B6930;
+  --cc-status-warning-border: rgba(196, 147, 90, 0.25);
+  --cc-status-pending-bg: rgba(139, 149, 160, 0.1);
   --cc-status-pending-text: #5A6270;
-  --cc-status-pending-border: rgba(122, 130, 142, 0.25);
-  --cc-status-neutral-bg: rgba(155, 163, 175, 0.1);
+  --cc-status-pending-border: rgba(139, 149, 160, 0.25);
+  --cc-status-neutral-bg: rgba(139, 149, 160, 0.1);
   --cc-status-neutral-text: #6B7280;
-  --cc-status-neutral-border: rgba(155, 163, 175, 0.2);
+  --cc-status-neutral-border: rgba(139, 149, 160, 0.2);
 
   /* Map to shadcn variables */
   --background: #FFFFFF;
@@ -201,31 +201,31 @@
   --card-foreground: #000000;
   --popover: #F7F7F7;
   --popover-foreground: #000000;
-  --primary: #1A1F36;
+  --primary: #3B5068;
   --primary-foreground: #FFFFFF;
-  --secondary: rgba(0, 0, 0, 0.04);
+  --secondary: rgba(59, 80, 104, 0.06);
   --secondary-foreground: #000000;
-  --muted: rgba(0, 0, 0, 0.04);
-  --muted-foreground: #4A5568;
-  --accent: rgba(0, 0, 0, 0.04);
+  --muted: rgba(59, 80, 104, 0.06);
+  --muted-foreground: #3B5068;
+  --accent: rgba(59, 80, 104, 0.06);
   --accent-foreground: #000000;
-  --destructive: #888888;
-  --border: #DDDDDD;
-  --input: #DDDDDD;
-  --ring: #1A1F36;
-  --chart-1: #1A1F36;
-  --chart-2: #4A5568;
-  --chart-3: #9BA3AF;
-  --chart-4: #D1D5DB;
-  --chart-5: #DDDDDD;
+  --destructive: #B85C5C;
+  --border: #D8DEE4;
+  --input: #D8DEE4;
+  --ring: #3B5068;
+  --chart-1: #3B5068;
+  --chart-2: #5A7A94;
+  --chart-3: #8BA4B8;
+  --chart-4: #D8DEE4;
+  --chart-5: #2A3A4D;
   --sidebar: #F7F7F7;
-  --sidebar-foreground: #4A5568;
-  --sidebar-primary: #1A1F36;
+  --sidebar-foreground: #3B5068;
+  --sidebar-primary: #3B5068;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgba(26, 31, 54, 0.06);
-  --sidebar-accent-foreground: #1A1F36;
-  --sidebar-border: #DDDDDD;
-  --sidebar-ring: #1A1F36;
+  --sidebar-accent: rgba(59, 80, 104, 0.08);
+  --sidebar-accent-foreground: #3B5068;
+  --sidebar-border: #D8DEE4;
+  --sidebar-ring: #3B5068;
 }
 
 @layer base {
@@ -253,10 +253,10 @@
   border-color: var(--cc-border-hover);
 }
 [data-theme="light"] .glass-card {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(59, 80, 104, 0.06), 0 1px 2px rgba(59, 80, 104, 0.04);
 }
 [data-theme="light"] .glass-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 12px rgba(59, 80, 104, 0.1), 0 2px 4px rgba(59, 80, 104, 0.06);
 }
 
 /* Alternating table rows */
@@ -264,7 +264,12 @@
   background: var(--cc-surface);
 }
 [data-theme="light"] [data-slot="table-body"] tr:nth-child(even) {
-  background: #FAFAFA;
+  background: #EDF0F4;
+}
+
+/* Table header styling */
+[data-slot="table-header"] th {
+  background: var(--cc-surface-2);
 }
 
 /* Scrollbar styling — theme-aware */

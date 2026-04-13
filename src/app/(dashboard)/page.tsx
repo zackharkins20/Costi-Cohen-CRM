@@ -42,14 +42,14 @@ export default function DashboardPage() {
 
   const isDark = theme === 'dark'
 
-  /* Theme-aware chart palette — richer tones */
+  /* Theme-aware chart palette — blue-grey tones */
   const chartColors = isDark
-    ? ['#FFFFFF', '#A0A7AB', '#6B7280', '#FFFFFF', '#A0A7AB', '#6B7280']
-    : ['#1A1F36', '#4A5568', '#9BA3AF', '#1A1F36', '#4A5568', '#9BA3AF']
-  const chartAxisColor = isDark ? '#555555' : '#9BA3AF'
-  const chartGridColor = isDark ? '#222222' : '#DDDDDD'
+    ? ['#5A7A94', '#8BA4B8', '#A0B4C4', '#D8DEE4', '#4A7FA5', '#5A7A94']
+    : ['#3B5068', '#5A7A94', '#8BA4B8', '#D8DEE4', '#2A3A4D', '#3B5068']
+  const chartAxisColor = isDark ? '#555555' : '#8B95A0'
+  const chartGridColor = isDark ? '#222222' : '#D8DEE4'
   const chartTooltipBg = isDark ? '#111111' : '#FFFFFF'
-  const chartTooltipBorder = isDark ? '#222222' : '#E5E7EB'
+  const chartTooltipBorder = isDark ? '#222222' : '#D8DEE4'
   const chartTooltipText = isDark ? '#FFFFFF' : '#000000'
 
   return (

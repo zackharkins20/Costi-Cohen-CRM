@@ -45,7 +45,7 @@ export function WhatsNewModal({ open, onClose }: WhatsNewModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-cc-text-secondary" />
-            What&apos;s New
+            What&apos;s New in The Exchange
           </DialogTitle>
           <p className="text-xs text-cc-text-muted mt-1">
             Version {CURRENT_VERSION} &mdash; Latest updates and improvements

@@ -105,12 +105,12 @@ export default function ReportsPage() {
 
   const isDark = theme === 'dark'
   const chartColors = isDark
-    ? ['#FFFFFF', '#A0A7AB', '#6B7280', '#8892A0', '#C0C7CF', '#FFFFFF']
-    : ['#1A1F36', '#4A5568', '#6B7280', '#9BA3AF', '#333333', '#1A1F36']
-  const chartAxisColor = '#A0A7AB'
-  const chartGridColor = isDark ? '#222222' : '#DDDDDD'
+    ? ['#5A7A94', '#8BA4B8', '#A0B4C4', '#D8DEE4', '#4A7FA5', '#5A7A94']
+    : ['#3B5068', '#5A7A94', '#8BA4B8', '#D8DEE4', '#2A3A4D', '#3B5068']
+  const chartAxisColor = isDark ? '#555555' : '#8B95A0'
+  const chartGridColor = isDark ? '#222222' : '#D8DEE4'
   const chartTooltipBg = isDark ? '#111111' : '#F7F7F7'
-  const chartTooltipBorder = isDark ? '#222222' : '#DDDDDD'
+  const chartTooltipBorder = isDark ? '#222222' : '#D8DEE4'
   const chartTooltipText = isDark ? '#FFFFFF' : '#000000'
 
   const tabs: { key: ReportTab; label: string }[] = [
@@ -212,7 +212,7 @@ export default function ReportsPage() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-sm font-medium transition-colors border ${
               tab === t.key
-                ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                ? 'bg-cc-accent text-white border-cc-accent'
                 : 'bg-transparent text-cc-text-secondary border-cc-border hover:border-cc-border-hover hover:text-cc-text-primary'
             }`}
           >
@@ -229,7 +229,7 @@ export default function ReportsPage() {
             onClick={() => setPreset(p.key)}
             className={`px-3 py-1.5 text-xs font-medium transition-colors border ${
               preset === p.key
-                ? 'bg-transparent text-cc-text-primary border-cc-btn-border'
+                ? 'bg-cc-accent text-white border-cc-accent'
                 : 'bg-transparent text-cc-text-secondary border-cc-border hover:border-cc-border-hover hover:text-cc-text-primary'
             }`}
           >
@@ -369,8 +369,8 @@ export default function ReportsPage() {
                   <AreaChart data={revenueChartData}>
                     <defs>
                       <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={isDark ? '#FFFFFF' : '#000000'} stopOpacity={0.15} />
-                        <stop offset="95%" stopColor={isDark ? '#FFFFFF' : '#000000'} stopOpacity={0} />
+                        <stop offset="5%" stopColor={isDark ? '#5A7A94' : '#3B5068'} stopOpacity={0.25} />
+                        <stop offset="95%" stopColor={isDark ? '#5A7A94' : '#3B5068'} stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="date" tick={{ fill: chartAxisColor, fontSize: 11 }} axisLine={{ stroke: chartGridColor }} tickLine={false} />
@@ -378,7 +378,7 @@ export default function ReportsPage() {
                     <Tooltip
                       contentStyle={{ background: chartTooltipBg, border: `1px solid ${chartTooltipBorder}`, borderRadius: '6px', color: chartTooltipText, fontSize: '13px' }}
                     />
-                    <Area type="monotone" dataKey="total" stroke={isDark ? '#FFFFFF' : '#000000'} fill="url(#areaGrad)" strokeWidth={2} />
+                    <Area type="monotone" dataKey="total" stroke={isDark ? '#5A7A94' : '#3B5068'} fill="url(#areaGrad)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (

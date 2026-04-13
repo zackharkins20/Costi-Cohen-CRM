@@ -11,8 +11,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Costi Cohen — Property Advisory CRM',
-  description: 'CRM and pipeline tracker for Costi Cohen Property Advisory',
+  title: 'The Exchange — Costi Cohen Buyers Agency',
+  description: 'The Exchange — commercial property CRM for Costi Cohen Buyers Agency',
 }
 
 export default function RootLayout({

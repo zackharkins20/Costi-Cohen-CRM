@@ -16,7 +16,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     target: 'sidebar',
     title: 'Sidebar Navigation',
-    description: 'Navigate between all CRM sections. Collapse for more space or expand for labels.',
+    description: 'Navigate between all sections of The Exchange. Collapse for more space or expand for labels.',
   },
   {
     target: 'dashboard-metrics',
@@ -31,7 +31,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     target: 'global-search',
     title: 'Global Search',
-    description: 'Search contacts, deals, and tasks instantly from anywhere in the CRM.',
+    description: 'Search contacts, deals, and tasks instantly from anywhere in The Exchange.',
   },
   {
     target: 'pipeline-nav',

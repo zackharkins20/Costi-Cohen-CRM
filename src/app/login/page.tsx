@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { EyeIcon, EyeOffIcon, Building2, Users, Zap } from 'lucide-react'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -57,132 +57,256 @@ export default function LoginPage() {
     }),
   }
 
+  const features = [
+    { icon: Building2, title: 'Pipeline Management', desc: 'Track deals from lead to settlement' },
+    { icon: Users, title: 'Client Intelligence', desc: 'Contacts, history, and insights' },
+    { icon: Zap, title: 'Workflow Automation', desc: 'Set it and forget it' },
+  ]
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4" style={{ background: '#F5F5F5' }}>
-      {/* Logo */}
-      <motion.div
-        className="mb-10"
-        initial="hidden"
-        animate="visible"
-        custom={0}
-        variants={fadeUp}
+    <div className="flex min-h-screen" style={{ background: '#F5F5F5' }}>
+      {/* ─── Left Panel: Branded Splash ─── */}
+      <div
+        className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 relative overflow-hidden"
+        style={{ background: 'linear-gradient(160deg, #1a1a1a 0%, #2A3A4D 100%)' }}
       >
-        <span
-          style={{
-            color: '#1a1a1a',
-            fontSize: '28px',
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            fontFamily: "'Inter', sans-serif",
-          }}
+        {/* Logo */}
+        <motion.div initial="hidden" animate="visible" custom={0} variants={fadeUp}>
+          <span
+            style={{
+              color: 'rgba(255,255,255,0.7)',
+              fontSize: '14px',
+              fontWeight: 500,
+              letterSpacing: '0.18em',
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            COSTI COHEN
+          </span>
+        </motion.div>
+
+        {/* Main content */}
+        <div>
+          <motion.h1
+            className="text-[56px] font-bold leading-[1.05] tracking-[-0.02em]"
+            style={{ color: '#FFFFFF', fontFamily: "'Inter', sans-serif" }}
+            initial="hidden"
+            animate="visible"
+            custom={1}
+            variants={fadeUp}
+          >
+            The Exchange
+          </motion.h1>
+
+          <motion.div
+            className="w-12 h-[3px] mt-5 mb-5"
+            style={{ background: '#3B5068' }}
+            initial="hidden"
+            animate="visible"
+            custom={2}
+            variants={fadeUp}
+          />
+
+          <motion.p
+            className="text-[20px] font-light"
+            style={{ color: 'rgba(255,255,255,0.85)', fontFamily: "'Inter', sans-serif" }}
+            initial="hidden"
+            animate="visible"
+            custom={2}
+            variants={fadeUp}
+          >
+            Where deals change hands.
+          </motion.p>
+
+          <motion.p
+            className="text-[14px] mt-2"
+            style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'Inter', sans-serif" }}
+            initial="hidden"
+            animate="visible"
+            custom={3}
+            variants={fadeUp}
+          >
+            Your commercial property command centre.
+          </motion.p>
+
+          {/* Feature cards */}
+          <div className="mt-10 space-y-3">
+            {features.map((f, i) => (
+              <motion.div
+                key={f.title}
+                className="flex items-center gap-4 rounded-lg px-5 py-4"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  backdropFilter: 'blur(8px)',
+                }}
+                initial="hidden"
+                animate="visible"
+                custom={4 + i}
+                variants={fadeUp}
+              >
+                <div
+                  className="flex items-center justify-center w-10 h-10 rounded-lg flex-shrink-0"
+                  style={{ background: 'rgba(59, 80, 104, 0.4)', border: '1px solid rgba(59, 80, 104, 0.3)' }}
+                >
+                  <f.icon className="w-5 h-5" style={{ color: '#D8DEE4' }} />
+                </div>
+                <div>
+                  <p className="text-[14px] font-medium" style={{ color: '#FFFFFF' }}>{f.title}</p>
+                  <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.5)' }}>{f.desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <motion.div
+          className="flex items-center justify-between"
+          initial="hidden"
+          animate="visible"
+          custom={7}
+          variants={fadeUp}
         >
-          COSTI COHEN
-        </span>
-      </motion.div>
+          <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            costicohen.com.au
+          </span>
+          <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            &copy; 2026 Costi Cohen
+          </span>
+        </motion.div>
+      </div>
 
-      {/* Form Card */}
-      <motion.div
-        className="w-full max-w-[420px] rounded-xl bg-white p-8 sm:p-10"
-        style={{ boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08), 0 4px 10px -5px rgba(0,0,0,0.04)' }}
-        initial="hidden"
-        animate="visible"
-        custom={1}
-        variants={fadeUp}
-      >
-        <h2 className="text-[24px] font-semibold" style={{ fontFamily: "'Inter', sans-serif", color: '#1a1a1a' }}>
-          Welcome back
-        </h2>
-        <p className="mt-1.5 mb-7 text-[14px]" style={{ color: '#555' }}>
-          Sign in to Costi Cohen
-        </p>
+      {/* ─── Right Panel: Login Form ─── */}
+      <div className="flex flex-1 flex-col items-center justify-center px-6 lg:w-1/2" style={{ background: '#F5F5F5' }}>
+        {/* Mobile-only logo */}
+        <motion.div
+          className="mb-8 lg:hidden"
+          initial="hidden"
+          animate="visible"
+          custom={0}
+          variants={fadeUp}
+        >
+          <span
+            style={{
+              color: '#1a1a1a',
+              fontSize: '24px',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              fontFamily: "'Inter', sans-serif",
+            }}
+          >
+            The Exchange
+          </span>
+        </motion.div>
 
-        <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
-          <div className="space-y-5">
-            <div>
-              <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-black focus:ring-2 focus:ring-black/10"
-                style={{ color: '#000000' }}
-              />
-            </div>
+        <motion.div
+          className="w-full max-w-[420px]"
+          initial="hidden"
+          animate="visible"
+          custom={1}
+          variants={fadeUp}
+        >
+          <h2 className="text-[28px] font-semibold" style={{ fontFamily: "'Inter', sans-serif", color: '#1a1a1a' }}>
+            Welcome back
+          </h2>
+          <p className="mt-1.5 mb-8 text-[14px]" style={{ color: '#555' }}>
+            Sign in to The Exchange
+          </p>
 
-            {mode === 'password' && (
-              <div>
-                <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
-                  Password
-                </label>
-                <div className="relative">
+          <div
+            className="rounded-xl bg-white p-8"
+            style={{ boxShadow: '0 10px 25px -5px rgba(0,0,0,0.08), 0 4px 10px -5px rgba(0,0,0,0.04)' }}
+          >
+            <form onSubmit={mode === 'password' ? handlePasswordLogin : handleMagicLink}>
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
+                    Email
+                  </label>
                   <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="••••••••"
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="you@example.com"
                     required
-                    className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 pr-10 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-black focus:ring-2 focus:ring-black/10"
+                    className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-[#3B5068] focus:ring-2 focus:ring-[#3B5068]/20"
                     style={{ color: '#000000' }}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#999999] hover:text-[#333333] transition-colors"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? (
-                      <EyeOffIcon className="size-4" />
-                    ) : (
-                      <EyeIcon className="size-4" />
-                    )}
-                  </button>
                 </div>
+
+                {mode === 'password' && (
+                  <div>
+                    <label className="block text-[11px] font-medium uppercase tracking-[0.08em] mb-1.5" style={{ color: '#333333' }}>
+                      Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        placeholder="••••••••"
+                        required
+                        className="h-10 w-full rounded-md border border-[#DDDDDD] bg-[#FAFAFA] px-3 pr-10 text-sm placeholder:text-[#AAAAAA] outline-none transition-colors focus:border-[#3B5068] focus:ring-2 focus:ring-[#3B5068]/20"
+                        style={{ color: '#000000' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#999999] hover:text-[#333333] transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <EyeOffIcon className="size-4" />
+                        ) : (
+                          <EyeIcon className="size-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  onMouseEnter={() => setBtnHover(true)}
+                  onMouseLeave={() => setBtnHover(false)}
+                  className="w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: btnHover ? '#222222' : '#000000', color: '#ffffff' }}
+                >
+                  {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
+                </button>
               </div>
+            </form>
+
+            {message && (
+              <p className="text-sm mt-4" style={{ color: message.includes('Check') ? '#1a1a1a' : '#dc2626' }}>
+                {message}
+              </p>
             )}
 
             <button
-              type="submit"
-              disabled={loading}
-              onMouseEnter={() => setBtnHover(true)}
-              onMouseLeave={() => setBtnHover(false)}
-              className="w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: btnHover ? '#222222' : '#000000', color: '#ffffff' }}
+              onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
+              className="text-xs mt-5 block w-full text-center transition-colors hover:opacity-80"
+              style={{ color: '#3B5068' }}
             >
-              {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
+              {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
             </button>
           </div>
-        </form>
+        </motion.div>
 
-        {message && (
-          <p className="text-sm mt-4" style={{ color: message.includes('Check') ? '#1a1a1a' : '#dc2626' }}>
-            {message}
-          </p>
-        )}
-
-        <button
-          onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
-          className="text-xs mt-5 block w-full text-center transition-colors hover:opacity-80"
-          style={{ color: '#888' }}
+        {/* Footer */}
+        <motion.p
+          className="mt-8 text-[13px]"
+          style={{ color: '#888888' }}
+          initial="hidden"
+          animate="visible"
+          custom={2}
+          variants={fadeUp}
         >
-          {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
-        </button>
-      </motion.div>
-
-      {/* Footer */}
-      <motion.p
-        className="mt-8 text-[13px]"
-        style={{ color: '#888888' }}
-        initial="hidden"
-        animate="visible"
-        custom={2}
-        variants={fadeUp}
-      >
-        Costi Cohen &copy; 2026
-      </motion.p>
+          Costi Cohen &copy; 2026
+        </motion.p>
+      </div>
     </div>
   )
 }

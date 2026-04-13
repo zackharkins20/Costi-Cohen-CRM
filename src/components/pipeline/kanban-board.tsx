@@ -3,33 +3,33 @@
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { cn } from '@/lib/utils'
 
-/* Stage column top-border colors — subtle progressive tints */
+/* Stage column top-border colors — blue-grey progressive tints */
 const stageTopBorders: Record<string, string> = {
-  lead: 'border-t-[3px] border-t-[#9BA3AF]',
-  initial_call: 'border-t-[3px] border-t-[#7A828E]',
-  property_search: 'border-t-[3px] border-t-[#4A5568]',
-  due_diligence: 'border-t-[3px] border-t-[#333D4D]',
-  exchange: 'border-t-[3px] border-t-[#1A1F36]',
-  fees_collected: 'border-t-[3px] border-t-[#4A5D52]',
+  lead: 'border-t-[3px] border-t-[#8BA4B8]',
+  initial_call: 'border-t-[3px] border-t-[#6B8FA8]',
+  property_search: 'border-t-[3px] border-t-[#5A7A94]',
+  due_diligence: 'border-t-[3px] border-t-[#3B5068]',
+  exchange: 'border-t-[3px] border-t-[#2A3A4D]',
+  fees_collected: 'border-t-[3px] border-t-[#5A8F6A]',
   /* task statuses */
-  todo: 'border-t-[3px] border-t-[#9BA3AF]',
-  in_progress: 'border-t-[3px] border-t-[#4A5568]',
-  review: 'border-t-[3px] border-t-[#1A1F36]',
-  done: 'border-t-[3px] border-t-[#4A5D52]',
+  todo: 'border-t-[3px] border-t-[#8BA4B8]',
+  in_progress: 'border-t-[3px] border-t-[#5A7A94]',
+  review: 'border-t-[3px] border-t-[#3B5068]',
+  done: 'border-t-[3px] border-t-[#5A8F6A]',
 }
 
 /* Card left-border accents by stage */
 const stageLeftBorders: Record<string, string> = {
-  lead: 'border-l-[3px] border-l-[#9BA3AF]',
-  initial_call: 'border-l-[3px] border-l-[#7A828E]',
-  property_search: 'border-l-[3px] border-l-[#4A5568]',
-  due_diligence: 'border-l-[3px] border-l-[#333D4D]',
-  exchange: 'border-l-[3px] border-l-[#1A1F36]',
-  fees_collected: 'border-l-[3px] border-l-[#4A5D52]',
-  todo: 'border-l-[3px] border-l-[#9BA3AF]',
-  in_progress: 'border-l-[3px] border-l-[#4A5568]',
-  review: 'border-l-[3px] border-l-[#1A1F36]',
-  done: 'border-l-[3px] border-l-[#4A5D52]',
+  lead: 'border-l-[3px] border-l-[#8BA4B8]',
+  initial_call: 'border-l-[3px] border-l-[#6B8FA8]',
+  property_search: 'border-l-[3px] border-l-[#5A7A94]',
+  due_diligence: 'border-l-[3px] border-l-[#3B5068]',
+  exchange: 'border-l-[3px] border-l-[#2A3A4D]',
+  fees_collected: 'border-l-[3px] border-l-[#5A8F6A]',
+  todo: 'border-l-[3px] border-l-[#8BA4B8]',
+  in_progress: 'border-l-[3px] border-l-[#5A7A94]',
+  review: 'border-l-[3px] border-l-[#3B5068]',
+  done: 'border-l-[3px] border-l-[#5A8F6A]',
 }
 
 interface KanbanColumn<T> {
