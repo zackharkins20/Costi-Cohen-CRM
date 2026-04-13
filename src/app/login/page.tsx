@@ -5,7 +5,6 @@ import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
-import Image from 'next/image'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -14,6 +13,7 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'password' | 'magic'>('password')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [btnHover, setBtnHover] = useState(false)
   const router = useRouter()
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
@@ -67,14 +67,17 @@ export default function LoginPage() {
         custom={0}
         variants={fadeUp}
       >
-        <Image
-          src="/logo-text.jpg"
-          alt="Costi Cohen"
-          width={220}
-          height={28}
-          className="h-auto"
-          priority
-        />
+        <span
+          style={{
+            color: '#1a1a1a',
+            fontSize: '28px',
+            fontWeight: 700,
+            letterSpacing: '0.12em',
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
+          COSTI COHEN
+        </span>
       </motion.div>
 
       {/* Form Card */}
@@ -89,7 +92,7 @@ export default function LoginPage() {
         <h2 className="text-[24px] font-semibold" style={{ fontFamily: "'Inter', sans-serif", color: '#1a1a1a' }}>
           Welcome back
         </h2>
-        <p className="mt-1.5 mb-7 text-[14px]" style={{ color: '#4a4a4a' }}>
+        <p className="mt-1.5 mb-7 text-[14px]" style={{ color: '#555' }}>
           Sign in to Costi Cohen
         </p>
 
@@ -144,8 +147,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
+              onMouseEnter={() => setBtnHover(true)}
+              onMouseLeave={() => setBtnHover(false)}
               className="w-full h-10 rounded-md text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ backgroundColor: '#000000', color: '#ffffff' }}
+              style={{ backgroundColor: btnHover ? '#222222' : '#000000', color: '#ffffff' }}
             >
               {loading ? 'Loading...' : mode === 'password' ? 'Sign In' : 'Send Magic Link'}
             </button>
@@ -161,7 +166,7 @@ export default function LoginPage() {
         <button
           onClick={() => setMode(mode === 'password' ? 'magic' : 'password')}
           className="text-xs mt-5 block w-full text-center transition-colors hover:opacity-80"
-          style={{ color: '#666666' }}
+          style={{ color: '#888' }}
         >
           {mode === 'password' ? 'Use magic link instead' : 'Use password instead'}
         </button>
