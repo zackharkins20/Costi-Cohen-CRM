@@ -51,7 +51,12 @@ export const TOUR_STEPS: TourStep[] = [
   {
     target: 'reports-nav',
     title: 'Reports',
-    description: 'Analyse pipeline, revenue, activity, and contact data with customisable date ranges.',
+    description: 'Analyse pipeline, revenue, activity, buyer types, and contact data with customisable date ranges.',
+  },
+  {
+    target: 'quick-add',
+    title: 'Quick Add',
+    description: 'Create a new deal, contact, task, event, or email from anywhere with one click.',
   },
 ]
 
@@ -233,10 +238,16 @@ export function FeatureTour({ active, onComplete }: FeatureTourProps) {
 export function useTour() {
   const [tourActive, setTourActive] = useState(false)
 
+  // Auto-trigger: only starts if tour hasn't been completed before
   const startTour = useCallback(() => {
     try {
       if (localStorage.getItem(LS_KEY) === 'true') return
     } catch {}
+    setTourActive(true)
+  }, [])
+
+  // Manual trigger: always starts the tour (used by "Take a Tour" button)
+  const startTourManual = useCallback(() => {
     setTourActive(true)
   }, [])
 
@@ -256,6 +267,7 @@ export function useTour() {
   return {
     tourActive,
     startTour,
+    startTourManual,
     completeTour,
     isTourCompleted,
   }

@@ -51,7 +51,7 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false)
   const [whatsNewOpen, setWhatsNewOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
-  const { tourActive, startTour, completeTour } = useTour()
+  const { tourActive, startTourManual, completeTour } = useTour()
 
   // Password change state
   const [currentPassword, setCurrentPassword] = useState('')
@@ -263,7 +263,7 @@ export default function SettingsPage() {
               <Sparkles className="h-4 w-4 mr-1.5" />
               What&apos;s New
             </Button>
-            <Button variant="outline" onClick={startTour}>
+            <Button variant="outline" onClick={startTourManual}>
               <Compass className="h-4 w-4 mr-1.5" />
               Take a Tour
             </Button>
